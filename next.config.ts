@@ -52,6 +52,22 @@ const nextConfig: NextConfig = {
         destination: "/services/territorial-development/implementation-mechanisms",
         permanent: true,
       },
+      // ── Removed press-center sub-pages → /press-center ──
+      {
+        source: "/press-center/news",
+        destination: "/press-center",
+        permanent: true,
+      },
+      {
+        source: "/press-center/articles",
+        destination: "/press-center",
+        permanent: true,
+      },
+      {
+        source: "/press-center/insights",
+        destination: "/press-center",
+        permanent: true,
+      },
     ];
   },
   images: {

@@ -125,9 +125,6 @@ const navigation = [
     inHeader: true,
     description: "Новости, статьи экспертов и аналитические материалы о рынке и наших проектах.",
     submenu: [
-      { name: "Новости компании", href: "/press-center/news" },
-      { name: "Статьи", href: "/press-center/articles" },
-      { name: "Инсайты и аналитика", href: "/press-center/insights" },
       { name: "Все материалы", href: "/press-center" },
     ],
   },
@@ -234,8 +231,10 @@ export function Header() {
     if (path.startsWith("/press-center")) return "dark"
     // Teal (#008C95) hero pages
     if (/^\/cases\/[^/]+$/.test(path)) return "teal"
-    // Default: light gray (#f1f2f4) — homepage only
-    return "light"
+    // Homepage: light gray (#f1f2f4)
+    if (path === "/") return "light"
+    // Everything else (including 404 pages) → dark
+    return "dark"
   }
 
   const heroTheme = getHeaderTheme(pathname)

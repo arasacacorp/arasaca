@@ -269,9 +269,6 @@ const categories: Cat[] = [
     links: [
       { name: "Пресс-центр", href: "/press-center" },
       { name: "Все публикации", href: "/press-center" },
-      { name: "Новости", href: "/press-center/news" },
-      { name: "Статьи", href: "/press-center/articles" },
-      { name: "Инсайты", href: "/press-center/insights" },
     ],
     subs: [
       {

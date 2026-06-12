@@ -763,7 +763,7 @@ export const typeLabels: Record<PublicationType, string> = {
 
 /** href для раздела по типу */
 export const typeHrefs: Record<PublicationType, string> = {
-  news: "/press-center/news",
-  article: "/press-center/articles",
-  insight: "/press-center/insights",
+  news: "/press-center",
+  article: "/press-center",
+  insight: "/press-center",
 };

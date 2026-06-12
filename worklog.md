@@ -383,3 +383,27 @@ Stage Summary:
 - Настроено 8 постоянных редиректов (301)
 - Обновлены карта сайта и sitemap.xml — сиротских ссылок больше нет
 - Канонические страницы работают без изменений для пользователя
+---
+Task ID: 5
+Agent: main
+Task: Stage 5 — Удаление подстраниц пресс-центра + исправление Header↔Hero mismatches
+
+Work Log:
+- Удалил 3 директории: press-center/news/, press-center/articles/, press-center/insights/
+- Обновил typeHrefs в publications.ts: все типы → /press-center
+- Обновил press-center/page.tsx: убрал 3 канала из channels
+- Обновил Header.tsx: убрал 3 ссылки из подменю пресс-центра
+- Обновил map/page.tsx: убрал 3 ссылки на подстраницы
+- Обновил sitemap.ts: убрал 3 записи /press-center/news|articles|insights
+- Исправил PublicationDetailClient.tsx: hero с тёмным фоном (C.dark → #004a59), белый текст, mint акценты
+- Убрал промежуточную ссылку в breadcrumbs (было: Главная → Пресс-центр → Новости → Статья, стало: Главная → Пресс-центр → Статья)
+- Исправил getHeaderTheme(): homepage → "light", всё остальное → "dark" (раньше было default "light", что ломало 404)
+- Добавил 3 редиректа в next.config.ts: /press-center/news|articles|insights → /press-center
+- Lint чист, Agent Browser — все 6 проверок пройдены
+
+Stage Summary:
+- Удалено 3 директории (3 page.tsx ~1 300 строк)
+- Hero [slug] страницы: тёмный фон + белый текст + mint акценты (вместо светлого фона + тёмный текст)
+- 404 страница: тёмный header (вместо светлого)
+- Homepage: остаётся light header ✅
+- Все ссылки на подстраницы пресс-центра обновлены → /press-center

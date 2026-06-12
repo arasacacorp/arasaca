@@ -79,33 +79,31 @@ export default function PublicationDetailClient({
 }) {
   const { title, type, date, description, author, readTime, image, content, slug } = publication;
   const sectionHref = typeHrefs[type];
-  const sectionLabel = typeLabels[type];
 
   return (
     <main className="min-h-screen bg-white flex flex-col">
       {/* ── Hero / Breadcrumbs ── */}
-      <section className="relative pt-16 lg:pt-[120px] pb-10 bg-gradient-to-b from-[#f1f2f4] to-white">
+      <section
+        className="relative pt-16 lg:pt-[120px] pb-10"
+        style={{ background: `linear-gradient(to bottom, ${C.dark}, #004a59)` }}
+      >
         <div className="container-kept pt-6 md:pt-10 lg:pt-12">
           {/* Breadcrumbs */}
           <motion.nav
-            className="flex items-center gap-2 text-sm text-gray-500 mb-8 flex-wrap"
+            className="flex items-center gap-2 text-sm mb-8 flex-wrap"
             variants={fadeIn}
             initial="hidden"
             animate="visible"
           >
-            <Link href="/" className="hover:underline" style={{ color: C.textMid }}>
+            <Link href="/" className="hover:underline" style={{ color: "rgba(255,255,255,0.5)" }}>
               Главная
             </Link>
-            <ChevronRight className="w-4 h-4 shrink-0" />
-            <Link href="/press-center" className="hover:underline" style={{ color: C.textMid }}>
+            <ChevronRight className="w-4 h-4 shrink-0" style={{ color: "rgba(255,255,255,0.3)" }} />
+            <Link href="/press-center" className="hover:underline" style={{ color: "rgba(255,255,255,0.5)" }}>
               Пресс-центр
             </Link>
-            <ChevronRight className="w-4 h-4 shrink-0" />
-            <Link href={sectionHref} className="hover:underline" style={{ color: C.textMid }}>
-              {sectionLabel}
-            </Link>
-            <ChevronRight className="w-4 h-4 shrink-0" />
-            <span className="truncate max-w-[200px] sm:max-w-none" style={{ color: C.dna }}>
+            <ChevronRight className="w-4 h-4 shrink-0" style={{ color: "rgba(255,255,255,0.3)" }} />
+            <span className="truncate max-w-[200px] sm:max-w-none" style={{ color: C.mint }}>
               {title}
             </span>
           </motion.nav>
@@ -117,11 +115,11 @@ export default function PublicationDetailClient({
             animate="visible"
             custom={0}
             className="flex items-center gap-3 mb-4 text-sm flex-wrap"
-            style={{ color: C.textMuted }}
+            style={{ color: "rgba(255,255,255,0.5)" }}
           >
             <TypeBadge type={type} />
             <span className="flex items-center gap-1.5">
-              <Calendar className="w-4 h-4" style={{ color: C.dna }} />
+              <Calendar className="w-4 h-4" style={{ color: C.mint }} />
               {date}
             </span>
           </motion.div>
@@ -133,7 +131,7 @@ export default function PublicationDetailClient({
             animate="visible"
             custom={1}
             className="text-3xl lg:text-[2.5rem] font-bold leading-tight mb-4 max-w-4xl"
-            style={{ color: C.dna }}
+            style={{ color: C.white }}
           >
             {title}
           </motion.h1>
@@ -145,7 +143,7 @@ export default function PublicationDetailClient({
             animate="visible"
             custom={2}
             className="text-lg leading-relaxed max-w-3xl"
-            style={{ color: C.textMid }}
+            style={{ color: "rgba(255,255,255,0.7)" }}
           >
             {description}
           </motion.p>
@@ -158,17 +156,17 @@ export default function PublicationDetailClient({
               animate="visible"
               custom={3}
               className="flex items-center gap-4 mt-6 text-sm flex-wrap"
-              style={{ color: C.textMuted }}
+              style={{ color: "rgba(255,255,255,0.5)" }}
             >
               {author && (
                 <span className="flex items-center gap-2">
-                  <User className="w-4 h-4" style={{ color: C.dna }} />
+                  <User className="w-4 h-4" style={{ color: C.mint }} />
                   {author}
                 </span>
               )}
               {readTime && (
                 <span className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" style={{ color: C.dna }} />
+                  <Clock className="w-4 h-4" style={{ color: C.mint }} />
                   {readTime}
                 </span>
               )}
@@ -267,7 +265,7 @@ export default function PublicationDetailClient({
               style={{ color: C.dna }}
             >
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-              Вернуться к разделу &laquo;{sectionLabel}&raquo;
+              Вернуться в Пресс-центр
             </Link>
           </div>
         </div>

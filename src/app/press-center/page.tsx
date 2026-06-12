@@ -81,30 +81,6 @@ const tagline = "Актуальное о компании и отрасли.";
 
 const channels = [
   {
-    title: "Новости компании",
-    description: "Официальные пресс-релизы, события, достижения и инициативы Арасака",
-    href: "/press-center/news",
-    icon: Megaphone,
-    accent: C.dna,
-    count: "12+",
-  },
-  {
-    title: "Статьи и экспертиза",
-    description: "Экспертные публикации наших консультантов в деловых изданиях",
-    href: "/press-center/articles",
-    icon: BookOpen,
-    accent: C.orange,
-    count: "20+",
-  },
-  {
-    title: "Инсайты и аналитика",
-    description: "Исследования рынков, отраслевые обзоры и аналитические материалы",
-    href: "/press-center/insights",
-    icon: TrendingUp,
-    accent: C.mintDark,
-    count: "15+",
-  },
-  {
     title: "Все публикации",
     description: "Пресс-центр — единая лента новостей, статей и аналитики",
     href: "/press-center",
