@@ -19,28 +19,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-/* ═══════════════════════════════════════════════════════
-   COLOUR PALETTE
-   ═══════════════════════════════════════════════════════ */
-const C = {
-  dna: "#008C95",
-  dnaHover: "#007a82",
-  dark: "#00313C",
-  darkLighter: "#004452",
-  mint: "#77e2c3",
-  mintDark: "#4dc9a5",
-  orange: "#E04E39",
-  orangeHover: "#c94330",
-  light: "#e8f5f3",
-  muted: "#f1f2f4",
-  white: "#ffffff",
-  textDark: "#1a1a1a",
-  textMid: "#494a4a",
-  textMuted: "#6b7280",
-  border: "#e5e7eb",
-  borderLight: "#f0f0f0",
-};
+import { C } from "@/lib/colors";
 
 /* ─── Animation variants ─── */
 const fadeUp = {

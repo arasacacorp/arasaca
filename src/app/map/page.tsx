@@ -17,24 +17,7 @@ import {
   Factory,
   MapPin,
 } from "lucide-react";
-
-/* ═══════════════════════════════════════════════════════
-   COLOUR PALETTE
-   ═══════════════════════════════════════════════════════ */
-const C = {
-  dna: "#008C95",
-  dark: "#00313C",
-  mint: "#77e2c3",
-  mintDark: "#4dc9a5",
-  orange: "#E04E39",
-  muted: "#f1f2f4",
-  white: "#ffffff",
-  textDark: "#1a1a1a",
-  textMid: "#494a4a",
-  textMuted: "#6b7280",
-  border: "#e5e7eb",
-  borderLight: "#f0f0f0",
-};
+import { C } from "@/lib/colors";
 
 const vp = { once: true, amount: 0.1 as const };
 

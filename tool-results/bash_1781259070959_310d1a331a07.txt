@@ -1,0 +1,893 @@
+================================================================================
+CONSOLIDATED C COLOR CONSTANTS ANALYSIS
+Total files analyzed: 43
+Total unique property names: 19
+================================================================================
+
+================================================================================
+SECTION 1: ALL UNIQUE PROPERTY NAMES (sorted by usage frequency)
+================================================================================
+  border                used in 43/43 files (100.0%)  [STANDARD]
+  dark                  used in 43/43 files (100.0%)  [STANDARD]
+  dna                   used in 43/43 files (100.0%)  [STANDARD]
+  mint                  used in 43/43 files (100.0%)  [STANDARD]
+  orange                used in 43/43 files (100.0%)  [STANDARD]
+  textDark              used in 43/43 files (100.0%)  [STANDARD]
+  textMuted             used in 43/43 files (100.0%)  [STANDARD]
+  white                 used in 43/43 files (100.0%)  [STANDARD]
+  borderLight           used in 42/43 files ( 97.7%)  [STANDARD]
+  mintDark              used in 42/43 files ( 97.7%)  [STANDARD]
+  muted                 used in 42/43 files ( 97.7%)  [STANDARD]
+  textMid               used in 42/43 files ( 97.7%)  [STANDARD]
+  darkLighter           used in 41/43 files ( 95.3%)  [STANDARD]
+  dnaHover              used in 41/43 files ( 95.3%)  [STANDARD]
+  light                 used in 41/43 files ( 95.3%)  [STANDARD]
+  orangeHover           used in 41/43 files ( 95.3%)  [STANDARD]
+  orangeLight           used in  2/43 files (  4.7%)  [SPECIAL]
+  orangeDark            used in  1/43 files (  2.3%)  [SPECIAL]
+  orangeMuted           used in  1/43 files (  2.3%)  [SPECIAL]
+
+================================================================================
+SECTION 2: PROPERTY → VALUES → FILES MAPPING
+================================================================================
+
+--- border [STANDARD] (used in 43/43 files) ---
+  Value: #e5e7eb
+    Used in 43 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/feedback/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- borderLight [STANDARD] (used in 42/43 files) ---
+  Value: #f0f0f0
+    Used in 42 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/feedback/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- dark [STANDARD] (used in 43/43 files) ---
+  Value: #00313C
+    Used in 43 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/feedback/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- darkLighter [STANDARD] (used in 41/43 files) ---
+  Value: #004452
+    Used in 41 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- dna [STANDARD] (used in 43/43 files) ---
+  Value: #008C95
+    Used in 43 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/feedback/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- dnaHover [STANDARD] (used in 41/43 files) ---
+  Value: #007a82
+    Used in 41 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- light [STANDARD] (used in 41/43 files) ---
+  Value: #e8f5f3
+    Used in 41 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- mint [STANDARD] (used in 43/43 files) ---
+  Value: #77e2c3
+    Used in 43 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/feedback/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- mintDark [STANDARD] (used in 42/43 files) ---
+  Value: #4dc9a5
+    Used in 42 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- muted [STANDARD] (used in 42/43 files) ---
+  Value: #f1f2f4
+    Used in 42 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- orange [STANDARD] (used in 43/43 files) ---
+  Value: #E04E39
+    Used in 43 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/feedback/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- orangeDark [SPECIAL] (used in 1/43 files) ---
+  Value: #b83d2e
+    Used in 1 file(s):
+      - app/industries/page.tsx
+
+--- orangeHover [STANDARD] (used in 41/43 files) ---
+  Value: #c94330
+    Used in 41 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- orangeLight [SPECIAL] (used in 2/43 files) ---
+  Value: #FDEAE6
+    Used in 1 file(s):
+      - app/solutions/page.tsx
+  Value: #f06a58
+    Used in 1 file(s):
+      - app/industries/page.tsx
+
+--- orangeMuted [SPECIAL] (used in 1/43 files) ---
+  Value: #FFF5F3
+    Used in 1 file(s):
+      - app/solutions/page.tsx
+
+--- textDark [STANDARD] (used in 43/43 files) ---
+  Value: #1a1a1a
+    Used in 43 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/feedback/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- textMid [STANDARD] (used in 42/43 files) ---
+  Value: #494a4a
+    Used in 42 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/feedback/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- textMuted [STANDARD] (used in 43/43 files) ---
+  Value: #6b7280
+    Used in 43 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/feedback/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+--- white [STANDARD] (used in 43/43 files) ---
+  Value: #ffffff
+    Used in 43 file(s):
+      - app/about/page.tsx
+      - app/career/page.tsx
+      - app/career/vacancies/page.tsx
+      - app/cases/[slug]/page.tsx
+      - app/cases/page.tsx
+      - app/contacts/page.tsx
+      - app/customers/page.tsx
+      - app/feedback/page.tsx
+      - app/industries/[slug]/page.tsx
+      - app/industries/page.tsx
+      - app/map/page.tsx
+      - app/not-found.tsx
+      - app/page.tsx
+      - app/press-center/page.tsx
+      - app/pro-bono/page.tsx
+      - app/services/analytics/[slug]/page.tsx
+      - app/services/analytics/page.tsx
+      - app/services/communications/[slug]/page.tsx
+      - app/services/communications/page.tsx
+      - app/services/consulting/[slug]/page.tsx
+      - app/services/consulting/page.tsx
+      - app/services/data-analytics/page.tsx
+      - app/services/economic-research/page.tsx
+      - app/services/engineering/[slug]/page.tsx
+      - app/services/engineering/page.tsx
+      - app/services/hr/[slug]/page.tsx
+      - app/services/hr/page.tsx
+      - app/services/learning/[slug]/page.tsx
+      - app/services/learning/page.tsx
+      - app/services/market-research/page.tsx
+      - app/services/page.tsx
+      - app/services/research/page.tsx
+      - app/services/startups/[slug]/page.tsx
+      - app/services/startups/page.tsx
+      - app/services/technologies/[slug]/page.tsx
+      - app/services/technologies/page.tsx
+      - app/services/territorial-development/[slug]/page.tsx
+      - app/services/territorial-development/page.tsx
+      - app/services/urban/infrastructure/page.tsx
+      - app/services/urban/master-planning/page.tsx
+      - app/services/urban/page.tsx
+      - app/services/urban/territory-economics/page.tsx
+      - app/solutions/page.tsx
+
+================================================================================
+SECTION 3: STANDARD vs SPECIAL CLASSIFICATION
+================================================================================
+
+STANDARD properties (used in ≥80% of files): 16
+  border                (43/43 = 100.0%)
+  dark                  (43/43 = 100.0%)
+  dna                   (43/43 = 100.0%)
+  mint                  (43/43 = 100.0%)
+  orange                (43/43 = 100.0%)
+  textDark              (43/43 = 100.0%)
+  textMuted             (43/43 = 100.0%)
+  white                 (43/43 = 100.0%)
+  borderLight           (42/43 = 97.7%)
+  mintDark              (42/43 = 97.7%)
+  muted                 (42/43 = 97.7%)
+  textMid               (42/43 = 97.7%)
+  darkLighter           (41/43 = 95.3%)
+  dnaHover              (41/43 = 95.3%)
+  light                 (41/43 = 95.3%)
+  orangeHover           (41/43 = 95.3%)
+
+COMMON properties (used in 50-79% of files): 0
+
+SPECIAL properties (used in <50% of files): 3
+  orangeLight           (2/43 = 4.7%)
+  orangeDark            (1/43 = 2.3%)
+  orangeMuted           (1/43 = 2.3%)
+
+================================================================================
+SECTION 4: FILES WITH NON-STANDARD C OBJECTS
+================================================================================
+
+  app/feedback/page.tsx
+    MISSING standard props: darkLighter, dnaHover, light, mintDark, muted, orangeHover
+
+  app/industries/page.tsx
+    EXTRA special props: orangeDark, orangeLight
+
+  app/map/page.tsx
+    MISSING standard props: darkLighter, dnaHover, light, orangeHover
+
+  app/not-found.tsx
+    MISSING standard props: borderLight, textMid
+
+  app/solutions/page.tsx
+    EXTRA special props: orangeLight, orangeMuted
+
+================================================================================
+SECTION 5: VALUE VARIANCE ANALYSIS
+================================================================================
+
+Properties where ALL files that use it share the SAME value (zero variance):
+  border               = #e5e7eb
+  borderLight          = #f0f0f0
+  dark                 = #00313C
+  darkLighter          = #004452
+  dna                  = #008C95
+  dnaHover             = #007a82
+  light                = #e8f5f3
+  mint                 = #77e2c3
+  mintDark             = #4dc9a5
+  muted                = #f1f2f4
+  orange               = #E04E39
+  orangeDark           = #b83d2e
+  orangeHover          = #c94330
+  orangeMuted          = #FFF5F3
+  textDark             = #1a1a1a
+  textMid              = #494a4a
+  textMuted            = #6b7280
+  white                = #ffffff
+
+Properties with MULTIPLE distinct values (variance detected):
+  orangeLight:
+    #FDEAE6  (1 files)
+    #f06a58  (1 files)
+
+================================================================================
+SECTION 6: PROPOSED DESIGN TOKEN BASE (canonical C object)
+================================================================================
+
+  const C = {
+    border: '#e5e7eb',  // STANDARD - 43/43 files
+    dark: '#00313C',  // STANDARD - 43/43 files
+    dna: '#008C95',  // STANDARD - 43/43 files
+    mint: '#77e2c3',  // STANDARD - 43/43 files
+    orange: '#E04E39',  // STANDARD - 43/43 files
+    textDark: '#1a1a1a',  // STANDARD - 43/43 files
+    textMuted: '#6b7280',  // STANDARD - 43/43 files
+    white: '#ffffff',  // STANDARD - 43/43 files
+    borderLight: '#f0f0f0',  // STANDARD - 42/43 files
+    mintDark: '#4dc9a5',  // STANDARD - 42/43 files
+    muted: '#f1f2f4',  // STANDARD - 42/43 files
+    textMid: '#494a4a',  // STANDARD - 42/43 files
+    darkLighter: '#004452',  // STANDARD - 41/43 files
+    dnaHover: '#007a82',  // STANDARD - 41/43 files
+    light: '#e8f5f3',  // STANDARD - 41/43 files
+    orangeHover: '#c94330',  // STANDARD - 41/43 files
+    orangeLight: '#f06a58',  // SPECIAL - 2/43 files
+    orangeDark: '#b83d2e',  // SPECIAL - 1/43 files
+    orangeMuted: '#FFF5F3',  // SPECIAL - 1/43 files
+  }

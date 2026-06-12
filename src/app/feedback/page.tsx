@@ -11,22 +11,7 @@ import {
   Send,
   CheckCircle2,
 } from "lucide-react";
-
-/* ═══════════════════════════════════════════════════════
-   COLOUR PALETTE (same as Contacts page)
-   ═══════════════════════════════════════════════════════ */
-const C = {
-  dna: "#008C95",
-  dark: "#00313C",
-  mint: "#77e2c3",
-  orange: "#E04E39",
-  white: "#ffffff",
-  textDark: "#1a1a1a",
-  textMid: "#494a4a",
-  textMuted: "#6b7280",
-  border: "#e5e7eb",
-  borderLight: "#f0f0f0",
-};
+import { C } from "@/lib/colors";
 
 /* ─── Same inquiry types as Contacts page ─── */
 const inquiryTypes = [
