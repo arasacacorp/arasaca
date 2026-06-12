@@ -84,7 +84,7 @@ export default function PublicationDetailClient({
   return (
     <main className="min-h-screen bg-white flex flex-col">
       {/* ── Hero / Breadcrumbs ── */}
-      <section className="relative pt-16 lg:pt-[120px] pb-10 bg-gradient-to-b from-[#e8f5f3] to-white">
+      <section className="relative pt-16 lg:pt-[120px] pb-10 bg-gradient-to-b from-[#f1f2f4] to-white">
         <div className="container-kept pt-6 md:pt-10 lg:pt-12">
           {/* Breadcrumbs */}
           <motion.nav

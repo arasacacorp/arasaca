@@ -78,7 +78,7 @@ export default function InsightsPage() {
       {/* ── Hero Section ── */}
       <section
         className="relative pt-16 lg:pt-[120px] pb-16"
-        style={{ background: `linear-gradient(to bottom, ${C.light}, #ffffff)` }}
+        style={{ background: `linear-gradient(to bottom, ${C.muted}, #ffffff)` }}
       >
         <div className="container-kept pt-6 md:pt-10 lg:pt-12">
           {/* Breadcrumbs */}

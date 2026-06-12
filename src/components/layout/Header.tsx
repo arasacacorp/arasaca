@@ -219,7 +219,8 @@ export function Header() {
     if (path === "/services" || path.startsWith("/services/")) return "dark"
     if (path === "/industries" || path.startsWith("/industries/")) return "dark"
     if (path === "/career" || path.startsWith("/career/")) return "dark"
-    if (path === "/solutions" && !path.includes("/master-planning")) return "dark"
+    if (path === "/solutions" || path.startsWith("/solutions/")) return "dark"
+    if (path === "/map") return "dark"
     if (path === "/lab") return "dark"
     if (path === "/pro-bono") return "dark"
     if (path === "/sitemap") return "dark"
@@ -228,10 +229,7 @@ export function Header() {
     if (path === "/terms") return "dark"
     // Teal (#008C95) hero pages
     if (/^\/cases\/[^/]+$/.test(path)) return "teal"
-    // Light mint (#e8f5f3) hero pages
-    if (path.startsWith("/press-center")) return "mint"
-    if (path === "/solutions/master-planning") return "mint"
-    // Default: light gray (#f1f2f4)
+    // Default: light gray (#f1f2f4) — press-center, about, cases listing, contacts, customers, homepage
     return "light"
   }
 

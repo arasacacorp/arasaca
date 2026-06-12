@@ -1,0 +1,776 @@
+     1→"use client";
+     2→
+     3→import { motion } from "framer-motion";
+     4→import Link from "next/link";
+     5→import {
+     6→  ChevronRight,
+     7→  ArrowRight,
+     8→  Map,
+     9→  Layers,
+    10→  Wallet,
+    11→  BarChart3,
+    12→  Database,
+    13→  Users,
+    14→  BookOpen,
+    15→  Shield,
+    16→  Building2,
+    17→  Target,
+    18→  Cpu,
+    19→  ExternalLink,
+    20→} from "lucide-react";
+    21→import { C } from "@/lib/colors";
+    22→
+    23→/* ─── Animation variants ─── */
+    24→const fadeUp = {
+    25→  hidden: { opacity: 0, y: 32 },
+    26→  visible: (i: number = 0) => ({
+    27→    opacity: 1,
+    28→    y: 0,
+    29→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    30→  }),
+    31→};
+    32→
+    33→const fadeIn = {
+    34→  hidden: { opacity: 0 },
+    35→  visible: (i: number = 0) => ({
+    36→    opacity: 1,
+    37→    transition: { duration: 0.8, delay: i * 0.12 },
+    38→  }),
+    39→};
+    40→
+    41→const scaleIn = {
+    42→  hidden: { opacity: 0, scale: 0.92 },
+    43→  visible: (i: number = 0) => ({
+    44→    opacity: 1,
+    45→    scale: 1,
+    46→    transition: { duration: 0.6, delay: i * 0.08, ease: [0.22, 0.61, 0.36, 1] },
+    47→  }),
+    48→};
+    49→
+    50→const vp = { once: true, amount: 0.15 as const };
+    51→
+    52→/* ─── Section label component ─── */
+    53→function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+    54→  return (
+    55→    <motion.span
+    56→      className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+    57→      style={{ color: light ? C.mint : C.dna }}
+    58→      variants={fadeIn}
+    59→      initial="hidden"
+    60→      whileInView="visible"
+    61→      viewport={vp}
+    62→    >
+    63→      {children}
+    64→    </motion.span>
+    65→  );
+    66→}
+    67→
+    68→/* ═══════════════════════════════════════════════════════
+    69→   DATA
+    70→   ═══════════════════════════════════════════════════════ */
+    71→
+    72→const productName = "Цифровая платформа мастер-планирования";
+    73→const productTagline =
+    74→  "Управление инвестиционными программами развития территорий и инфраструктурных проектов";
+    75→
+    76→const features = [
+    77→  {
+    78→    icon: Map,
+    79→    title: "Цифровое мастер-планирование",
+    80→    description:
+    81→      "Единая цифровая модель территории: функциональное зонирование, параметры застройки, очередность освоения.",
+    82→  },
+    83→  {
+    84→    icon: Layers,
+    85→    title: "Управление портфелем проектов",
+    86→    description:
+    87→      "Ведение портфеля инвестиционных проектов, привязанных к локациям мастер-плана.",
+    88→  },
+    89→  {
+    90→    icon: Wallet,
+    91→    title: "Управление финансированием",
+    92→    description:
+    93→      "Планирование и контроль освоения средств по источникам (бюджеты, внебюджет, ГЧП) в привязке к объектам инфраструктуры.",
+    94→  },
+    95→  {
+    96→    icon: Database,
+    97→    title: "Интеграция с госсистемами",
+    98→    description:
+    99→      "Обмен данными с ГИСОГД, ЕГРН и системами казначейства для актуального статуса участков и финансирования.",
+   100→  },
+   101→  {
+   102→    icon: BarChart3,
+   103→    title: "Мониторинг KPI развития",
+   104→    description:
+   105→      "Отслеживание показателей реализации мастер-плана: ввод недвижимости, соцобъекты, рабочие места, освоение инвестиций.",
+   106→  },
+   107→  {
+   108→    icon: Users,
+   109→    title: "Единая среда взаимодействия",
+   110→    description:
+   111→      "Централизованная среда планирования для органов власти, застройщиков, сетевых организаций и проектных институтов.",
+   112→  },
+   113→  {
+   114→    icon: BookOpen,
+   115→    title: "Библиотека типовых решений",
+   116→    description:
+   117→      "Накопление лучших практик, типовых мастер-планов и шаблонов проектной документации.",
+   118→  },
+   119→  {
+   120→    icon: Shield,
+   121→    title: "Управление рисками",
+   122→    description:
+   123→      "Мониторинг рисков территориального развития: градостроительные ограничения, нехватка мощностей, срывы сроков подключения к сетям.",
+   124→  },
+   125→];
+   126→
+   127→const advantages = [
+   128→  {
+   129→    title: "Методология + софт",
+   130→    text: "Платформа поставляется с предустановленной методологией Агентства «ЦЕНТР», апробированной в 60+ регионах РФ — не «пустой» инструментарий.",
+   131→  },
+   132→  {
+   133→    title: "Master-to-Money",
+   134→    text: "Прямой переход от архитектурного образа территории к финансовой модели инвестиционной программы в режиме реального времени.",
+   135→  },
+   136→  {
+   137→    title: "Адаптация под ГЧП и КРТ",
+   138→    text: "Специализированные алгоритмы расчёта мультипликативных эффектов и распределения нагрузки на инфраструктуру между государством и частным инвестором.",
+   139→  },
+   140→  {
+   141→    title: "Технологический суверенитет",
+   142→    text: "Разработка на базе Open Source (PostgreSQL/PostGIS, Python), включение в Реестр отечественного ПО, независимость от зарубежных вендоров.",
+   143→  },
+   144→];
+   145→
+   146→const effects = [
+   147→  { value: "30–40%", label: "сокращение сроков разработки и согласования мастер-планов" },
+   148→  { value: "25%", label: "повышение точности прогнозирования бюджетных расходов" },
+   149→  { value: "50%", label: "снижение рисков замораживания проектов из‑за нехватки мощностей сетей" },
+   150→];
+   151→
+   152→const forWhom = [
+   153→  {
+   154→    title: "Государственный сектор",
+   155→    items: ["Федеральные и региональные министерства", "Администрации субъектов РФ", "Профильные департаменты"],
+   156→  },
+   157→  {
+   158→    title: "Институты развития",
+   159→    items: ["ВЭБ.РФ", "ДОМ.РФ", "Корпорации развития регионов"],
+   160→  },
+   161→  {
+   162→    title: "Крупный бизнес",
+   163→    items: ["Девелоперы полного цикла", "Промышленные холдинги", "Проекты КРТ от 50 га"],
+   164→  },
+   165→  {
+   166→    title: "Проектные институты",
+   167→    items: ["Организации урбанистики и градостроительства", "Архитектурно-планировочные бюро"],
+   168→  },
+   169→];
+   170→
+   171→const centerAgencyCases = [
+   172→  "Мастер-план Дербента (Республика Дагестан)",
+   173→  "Мастер-план Якутска (Республика Саха)",
+   174→  "Мастер-план Норильска (Красноярский край)",
+   175→  "Мастер-план Астраханской агломерации",
+   176→  "Более 60 регионов России",
+   177→];
+   178→
+   179→/* ═══════════════════════════════════════════════════════
+   180→   SECTION 1 — HERO
+   181→   ═══════════════════════════════════════════════════════ */
+   182→function HeroSection() {
+   183→  return (
+   184→    <section className="relative overflow-hidden pt-16 lg:pt-[120px]" style={{ background: C.dark }}>
+   185→      {/* Decorative diagonal lines */}
+   186→      <div
+   187→        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   188→        style={{
+   189→          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   190→        }}
+   191→      />
+   192→      {/* Decorative glow orbs */}
+   193→      <div
+   194→        className="pointer-events-none absolute -right-40 -top-20 h-[500px] w-[500px] rounded-full blur-[180px]"
+   195→        style={{ background: "rgba(0,140,149,0.15)" }}
+   196→      />
+   197→      <div
+   198→        className="pointer-events-none absolute -left-20 bottom-0 h-[300px] w-[300px] rounded-full blur-[120px]"
+   199→        style={{ background: "rgba(119,226,195,0.08)" }}
+   200→      />
+   201→
+   202→      <div className="container-kept relative z-10">
+   203→        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between py-6 md:py-10 lg:py-12">
+   204→          {/* LEFT: Label + heading + text + buttons */}
+   205→          <motion.div
+   206→            className="flex-1"
+   207→            variants={fadeUp}
+   208→            initial="hidden"
+   209→            animate="visible"
+   210→            custom={0.1}
+   211→          >
+   212→            {/* Breadcrumb */}
+   213→            <motion.nav
+   214→              className="flex items-center gap-2 mb-6"
+   215→              initial={{ opacity: 0 }}
+   216→              animate={{ opacity: 1 }}
+   217→              transition={{ duration: 0.5, delay: 0.1 }}
+   218→            >
+   219→              <Link href="/" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+   220→                Главная
+   221→              </Link>
+   222→              <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   223→              <Link href="/solutions" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+   224→                Решения
+   225→              </Link>
+   226→              <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   227→              <span className="text-[12px] font-medium" style={{ color: C.mint }}>Мастер-планирование</span>
+   228→            </motion.nav>
+   229→
+   230→            {/* Label badge — совместный продукт */}
+   231→            <span
+   232→              className="mb-4 inline-flex items-center gap-2 border px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.3em]"
+   233→              style={{ borderColor: "rgba(119,226,195,0.4)", color: C.mint }}
+   234→            >
+   235→              <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: C.mint }} />
+   236→              Совместный продукт
+   237→            </span>
+   238→
+   239→            {/* Partnership badge */}
+   240→            <motion.span
+   241→              className="ml-3 inline-flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-medium"
+   242→              style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)" }}
+   243→              initial={{ opacity: 0 }}
+   244→              animate={{ opacity: 1 }}
+   245→              transition={{ duration: 0.5, delay: 0.25 }}
+   246→            >
+   247→              Совместно с Агентством «ЦЕНТР»
+   248→            </motion.span>
+   249→
+   250→            {/* Main heading */}
+   251→            <motion.h1
+   252→              className="mb-4 max-w-xl"
+   253→              style={{
+   254→                fontFamily: "var(--font-russo)",
+   255→                fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   256→                fontWeight: 700,
+   257→                lineHeight: 1.25,
+   258→                letterSpacing: "-0.01em",
+   259→                color: C.white,
+   260→              }}
+   261→              initial={{ opacity: 0, y: 16 }}
+   262→              animate={{ opacity: 1, y: 0 }}
+   263→              transition={{ duration: 0.6, delay: 0.15 }}
+   264→            >
+   265→              {productName}
+   266→            </motion.h1>
+   267→
+   268→            {/* Tagline */}
+   269→            <motion.p
+   270→              className="mb-4 max-w-lg text-[15px] font-medium leading-relaxed"
+   271→              style={{ color: C.orange }}
+   272→              initial={{ opacity: 0, y: 12 }}
+   273→              animate={{ opacity: 1, y: 0 }}
+   274→              transition={{ duration: 0.6, delay: 0.25 }}
+   275→            >
+   276→              {productTagline}
+   277→            </motion.p>
+   278→
+   279→            {/* Description */}
+   280→            <motion.p
+   281→              className="mb-6 max-w-md text-[14px] font-light leading-relaxed"
+   282→              style={{ color: "rgba(255,255,255,0.55)" }}
+   283→              initial={{ opacity: 0, y: 12 }}
+   284→              animate={{ opacity: 1, y: 0 }}
+   285→              transition={{ duration: 0.6, delay: 0.35 }}
+   286→            >
+   287→              Платформа предназначена для автоматизации процессов стратегического и территориального мастер-планирования, а также управления инвестиционными программами, обеспечивающими реализацию утверждённых мастер-планов. Система ориентирована на крупные государственные корпорации, институты развития, региональные администрации и девелоперов.
+   288→            </motion.p>
+   289→
+   290→            {/* CTA buttons */}
+   291→            <motion.div
+   292→              className="flex flex-wrap items-center gap-3"
+   293→              initial={{ opacity: 0, y: 12 }}
+   294→              animate={{ opacity: 1, y: 0 }}
+   295→              transition={{ duration: 0.6, delay: 0.45 }}
+   296→            >
+   297→              <Link href="/contacts">
+   298→                <motion.span
+   299→                  className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white"
+   300→                  style={{ background: C.orange, borderRadius: "4px" }}
+   301→                  whileHover={{ background: C.orangeHover, transition: { duration: 0.3 } }}
+   302→                >
+   303→                  Запросить демонстрацию
+   304→                  <ArrowRight className="h-4 w-4" />
+   305→                </motion.span>
+   306→              </Link>
+   307→              <a href="https://www.centeragency.org/" target="_blank" rel="noopener noreferrer">
+   308→                <motion.span
+   309→                  className="inline-flex items-center gap-2 border px-7 py-3 text-sm font-medium uppercase tracking-[0.05em]"
+   310→                  style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)", borderRadius: "4px" }}
+   311→                  whileHover={{
+   312→                    borderColor: C.mint,
+   313→                    color: C.mint,
+   314→                    transition: { duration: 0.3 },
+   315→                  }}
+   316→                >
+   317→                  Сайт «ЦЕНТР»
+   318→                  <ExternalLink className="h-3.5 w-3.5" />
+   319→                </motion.span>
+   320→              </a>
+   321→            </motion.div>
+   322→          </motion.div>
+   323→
+   324→          {/* RIGHT: Effects stats — 3 glass cards */}
+   325→          <motion.div
+   326→            className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:w-[480px] lg:flex-shrink-0 lg:gap-4"
+   327→            variants={fadeUp}
+   328→            initial="hidden"
+   329→            animate="visible"
+   330→            custom={0.3}
+   331→          >
+   332→            {effects.map((effect, index) => (
+   333→              <motion.div
+   334→                key={effect.label}
+   335→                className="relative overflow-hidden rounded-lg p-5 md:p-6"
+   336→                style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }}
+   337→                variants={scaleIn}
+   338→                initial="hidden"
+   339→                animate="visible"
+   340→                custom={0.4 + index * 0.08}
+   341→              >
+   342→                {/* Top accent */}
+   343→                <div
+   344→                  className="absolute left-0 top-0 h-0.5 w-full"
+   345→                  style={{ background: `linear-gradient(90deg, ${C.orange}, ${C.orange}50)` }}
+   346→                />
+   347→                <div
+   348→                  className="text-2xl font-bold leading-none md:text-3xl"
+   349→                  style={{ fontFamily: "var(--font-russo)", color: C.orange }}
+   350→                >
+   351→                  {effect.value}
+   352→                </div>
+   353→                <div className="mt-1.5 text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.45)" }}>
+   354→                  {effect.label}
+   355→                </div>
+   356→              </motion.div>
+   357→            ))}
+   358→          </motion.div>
+   359→        </div>
+   360→      </div>
+   361→    </section>
+   362→  );
+   363→}
+   364→
+   365→/* ═══════════════════════════════════════════════════════
+   366→   SECTION 2 — КЛЮЧЕВЫЕ ВОЗМОЖНОСТИ
+   367→   ═══════════════════════════════════════════════════════ */
+   368→function FeaturesSection() {
+   369→  return (
+   370→    <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   371→      <div className="container-kept">
+   372→        <motion.div
+   373→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   374→          variants={fadeUp}
+   375→          initial="hidden"
+   376→          whileInView="visible"
+   377→          viewport={vp}
+   378→        >
+   379→          <div>
+   380→            <SectionLabel>Ключевые возможности</SectionLabel>
+   381→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   382→              Комплексное управление развитием территорий
+   383→            </h2>
+   384→          </div>
+   385→          <p className="text-section-desc max-w-xs lg:text-right">
+   386→            Внедрение позволяет перейти от разрозненного управления<br />инвестиционными проектами к целостному управлению
+   387→          </p>
+   388→        </motion.div>
+   389→
+   390→        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+   391→          {features.map((item, index) => (
+   392→            <motion.div
+   393→              key={item.title}
+   394→              className="flex"
+   395→              variants={fadeUp}
+   396→              initial="hidden"
+   397→              whileInView="visible"
+   398→              viewport={vp}
+   399→              custom={index * 0.06}
+   400→            >
+   401→              <div className="group relative flex w-full flex-col rounded-xl bg-white p-6 md:p-7 transition-all duration-300 hover:shadow-lg border border-transparent group-hover:border-gray-100">
+   402→                {/* Accent line on left */}
+   403→                <div
+   404→                  className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-xl"
+   405→                  style={{ background: C.dna }}
+   406→                />
+   407→                {/* Icon */}
+   408→                <div
+   409→                  className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg"
+   410→                  style={{ background: `${C.dna}10` }}
+   411→                >
+   412→                  <item.icon className="h-5 w-5" style={{ color: C.dna }} />
+   413→                </div>
+   414→                <h3 className="heading-subsection mb-2" style={{ color: C.textDark }}>
+   415→                  {item.title}
+   416→                </h3>
+   417→                <p className="text-[13px] leading-relaxed flex-1" style={{ color: C.textMuted }}>
+   418→                  {item.description}
+   419→                </p>
+   420→              </div>
+   421→            </motion.div>
+   422→          ))}
+   423→        </div>
+   424→      </div>
+   425→    </section>
+   426→  );
+   427→}
+   428→
+   429→/* ═══════════════════════════════════════════════════════
+   430→   SECTION 3 — ПРЕИМУЩЕСТВА ПЛАТФОРМЫ
+   431→   ═══════════════════════════════════════════════════════ */
+   432→function AdvantagesSection() {
+   433→  return (
+   434→    <section className="py-20 md:py-28 bg-white">
+   435→      <div className="container-kept">
+   436→        <motion.div
+   437→          className="mb-12"
+   438→          variants={fadeUp}
+   439→          initial="hidden"
+   440→          whileInView="visible"
+   441→          viewport={vp}
+   442→        >
+   443→          <SectionLabel>Преимущества платформы</SectionLabel>
+   444→          <h2 className="heading-section" style={{ color: C.textDark }}>
+   445→            Конкурентные преимущества решения
+   446→          </h2>
+   447→        </motion.div>
+   448→
+   449→        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-6">
+   450→          {advantages.map((item, index) => (
+   451→            <motion.div
+   452→              key={item.title}
+   453→              className="group relative flex w-full flex-col rounded-xl bg-white p-6 md:p-8 transition-all duration-300 hover:shadow-lg border border-gray-100"
+   454→              variants={fadeUp}
+   455→              initial="hidden"
+   456→              whileInView="visible"
+   457→              viewport={vp}
+   458→              custom={index * 0.08}
+   459→            >
+   460→              {/* Top accent line */}
+   461→              <div
+   462→                className="absolute left-0 top-0 h-0.5 w-full rounded-t-xl"
+   463→                style={{ background: `linear-gradient(90deg, ${C.dna}, ${C.dna}50)` }}
+   464→              />
+   465→              {/* Number */}
+   466→              <div
+   467→                className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold"
+   468→                style={{ background: `${C.dna}10`, color: C.dna }}
+   469→              >
+   470→                {String(index + 1).padStart(2, "0")}
+   471→              </div>
+   472→              <h3 className="heading-subsection mb-3" style={{ color: C.textDark }}>
+   473→                {item.title}
+   474→              </h3>
+   475→              <p className="text-[14px] leading-relaxed" style={{ color: C.textMuted }}>
+   476→                {item.text}
+   477→              </p>
+   478→            </motion.div>
+   479→          ))}
+   480→        </div>
+   481→      </div>
+   482→    </section>
+   483→  );
+   484→}
+   485→
+   486→/* ═══════════════════════════════════════════════════════
+   487→   SECTION 4 — ДЛЯ КОГО
+   488→   ═══════════════════════════════════════════════════════ */
+   489→function ForWhomSection() {
+   490→  return (
+   491→    <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   492→      <div className="container-kept">
+   493→        <motion.div
+   494→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   495→          variants={fadeUp}
+   496→          initial="hidden"
+   497→          whileInView="visible"
+   498→          viewport={vp}
+   499→        >
+   500→          <div>
+   501→            <SectionLabel>Для кого</SectionLabel>
+   502→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   503→              Целевые пользователи платформы
+   504→            </h2>
+   505→          </div>
+   506→          <p className="text-section-desc max-w-xs lg:text-right">
+   507→            Платформа применима в&nbsp;сфере государственного и&nbsp;муниципального управления,<br />градостроительства и&nbsp;девелопмента
+   508→          </p>
+   509→        </motion.div>
+   510→
+   511→        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+   512→          {forWhom.map((block, index) => (
+   513→            <motion.div
+   514→              key={block.title}
+   515→              className="group relative flex w-full flex-col rounded-xl bg-white p-6 md:p-7 transition-all duration-300 hover:shadow-lg border border-transparent group-hover:border-gray-100"
+   516→              variants={fadeUp}
+   517→              initial="hidden"
+   518→              whileInView="visible"
+   519→              viewport={vp}
+   520→              custom={index * 0.06}
+   521→            >
+   522→              {/* Accent line on left */}
+   523→              <div
+   524→                className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-xl"
+   525→                style={{ background: C.mintDark }}
+   526→              />
+   527→              <h3 className="heading-subsection mb-4" style={{ color: C.textDark }}>
+   528→                {block.title}
+   529→              </h3>
+   530→              <ul className="space-y-2.5 flex-1">
+   531→                {block.items.map((i) => (
+   532→                  <li key={i} className="text-[13px] leading-relaxed flex items-start gap-2" style={{ color: C.textMuted }}>
+   533→                    <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full" style={{ background: C.dna }} />
+   534→                    {i}
+   535→                  </li>
+   536→                ))}
+   537→              </ul>
+   538→            </motion.div>
+   539→          ))}
+   540→        </div>
+   541→      </div>
+   542→    </section>
+   543→  );
+   544→}
+   545→
+   546→/* ═══════════════════════════════════════════════════════
+   547→   SECTION 5 — ПАРТНЁР РАЗРАБОТКИ
+   548→   ═══════════════════════════════════════════════════════ */
+   549→function PartnerSection() {
+   550→  return (
+   551→    <section className="relative py-20 md:py-28 overflow-hidden" style={{ background: C.dark }}>
+   552→      {/* Decorative diagonal lines */}
+   553→      <div
+   554→        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   555→        style={{
+   556→          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   557→        }}
+   558→      />
+   559→      {/* Decorative glow */}
+   560→      <div
+   561→        className="pointer-events-none absolute -right-40 top-0 h-[400px] w-[400px] rounded-full blur-[160px]"
+   562→        style={{ background: "rgba(0,140,149,0.1)" }}
+   563→      />
+   564→
+   565→      <div className="container-kept relative z-10">
+   566→        <motion.div
+   567→          className="mb-12"
+   568→          variants={fadeUp}
+   569→          initial="hidden"
+   570→          whileInView="visible"
+   571→          viewport={vp}
+   572→        >
+   573→          <SectionLabel light>Партнёр разработки</SectionLabel>
+   574→          <h2 className="heading-section" style={{ color: C.white }}>
+   575→            Агентство стратегического развития «ЦЕНТР»
+   576→          </h2>
+   577→        </motion.div>
+   578→
+   579→        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+   580→          {/* LEFT: Partner info */}
+   581→          <motion.div
+   582→            variants={fadeUp}
+   583→            initial="hidden"
+   584→            whileInView="visible"
+   585→            viewport={vp}
+   586→            custom={0.1}
+   587→          >
+   588→            <div className="mb-6 flex items-center gap-3">
+   589→              <div
+   590→                className="flex h-12 w-12 items-center justify-center rounded-xl"
+   591→                style={{ background: `${C.mint}15` }}
+   592→              >
+   593→                <Building2 className="h-6 w-6" style={{ color: C.mint }} />
+   594→              </div>
+   595→            </div>
+   596→            <p className="mb-6 text-[14px] leading-relaxed" style={{ color: "rgba(255,255,255,0.8)" }}>
+   597→              Агентство стратегического развития <strong style={{ color: C.white }}>«ЦЕНТР»</strong> более 10 лет специализируется на комплексных исследованиях и разработке мастер-планов для различных регионов России — от Дербента и Астрахани до Якутска и Норильска. Авторская методология «ЦЕНТР» легла в основу алгоритмической логики платформы.
+   598→            </p>
+   599→            <p className="mb-8 text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+   600→              Методологические решения, интегрированные в платформу, прошли апробацию в рамках разработки стратегических документов развития более чем в 60 регионах России.
+   601→            </p>
+   602→            <a
+   603→              href="https://www.centeragency.org/"
+   604→              target="_blank"
+   605→              rel="noopener noreferrer"
+   606→              className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
+   607→              style={{ color: C.mint }}
+   608→            >
+   609→              Перейти на сайт Агентства «ЦЕНТР»
+   610→              <ArrowRight className="h-4 w-4" />
+   611→            </a>
+   612→          </motion.div>
+   613→
+   614→          {/* RIGHT: Cases */}
+   615→          <motion.div
+   616→            className="relative overflow-hidden rounded-xl p-6 lg:p-8"
+   617→            style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.08)" }}
+   618→            variants={fadeUp}
+   619→            initial="hidden"
+   620→            whileInView="visible"
+   621→            viewport={vp}
+   622→            custom={0.2}
+   623→          >
+   624→            {/* Top accent */}
+   625→            <div
+   626→              className="absolute left-0 top-0 h-0.5 w-full"
+   627→              style={{ background: `linear-gradient(90deg, ${C.mint}, ${C.mint}30)` }}
+   628→            />
+   629→            <h3 className="heading-subsection mb-5" style={{ color: C.white }}>
+   630→              Кейсы и опыт «ЦЕНТР»
+   631→            </h3>
+   632→            <ul className="space-y-4">
+   633→              {centerAgencyCases.map((c) => (
+   634→                <li key={c} className="flex items-start gap-3 text-[14px]" style={{ color: "rgba(255,255,255,0.75)" }}>
+   635→                  <Target className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: C.dna }} />
+   636→                  {c}
+   637→                </li>
+   638→              ))}
+   639→            </ul>
+   640→          </motion.div>
+   641→        </div>
+   642→      </div>
+   643→    </section>
+   644→  );
+   645→}
+   646→
+   647→/* ═══════════════════════════════════════════════════════
+   648→   SECTION 6 — ТЕХНОЛОГИЯ
+   649→   ═══════════════════════════════════════════════════════ */
+   650→function TechnologySection() {
+   651→  return (
+   652→    <section className="py-20 md:py-28 bg-white">
+   653→      <div className="container-kept">
+   654→        <motion.div
+   655→          className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   656→          variants={fadeUp}
+   657→          initial="hidden"
+   658→          whileInView="visible"
+   659→          viewport={vp}
+   660→        >
+   661→          <div>
+   662→            <SectionLabel>Технология</SectionLabel>
+   663→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   664→              Архитектура и технологический стек
+   665→            </h2>
+   666→          </div>
+   667→        </motion.div>
+   668→
+   669→        <motion.div
+   670→          className="flex flex-col md:flex-row md:items-start md:justify-between gap-10"
+   671→          variants={fadeUp}
+   672→          initial="hidden"
+   673→          whileInView="visible"
+   674→          viewport={vp}
+   675→          custom={0.1}
+   676→        >
+   677→          <div className="max-w-2xl">
+   678→            <div className="mb-5 flex items-center gap-3">
+   679→              <div
+   680→                className="flex h-10 w-10 items-center justify-center rounded-lg"
+   681→                style={{ background: `${C.dna}10` }}
+   682→              >
+   683→                <Cpu className="h-5 w-5" style={{ color: C.dna }} />
+   684→              </div>
+   685→            </div>
+   686→            <p className="text-[14px] leading-relaxed mb-4" style={{ color: C.textMid }}>
+   687→              Продукт реализуется как веб-приложение с доступом через браузер. Система управления жизненным циклом сложных инженерных объектов (PLM) в применении к территориальному развитию. Разработка на базе Open Source (PostgreSQL/PostGIS, Python), с возможностью включения в Реестр отечественного ПО.
+   688→            </p>
+   689→            <p className="text-[13px] leading-relaxed" style={{ color: C.textMuted }}>
+   690→              Интеграция ГИС и финансового моделирования в едином ядре; микросервисная архитектура; ролевой интерфейс для архитекторов (карты), экономистов и руководителей (бюджеты и KPI).
+   691→            </p>
+   692→          </div>
+   693→
+   694→          {/* Tech highlights */}
+   695→          <div className="flex flex-col gap-3 md:w-[340px] md:flex-shrink-0">
+   696→            {[
+   697→              { label: "PostgreSQL / PostGIS", desc: "Пространственные данные" },
+   698→              { label: "Python", desc: "Расчётные модули" },
+   699→              { label: "Микросервисы", desc: "Масштабируемая архитектура" },
+   700→              { label: "Реестр отечественного ПО", desc: "Технологический суверенитет" },
+   701→            ].map((tech, index) => (
+   702→              <motion.div
+   703→                key={tech.label}
+   704→                className="group relative overflow-hidden rounded-lg bg-white p-4 border border-gray-100 transition-all duration-300 hover:shadow-md"
+   705→                variants={scaleIn}
+   706→                initial="hidden"
+   707→                whileInView="visible"
+   708→                viewport={vp}
+   709→                custom={0.2 + index * 0.06}
+   710→              >
+   711→                <div className="pointer-events-none absolute left-0 top-0 h-full w-0.5" style={{ background: C.dna }} />
+   712→                <div className="text-[13px] font-semibold" style={{ color: C.textDark }}>{tech.label}</div>
+   713→                <div className="text-[11px] mt-0.5" style={{ color: C.textMuted }}>{tech.desc}</div>
+   714→              </motion.div>
+   715→            ))}
+   716→          </div>
+   717→        </motion.div>
+   718→      </div>
+   719→    </section>
+   720→  );
+   721→}
+   722→
+   723→/* ═══════════════════════════════════════════════════════
+   724→   SECTION 7 — CTA
+   725→   ═══════════════════════════════════════════════════════ */
+   726→function CtaSection() {
+   727→  return (
+   728→    <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   729→      <div className="container-kept">
+   730→        <motion.div
+   731→          className="text-center max-w-2xl mx-auto"
+   732→          variants={fadeUp}
+   733→          initial="hidden"
+   734→          whileInView="visible"
+   735→          viewport={vp}
+   736→        >
+   737→          <SectionLabel>Начните сотрудничество</SectionLabel>
+   738→          <h2 className="heading-section mb-4" style={{ color: C.textDark }}>
+   739→            Узнать больше о платформе
+   740→          </h2>
+   741→          <p className="text-section-desc mb-10">
+   742→            Готовы обсудить пилотное внедрение или интеграцию в ваши процессы? Свяжитесь с нами.
+   743→          </p>
+   744→          <Link href="/contacts">
+   745→            <motion.span
+   746→              className="inline-flex items-center gap-2 px-10 py-4 text-sm font-semibold uppercase tracking-[0.05em] text-white"
+   747→              style={{ background: C.orange, borderRadius: "4px" }}
+   748→              whileHover={{ background: C.orangeHover, transition: { duration: 0.3 } }}
+   749→            >
+   750→              Связаться с нами
+   751→              <ArrowRight className="h-5 w-5" />
+   752→            </motion.span>
+   753→          </Link>
+   754→        </motion.div>
+   755→      </div>
+   756→    </section>
+   757→  );
+   758→}
+   759→
+   760→/* ═══════════════════════════════════════════════════════
+   761→   PAGE
+   762→   ═══════════════════════════════════════════════════════ */
+   763→export default function SolutionMasterPlanningPage() {
+   764→  return (
+   765→    <main className="min-h-screen flex flex-col" style={{ background: C.white }}>
+   766→      <HeroSection />
+   767→      <FeaturesSection />
+   768→      <AdvantagesSection />
+   769→      <ForWhomSection />
+   770→      <PartnerSection />
+   771→      <TechnologySection />
+   772→      <CtaSection />
+   773→    </main>
+   774→  );
+   775→}
+   776→

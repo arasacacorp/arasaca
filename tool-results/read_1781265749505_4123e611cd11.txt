@@ -1,0 +1,1201 @@
+     1→"use client"
+     2→
+     3→import { useState, useEffect } from "react"
+     4→import Link from "next/link"
+     5→import { usePathname } from "next/navigation"
+     6→import { cn } from "@/lib/utils"
+     7→import { Button } from "@/components/ui/button"
+     8→import { Search, ChevronDown, X, ArrowRight, ChevronRight, Phone, Eye, Mail } from "lucide-react"
+     9→import { coreIndustries } from "@/data/industries"
+    10→
+    11→// Структура услуг с подуслугами
+    12→const servicesMenu = {
+    13→  name: "Услуги",
+    14→  href: "/services",
+    15→  inHeader: true,
+    16→  description: "Консалтинг, аналитика и исследования, технологии, инжиниринг, развитие территорий, HR, обучение, коммуникации и стартапы.",
+    17→  categories: [
+    18→    {
+    19→      name: "Консалтинг",
+    20→      href: "/services/consulting",
+    21→      services: [
+    22→        { name: "Стратегия и корпоративное управление", href: "/services/consulting/strategic-consulting" },
+    23→        { name: "Управление проектами и программами", href: "/services/consulting/project-management" },
+    24→        { name: "Инвестиционный консалтинг", href: "/services/consulting/investment-design" },
+    25→        { name: "Господдержка и сопровождение", href: "/services/consulting/government-support" },
+    26→      ],
+    27→    },
+    28→    {
+    29→      name: "Аналитика и исследования",
+    30→      href: "/services/analytics",
+    31→      services: [
+    32→        { name: "Рыночная аналитика и исследования", href: "/services/analytics/market-analytics" },
+    33→        { name: "Экономические исследования", href: "/services/analytics/economic-research" },
+    34→        { name: "Аналитика данных и моделирование", href: "/services/analytics/data-analytics" },
+    35→      ],
+    36→    },
+    37→    {
+    38→      name: "Технологии",
+    39→      href: "/services/technologies",
+    40→      highlight: true,
+    41→      services: [
+    42→        { name: "Цифровая трансформация и стратегия", href: "/services/technologies/digital-transformation" },
+    43→        { name: "ИТ-аудит и Due Diligence", href: "/services/technologies/it-audit" },
+    44→        { name: "Разработка и внедрение ИТ-решений", href: "/services/technologies/development" },
+    45→        { name: "Корпоративные инновации и R&D", href: "/services/technologies/innovation" },
+    46→        { name: "Промышленная автоматизация и IIoT", href: "/services/technologies/industrial-automation" },
+    47→        { name: "Облачные решения и инфраструктура", href: "/services/technologies/cloud" },
+    48→      ],
+    49→    },
+    50→    {
+    51→      name: "Инжиниринг",
+    52→      href: "/services/engineering",
+    53→      services: [
+    54→        { name: "Предпроектная проработка", href: "/services/engineering/pre-project" },
+    55→        { name: "Экспертиза капитальных проектов", href: "/services/engineering/expertise" },
+    56→        { name: "Управление строительными проектами", href: "/services/engineering/construction-management" },
+    57→      ],
+    58→    },
+    59→    {
+    60→      name: "Развитие территорий",
+    61→      href: "/services/territorial-development",
+    62→      services: [
+    63→        { name: "Пространственное и стратегическое планирование", href: "/services/territorial-development/spatial-strategic-planning" },
+    64→        { name: "Экономическое моделирование", href: "/services/territorial-development/economic-modeling" },
+    65→        { name: "Механизмы реализации", href: "/services/territorial-development/implementation-mechanisms" },
+    66→      ],
+    67→    },
+    68→    {
+    69→      name: "HR и организационное развитие",
+    70→      href: "/services/hr",
+    71→      services: [
+    72→        { name: "Управление человеческим капиталом", href: "/services/hr/human-capital-management" },
+    73→        { name: "Организационное развитие и трансформация", href: "/services/hr/organizational-development" },
+    74→        { name: "HR-аналитика и цифровизация", href: "/services/hr/hr-analytics" },
+    75→      ],
+    76→    },
+    77→    {
+    78→      name: "Обучение и развитие",
+    79→      href: "/services/learning",
+    80→      services: [
+    81→        { name: "Корпоративные программы развития", href: "/services/learning/corporate-development" },
+    82→        { name: "Lean & 5С и производственные практики", href: "/services/learning/lean-production" },
+    83→        { name: "Управление знаниями", href: "/services/learning/knowledge-management" },
+    84→        { name: "Корпоративная академия Арасаки", href: "/services/learning/arasaca-academy" },
+    85→      ],
+    86→    },
+    87→    {
+    88→      name: "Коммуникации и бренд",
+    89→      href: "/services/communications",
+    90→      services: [
+    91→        { name: "Бренд и позиционирование", href: "/services/communications/brand-positioning" },
+    92→        { name: "Коммуникационные стратегии", href: "/services/communications/communication-strategy" },
+    93→        { name: "Медийное присутствие и репутация", href: "/services/communications/media-reputation" },
+    94→        { name: "Корпоративная идентичность и культура", href: "/services/communications/corporate-culture" },
+    95→      ],
+    96→    },
+    97→    {
+    98→      name: "Стартапы и инновации",
+    99→      href: "/services/startups",
+   100→      services: [
+   101→        { name: "Развитие стартапов", href: "/services/startups/startup-development" },
+   102→        { name: "Инновации и R&D сопровождение", href: "/services/startups/innovation-rd" },
+   103→        { name: "Корпоративные инновации", href: "/services/startups/corporate-innovation" },
+   104→      ],
+   105→    },
+   106→  ],
+   107→}
+   108→
+   109→// Полная навигация — используется в бургер-меню
+   110→const navigation = [
+   111→  servicesMenu,
+   112→  {
+   113→    name: "Отрасли",
+   114→    href: "/industries",
+   115→    inHeader: true,
+   116→    description: "Ключевая экспертиза: атомная отрасль, строительство, градостроительство, ИТ, госсектор, машиностроение, судостроение и другие отрасли.",
+   117→    submenu: [
+   118→      ...coreIndustries.map((i) => ({ name: i.name, href: `/industries/${i.slug}` })),
+   119→      { name: "Все отрасли", href: "/industries" },
+   120→    ],
+   121→  },
+   122→  {
+   123→    name: "Пресс-центр",
+   124→    href: "/press-center",
+   125→    inHeader: true,
+   126→    description: "Новости, статьи экспертов и аналитические материалы о рынке и наших проектах.",
+   127→    submenu: [
+   128→      { name: "Новости компании", href: "/press-center/news" },
+   129→      { name: "Статьи", href: "/press-center/articles" },
+   130→      { name: "Инсайты и аналитика", href: "/press-center/insights" },
+   131→      { name: "Все материалы", href: "/press-center" },
+   132→    ],
+   133→  },
+   134→  {
+   135→    name: "Решения",
+   136→    href: "/solutions/master-planning",
+   137→    inHeader: true,
+   138→    description: "Продукты и платформенные решения для управления развитием территорий и инвестиционными программами.",
+   139→    submenu: [
+   140→      { name: "Платформа мастер-планирования", href: "/solutions/master-planning" },
+   141→    ],
+   142→  },
+   143→  {
+   144→    name: "Арасака Лаб",
+   145→    href: "/lab",
+   146→    inHeader: true,
+   147→    description: "Лаборатория цифровых решений. Разрабатываем IT-системы под индивидуальные запросы: CRM, автоматизации, интеграции, LMS, HR-системы.",
+   148→  },
+   149→  {
+   150→    name: "Компания",
+   151→    href: "/about",
+   152→    inHeader: true,
+   153→    description: "Арасака — консалтинговая компания. Повышаем эффективность бизнеса через управленческий консалтинг, цифровую трансформацию и инвестиционное консультирование.",
+   154→    submenu: [
+   155→      { name: "О нас", href: "/about" },
+   156→      { name: "Кейсы", href: "/cases" },
+   157→      { name: "Клиенты", href: "/customers" },
+   158→      { name: "Карьера", href: "/career" },
+   159→      { name: "Вакансии", href: "/career/vacancies" },
+   160→      { name: "Pro bono", href: "/pro-bono" },
+   161→      { name: "Обратная связь", href: "/feedback" },
+   162→      { name: "Мероприятия", href: "#events" },
+   163→      { name: "Публикации", href: "/press-center" },
+   164→    ],
+   165→  },
+   166→  { name: "Карьера", href: "/career", inHeader: false, description: "Присоединяйтесь к команде. Мы ищем талантливых специалистов в консалтинг и аналитику." },
+   167→  { name: "Контакты", href: "/contacts", inHeader: true, description: "Свяжитесь с нами: форма обратной связи и контакты по направлениям." },
+   168→]
+   169→
+   170→// Навигация для Kept-style pill кнопок — 5 основных пунктов
+   171→const keptNavItems = [
+   172→  { name: "Услуги", href: "/services" },
+   173→  { name: "Отрасли", href: "/industries" },
+   174→  { name: "Решения", href: "/solutions/master-planning" },
+   175→  { name: "Пресс-центр", href: "/press-center" },
+   176→  { name: "Контакты", href: "/contacts" },
+   177→]
+   178→
+   179→export function Header() {
+   180→  const pathname = usePathname()
+   181→  const [isScrolled, setIsScrolled] = useState(false)
+   182→  const [isScrollingDown, setIsScrollingDown] = useState(false)
+   183→  const [isOpen, setIsOpen] = useState(false)
+   184→  // Burger menu: which left nav item is active (null = show contacts on right)
+   185→  const [burgerActive, setBurgerActive] = useState<string | null>(null)
+   186→  // Third level: which sub-category is expanded (for services)
+   187→  const [burgerExpandedCategory, setBurgerExpandedCategory] = useState<number | null>(null)
+   188→
+   189→  useEffect(() => {
+   190→    let lastScrollY = window.scrollY
+   191→    const handleScroll = () => {
+   192→      const currentScrollY = window.scrollY
+   193→      setIsScrolled(currentScrollY > 50)
+   194→      setIsScrollingDown(currentScrollY > lastScrollY && currentScrollY > 50)
+   195→      lastScrollY = currentScrollY
+   196→    }
+   197→    window.addEventListener("scroll", handleScroll)
+   198→    return () => window.removeEventListener("scroll", handleScroll)
+   199→  }, [])
+   200→
+   201→  useEffect(() => {
+   202→    if (isOpen) document.body.style.overflow = "hidden"
+   203→    else document.body.style.overflow = ""
+   204→    return () => { document.body.style.overflow = "" }
+   205→  }, [isOpen])
+   206→
+   207→  // Reset burger state on open
+   208→  const openBurger = () => {
+   209→    setBurgerActive(null)
+   210→    setBurgerExpandedCategory(null)
+   211→    setIsOpen(true)
+   212→  }
+   213→
+   214→  const activeNav = burgerActive ? navigation.find((n) => n.name === burgerActive) : null
+   215→
+   216→  /* ─── Determine header theme based on the hero block background ─── */
+   217→  const getHeaderTheme = (path: string): "dark" | "teal" | "mint" | "light" => {
+   218→    // Dark (#00313C) hero pages
+   219→    if (path === "/services" || path.startsWith("/services/")) return "dark"
+   220→    if (path === "/industries" || path.startsWith("/industries/")) return "dark"
+   221→    if (path === "/career" || path.startsWith("/career/")) return "dark"
+   222→    if (path === "/solutions") return "dark"
+   223→    if (path === "/lab") return "dark"
+   224→    if (path === "/pro-bono") return "dark"
+   225→    if (path === "/sitemap") return "dark"
+   226→    if (path === "/feedback") return "dark"
+   227→    if (path === "/privacy") return "dark"
+   228→    if (path === "/terms") return "dark"
+   229→    // Teal (#008C95) hero pages
+   230→    if (/^\/cases\/[^/]+$/.test(path)) return "teal"
+   231→    // Light mint (#e8f5f3) hero pages
+   232→    if (path.startsWith("/press-center")) return "mint"
+   233→    // Default: light gray (#f1f2f4)
+   234→    return "light"
+   235→  }
+   236→
+   237→  const heroTheme = getHeaderTheme(pathname)
+   238→  const isHeroLightBg = heroTheme === "light" || heroTheme === "mint"
+   239→  // When scrolled, header bg is always white → always use dark text/icons
+   240→  const useDarkText = isScrolled || isHeroLightBg
+   241→
+   242→  // Feedback page uses minimal header (logo + burger only)
+   243→  const isFeedbackPage = pathname === "/feedback"
+   244→
+   245→  // Background class for non-scrolled header
+   246→  const heroBgClass = heroTheme === "dark"
+   247→    ? "bg-[#00313C]"
+   248→    : heroTheme === "teal"
+   249→      ? "bg-[#008C95]"
+   250→      : heroTheme === "mint"
+   251→        ? "bg-[#e8f5f3]"
+   252→        : "bg-[#f1f2f4]"
+   253→
+   254→  return (
+   255→    <>
+   256→    {/* ═══════════════════════════════════════════
+   257→       FEEDBACK PAGE: Desktop — minimal header (logo + burger only, 30% width)
+   258→       On mobile, the standard header below is shown instead.
+   259→       ═══════════════════════════════════════════ */}
+   260→    {isFeedbackPage && (
+   261→      <header
+   262→        className="fixed left-0 z-50 transition-all duration-300 top-0 w-[30%] hidden lg:block"
+   263→        style={{ background: "transparent" }}
+   264→      >
+   265→        <div className="flex items-center pt-8 pb-8 px-6 xl:px-10">
+   266→          <Link href="/" className="flex items-center leading-none">
+   267→            <span
+   268→              className="text-[28px] font-normal tracking-tight text-white leading-none"
+   269→              style={{ fontFamily: "var(--font-russo), sans-serif" }}
+   270→            >
+   271→              арасака
+   272→            </span>
+   273→          </Link>
+   274→          <button
+   275→            type="button"
+   276→            onClick={() => openBurger()}
+   277→            className="ml-3 flex flex-col items-center justify-center w-10 h-10 gap-[5px] text-white/60 hover:text-white transition-colors"
+   278→            aria-label="Открыть меню"
+   279→          >
+   280→            <span className="block w-6 h-[2px] bg-current transition-all rounded-full" />
+   281→            <span className="block w-6 h-[2px] bg-current transition-all rounded-full" />
+   282→            <span className="block w-4 h-[2px] bg-current transition-all rounded-full" />
+   283→          </button>
+   284→        </div>
+   285→      </header>
+   286→    )}
+   287→
+   288→    {/* ═══════════════════════════════════════════
+   289→       STANDARD HEADER
+   290→       Always shown on mobile (including /feedback).
+   291→       On desktop, hidden on /feedback (minimal header above is used instead).
+   292→       ═══════════════════════════════════════════ */}
+   293→    <header
+   294→      className={cn(
+   295→        "fixed left-0 right-0 z-50 transition-all duration-300",
+   296→        isFeedbackPage && "lg:hidden",
+   297→        isScrolled && isScrollingDown
+   298→          ? "-translate-y-full"
+   299→          : "top-0",
+   300→        isScrolled
+   301→          ? "bg-white shadow-[0_1px_0_rgba(0,0,0,0.06)]"
+   302→          : heroBgClass
+   303→      )}
+   304→    >
+   305→      <div className="container-kept">
+   306→
+   307→        {/* ═══════════════════════════════════════════
+   308→           DESKTOP: Not scrolled — full-size Kept-style
+   309→           [Logo + Burger] | [Запросить КП] | [Pill nav] | [Utilities]
+   310→           ═══════════════════════════════════════════ */}
+   311→        {!isScrolled && (
+   312→          <div className="hidden lg:flex items-center pt-8 pb-8">
+   313→            <div className="flex items-center gap-3 shrink-0">
+   314→              <Link href="/" className="flex items-center leading-none">
+   315→                <span
+   316→                  className={cn(
+   317→                    "text-[28px] font-normal tracking-tight leading-none",
+   318→                    !isHeroLightBg ? "text-white" : "text-[#008b96]"
+   319→                  )}
+   320→                  style={{ fontFamily: "var(--font-russo), sans-serif" }}
+   321→                >
+   322→                  арасака
+   323→                </span>
+   324→              </Link>
+   325→              <button
+   326→                type="button"
+   327→                onClick={() => openBurger()}
+   328→                className={cn(
+   329→                  "flex flex-col items-center justify-center w-10 h-10 gap-[5px] transition-colors",
+   330→                  !isHeroLightBg ? "text-white/60 hover:text-white" : "text-[#494a4a] hover:text-[#008C95]"
+   331→                )}
+   332→                aria-label="Открыть меню"
+   333→              >
+   334→                <span className="block w-6 h-[2px] bg-current transition-all rounded-full" />
+   335→                <span className="block w-6 h-[2px] bg-current transition-all rounded-full" />
+   336→                <span className="block w-4 h-[2px] bg-current transition-all rounded-full" />
+   337→              </button>
+   338→            </div>
+   339→
+   340→            <Link
+   341→              href="/feedback?type=proposals"
+   342→              className="ml-3 inline-flex items-center gap-1.5 px-4 py-1.5 rounded bg-[#E04E39] text-white text-[13px] font-medium hover:bg-[#c94330] transition-colors whitespace-nowrap"
+   343→            >
+   344→              Запросить КП
+   345→            </Link>
+   346→
+   347→            {/* Unified pill-shaped navigation — all items in one pill */}
+   348→            <nav className="flex-1 flex items-center justify-center">
+   349→              <div className={cn(
+   350→                "inline-flex items-center rounded px-1.5 py-1 gap-0.5",
+   351→                !isHeroLightBg ? "bg-white/[0.08]" : "bg-white shadow-sm"
+   352→              )}>
+   353→                {keptNavItems.map((item) => (
+   354→                  <Link
+   355→                    key={item.name}
+   356→                    href={item.href}
+   357→                    className={cn(
+   358→                      "inline-flex items-center justify-center px-4 py-1.5 text-[13px] font-medium transition-all duration-200 whitespace-nowrap rounded",
+   359→                      pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
+   360→                        ? "bg-[#008C95] text-white"
+   361→                        : !isHeroLightBg
+   362→                          ? "text-white/60 hover:bg-[#008C95] hover:text-white"
+   363→                          : "text-[#494a4a] hover:bg-[#008C95] hover:text-white"
+   364→                    )}
+   365→                  >
+   366→                    {item.name}
+   367→                  </Link>
+   368→                ))}
+   369→              </div>
+   370→            </nav>
+   371→
+   372→            <div className="flex items-center gap-1.5 shrink-0">
+   373→              <button
+   374→                className={cn(
+   375→                  "flex items-center justify-center w-8 h-8 transition-colors",
+   376→                  !isHeroLightBg ? "text-white/50 hover:text-white" : "text-[#494a4a] hover:text-[#008C95]"
+   377→                )}
+   378→                aria-label="Поиск"
+   379→              >
+   380→                <Search className="w-4 h-4" />
+   381→              </button>
+   382→              <a
+   383→                href="tel:+74959374477"
+   384→                className={cn(
+   385→                  "flex items-center justify-center w-8 h-8 transition-colors",
+   386→                  !isHeroLightBg ? "text-white/50 hover:text-white" : "text-[#494a4a] hover:text-[#008C95]"
+   387→                )}
+   388→                aria-label="Позвонить"
+   389→              >
+   390→                <Phone className="w-4 h-4" />
+   391→              </a>
+   392→              <div className={cn("w-px h-4 mx-0.5", !isHeroLightBg ? "bg-white/20" : "bg-gray-300")} />
+   393→              <button className={cn(
+   394→                "flex items-center gap-0.5 text-[11px] transition-colors px-1 py-0.5",
+   395→                !isHeroLightBg ? "text-white/40 hover:text-white/70" : "text-[#494a4a] hover:text-[#008C95]"
+   396→              )}>
+   397→                RU
+   398→                <ChevronDown className="w-2.5 h-2.5" />
+   399→              </button>
+   400→            </div>
+   401→          </div>
+   402→        )}
+   403→
+   404→        {/* ═══════════════════════════════════════════
+   405→           DESKTOP: Scrolled — compact Kept-style
+   406→           ═══════════════════════════════════════════ */}
+   407→        {isScrolled && (
+   408→          <div className="hidden lg:flex items-center pt-4 pb-4">
+   409→            <div className="flex items-center gap-3 shrink-0">
+   410→              <Link href="/" className="flex items-center leading-none">
+   411→                <span
+   412→                  className="text-[24px] font-normal tracking-tight text-[#008b96] leading-none"
+   413→                  style={{ fontFamily: "var(--font-russo), sans-serif" }}
+   414→                >
+   415→                  арасака
+   416→                </span>
+   417→              </Link>
+   418→              <button
+   419→                type="button"
+   420→                onClick={() => openBurger()}
+   421→                className="flex flex-col items-center justify-center w-9 h-9 gap-[4px] text-[#494a4a] hover:text-[#008C95] transition-colors"
+   422→                aria-label="Открыть меню"
+   423→              >
+   424→                <span className="block w-5 h-[2px] bg-current transition-all rounded-full" />
+   425→                <span className="block w-5 h-[2px] bg-current transition-all rounded-full" />
+   426→                <span className="block w-4 h-[2px] bg-current transition-all rounded-full" />
+   427→              </button>
+   428→            </div>
+   429→
+   430→            <Link
+   431→              href="/feedback?type=proposals"
+   432→              className="ml-2.5 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-[#E04E39] text-white text-[12px] font-medium hover:bg-[#c94330] transition-colors whitespace-nowrap"
+   433→            >
+   434→              Запросить КП
+   435→            </Link>
+   436→
+   437→            <nav className="flex-1 flex items-center justify-center">
+   438→              <div className="inline-flex items-center rounded bg-white/80 shadow-sm px-1.5 py-0.5 gap-0.5">
+   439→                {keptNavItems.map((item) => (
+   440→                  <Link
+   441→                    key={item.name}
+   442→                    href={item.href}
+   443→                    className={cn(
+   444→                      "inline-flex items-center justify-center px-3.5 py-1 text-[12px] font-medium transition-all duration-200 whitespace-nowrap rounded",
+   445→                      pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
+   446→                        ? "bg-[#008C95] text-white"
+   447→                        : "text-[#494a4a] hover:bg-[#008C95] hover:text-white"
+   448→                    )}
+   449→                  >
+   450→                    {item.name}
+   451→                  </Link>
+   452→                ))}
+   453→              </div>
+   454→            </nav>
+   455→
+   456→            <div className="flex items-center gap-1.5 shrink-0">
+   457→              <button
+   458→                className="flex items-center justify-center w-7.5 h-7.5 text-[#494a4a] hover:text-[#008C95] transition-colors"
+   459→                aria-label="Поиск"
+   460→              >
+   461→                <Search className="w-3.5 h-3.5" />
+   462→              </button>
+   463→              <a
+   464→                href="tel:+74959374477"
+   465→                className="flex items-center justify-center w-7.5 h-7.5 text-[#494a4a] hover:text-[#008C95] transition-colors"
+   466→                aria-label="Позвонить"
+   467→              >
+   468→                <Phone className="w-3.5 h-3.5" />
+   469→              </a>
+   470→              <div className="w-px h-4 bg-gray-300 mx-0.5" />
+   471→              <button className="flex items-center gap-0.5 text-[11px] text-[#494a4a] hover:text-[#008C95] transition-colors px-1 py-0.5">
+   472→                RU
+   473→                <ChevronDown className="w-2.5 h-2.5" />
+   474→              </button>
+   475→            </div>
+   476→          </div>
+   477→        )}
+   478→
+   479→        {/* Mobile header (always visible on mobile) */}
+   480→        <div className={cn(
+   481→          "flex items-center justify-between lg:hidden",
+   482→          isScrolled ? "h-16" : "h-14"
+   483→        )}>
+   484→          <div className="flex items-center gap-3">
+   485→            <button
+   486→              type="button"
+   487→              onClick={() => openBurger()}
+   488→              className={cn(
+   489→                "flex flex-col items-center justify-center w-8 h-8 gap-[5px] transition-colors",
+   490→                !useDarkText ? "text-white/60 hover:text-white" : "text-gray-600 hover:text-[#008C95]"
+   491→              )}
+   492→              aria-label="Открыть меню"
+   493→            >
+   494→              <span className="block w-5 h-[1.5px] bg-current transition-all" />
+   495→              <span className="block w-5 h-[1.5px] bg-current transition-all" />
+   496→              <span className="block w-3.5 h-[1.5px] bg-current transition-all" />
+   497→            </button>
+   498→
+   499→            <Link href="/" className="flex items-center leading-none">
+   500→              <span
+   501→                className={cn(
+   502→                  "text-[28px] font-normal tracking-tight leading-none",
+   503→                  !useDarkText ? "text-white" : "text-[#008b96]"
+   504→                )}
+   505→                style={{ fontFamily: "var(--font-russo), sans-serif" }}
+   506→              >
+   507→                арасака
+   508→              </span>
+   509→            </Link>
+   510→          </div>
+   511→
+   512→          <div className="flex items-center gap-2">
+   513→            <Link
+   514→              href="/feedback?type=proposals"
+   515→              className="inline-flex items-center px-3 py-1.5 rounded bg-[#E04E39] text-white text-[12px] font-medium hover:bg-[#c94330] transition-colors whitespace-nowrap"
+   516→            >
+   517→              Запросить КП
+   518→            </Link>
+   519→            <button
+   520→              className={cn(
+   521→                "flex items-center justify-center w-9 h-9 transition-colors",
+   522→                !useDarkText ? "text-white/40 hover:text-white" : "text-gray-400 hover:text-[#008C95]"
+   523→              )}
+   524→              aria-label="Поиск"
+   525→            >
+   526→              <Search className="w-[18px] h-[18px]" />
+   527→            </button>
+   528→            <a
+   529→              href="tel:+74959374477"
+   530→              className={cn(
+   531→                "hidden md:flex items-center justify-center w-9 h-9 transition-colors",
+   532→                !useDarkText ? "text-white/40 hover:text-white" : "text-gray-400 hover:text-[#008C95]"
+   533→              )}
+   534→              aria-label="Позвонить"
+   535→            >
+   536→              <Phone className="w-[18px] h-[18px]" />
+   537→            </a>
+   538→            <div className={cn("hidden md:block w-px h-4 mx-1", !useDarkText ? "bg-white/20" : "bg-gray-200")} />
+   539→            <button className={cn(
+   540→              "hidden md:flex items-center gap-1 text-[13px] transition-colors px-2 py-1",
+   541→              !useDarkText ? "text-white/40 hover:text-white/70" : "text-gray-400 hover:text-[#008C95]"
+   542→            )}>
+   543→              RU
+   544→              <ChevronDown className="w-3 h-3" />
+   545→            </button>
+   546→          </div>
+   547→        </div>
+   548→      </div>
+   549→    </header>
+   550→
+   551→    {/* ═══════════════════════════════════════════
+   552→       Full-screen burger menu
+   553→       Mobile: slide-in panel with accordion + drill-down
+   554→       Desktop: 3-column layout (Left nav | Middle submenu | Right contacts)
+   555→       ═══════════════════════════════════════════ */}
+   556→
+   557→    {/* Backdrop overlay — mobile only */}
+   558→    {isOpen && (
+   559→      <div
+   560→        className="fixed inset-0 z-[99] bg-black/50 lg:hidden transition-opacity duration-300"
+   561→        onClick={() => setIsOpen(false)}
+   562→        aria-hidden="true"
+   563→      />
+   564→    )}
+   565→
+   566→    {/* Mobile slide-in panel */}
+   567→    <div
+   568→      className={cn(
+   569→        "fixed top-0 right-0 bottom-0 z-[100] w-full sm:w-[85vw] max-w-[400px] bg-[#00313C] flex flex-col lg:hidden transition-transform duration-300 ease-out will-change-transform",
+   570→        isOpen ? "translate-x-0" : "translate-x-full"
+   571→      )}
+   572→      role="dialog"
+   573→      aria-modal="true"
+   574→      aria-label="Меню навигации"
+   575→    >
+   576→      {/* Mobile top bar */}
+   577→      <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 shrink-0">
+   578→        <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center leading-none">
+   579→          <span
+   580→            className="text-[22px] font-normal tracking-tight text-white leading-none"
+   581→            style={{ fontFamily: "var(--font-russo), sans-serif" }}
+   582→          >
+   583→            арасака
+   584→          </span>
+   585→        </Link>
+   586→        <div className="flex items-center gap-3">
+   587→          {/* Mobile: show search + close in top bar */}
+   588→          <button
+   589→            className="flex items-center justify-center w-10 h-10 text-white/50 hover:text-white transition-colors rounded-full hover:bg-white/[0.06]"
+   590→            aria-label="Поиск"
+   591→          >
+   592→            <Search className="w-[18px] h-[18px]" />
+   593→          </button>
+   594→          <button
+   595→            type="button"
+   596→            onClick={() => setIsOpen(false)}
+   597→            className="flex items-center justify-center w-10 h-10 text-white/60 hover:text-white transition-colors rounded-full hover:bg-white/[0.06]"
+   598→            aria-label="Закрыть меню"
+   599→          >
+   600→            <X className="w-5 h-5" />
+   601→          </button>
+   602→        </div>
+   603→      </div>
+   604→
+   605→      {/* ══════════════════════════════════
+   606→         MOBILE: Navigation content
+   607→         Uses drill-down pattern with slide transitions
+   608→         ══════════════════════════════════ */}
+   609→      <div className="flex-1 overflow-hidden relative">
+   610→        {/* Level 0: Main navigation list */}
+   611→        <div
+   612→          className={cn(
+   613→            "absolute inset-0 overflow-y-auto transition-transform duration-300 ease-out",
+   614→            burgerActive ? "-translate-x-full" : "translate-x-0"
+   615→          )}
+   616→        >
+   617→          <nav className="py-2">
+   618→            {navigation.map((item, index) => {
+   619→              const hasSubmenu = !!(item.submenu || ("categories" in item))
+   620→              return (
+   621→                <div key={item.name}>
+   622→                  {hasSubmenu ? (
+   623→                    <button
+   624→                      type="button"
+   625→                      onClick={() => {
+   626→                        setBurgerActive(item.name)
+   627→                        setBurgerExpandedCategory(null)
+   628→                      }}
+   629→                      className={cn(
+   630→                        "w-full text-left flex items-center justify-between gap-3 px-5 min-h-[52px] py-3 text-[16px] font-medium transition-colors active:bg-white/[0.08]",
+   631→                        "text-white/90 hover:text-white hover:bg-white/[0.04]"
+   632→                      )}
+   633→                      style={{ animationDelay: `${index * 30}ms` }}
+   634→                    >
+   635→                      <span>{item.name}</span>
+   636→                      <ChevronRight className="w-4 h-4 shrink-0 text-white/25" />
+   637→                    </button>
+   638→                  ) : (
+   639→                    <Link
+   640→                      href={item.href}
+   641→                      onClick={() => setIsOpen(false)}
+   642→                      className={cn(
+   643→                        "w-full flex items-center justify-between gap-3 px-5 min-h-[52px] py-3 text-[16px] font-medium transition-colors active:bg-white/[0.08]",
+   644→                        "text-white/90 hover:text-white hover:bg-white/[0.04]"
+   645→                      )}
+   646→                    >
+   647→                      <span>{item.name}</span>
+   648→                    </Link>
+   649→                  )}
+   650→                </div>
+   651→              )
+   652→            })}
+   653→          </nav>
+   654→
+   655→          {/* Mobile: Quick contact bar */}
+   656→          <div className="border-t border-white/[0.08] px-5 py-5 space-y-4">
+   657→            <div className="flex items-center gap-3">
+   658→              <a
+   659→                href="tel:+74959374477"
+   660→                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.1] transition-colors"
+   661→                aria-label="Позвонить"
+   662→              >
+   663→                <Phone className="w-[18px] h-[18px]" />
+   664→              </a>
+   665→              <a
+   666→                href="mailto:info@arasaca.ru"
+   667→                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.1] transition-colors"
+   668→                aria-label="Написать"
+   669→              >
+   670→                <Mail className="w-[18px] h-[18px]" />
+   671→              </a>
+   672→              <button
+   673→                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/[0.06] text-white/60 hover:text-white hover:bg-white/[0.1] transition-colors"
+   674→                aria-label="Поиск"
+   675→              >
+   676→                <Search className="w-[18px] h-[18px]" />
+   677→              </button>
+   678→            </div>
+   679→          </div>
+   680→        </div>
+   681→
+   682→        {/* Level 1: Sub-navigation (drill-down) */}
+   683→        <div
+   684→          className={cn(
+   685→            "absolute inset-0 overflow-y-auto transition-transform duration-300 ease-out bg-[#00313C]",
+   686→            burgerActive ? "translate-x-0" : "translate-x-full"
+   687→          )}
+   688→        >
+   689→          {/* Sub-nav header with back button */}
+   690→          <div className="sticky top-0 z-10 bg-[#00313C] border-b border-white/[0.08]">
+   691→            <button
+   692→              type="button"
+   693→              onClick={() => {
+   694→                setBurgerActive(null)
+   695→                setBurgerExpandedCategory(null)
+   696→              }}
+   697→              className="flex items-center gap-2 px-5 py-3.5 text-[13px] text-white/50 hover:text-white/80 transition-colors w-full active:bg-white/[0.06]"
+   698→            >
+   699→              <ChevronRight className="w-3.5 h-3.5 rotate-180" />
+   700→              <span>Меню</span>
+   701→            </button>
+   702→          </div>
+   703→
+   704→          {activeNav && (
+   705→            <div>
+   706→              {/* Section title + link */}
+   707→              <div className="px-5 pt-4 pb-2">
+   708→                <Link
+   709→                  href={activeNav.href}
+   710→                  onClick={() => setIsOpen(false)}
+   711→                  className="inline-flex items-center gap-2 text-[#77e2c3] text-[17px] font-semibold hover:gap-3 transition-all"
+   712→                >
+   713→                  {activeNav.name}
+   714→                  <ArrowRight className="w-4 h-4" />
+   715→                </Link>
+   716→              </div>
+   717→
+   718→              {/* SERVICES: Category list with expandable items */}
+   719→              {activeNav.name === "Услуги" && "categories" in activeNav && (
+   720→                <div>
+   721→                  {activeNav.categories.map((category, idx) => {
+   722→                    const isCatExpanded = burgerExpandedCategory === idx
+   723→                    return (
+   724→                      <div key={category.name}>
+   725→                        <button
+   726→                          type="button"
+   727→                          onClick={() => setBurgerExpandedCategory(isCatExpanded ? null : idx)}
+   728→                          className={cn(
+   729→                            "w-full text-left flex items-center justify-between gap-2 px-5 min-h-[48px] py-3 transition-colors active:bg-white/[0.08]",
+   730→                            isCatExpanded
+   731→                              ? "text-[#77e2c3] bg-white/[0.05]"
+   732→                              : "text-white/75 hover:text-white hover:bg-white/[0.04]"
+   733→                          )}
+   734→                        >
+   735→                          <div className="flex items-center gap-2.5">
+   736→                            {category.highlight && (
+   737→                              <span className="w-1.5 h-1.5 bg-[#77e2c3] rounded-full shrink-0" />
+   738→                            )}
+   739→                            <span className="text-[15px] font-medium">{category.name}</span>
+   740→                          </div>
+   741→                          <ChevronRight className={cn(
+   742→                            "w-4 h-4 shrink-0 transition-transform duration-200",
+   743→                            isCatExpanded ? "text-[#77e2c3] rotate-90" : "text-white/25"
+   744→                          )} />
+   745→                        </button>
+   746→                        {isCatExpanded && (
+   747→                          <div className="bg-white/[0.03] border-t border-b border-white/[0.05]">
+   748→                            <div className="py-1">
+   749→                              {category.services.map((service) => (
+   750→                                <Link
+   751→                                  key={service.href}
+   752→                                  href={service.href}
+   753→                                  onClick={() => setIsOpen(false)}
+   754→                                  className="block px-5 pl-8 py-3 text-white/55 hover:text-white text-[14px] leading-snug transition-colors active:bg-white/[0.06]"
+   755→                                >
+   756→                                  {service.name}
+   757→                                </Link>
+   758→                              ))}
+   759→                            </div>
+   760→                            <div className="px-5 pl-8 pb-3 pt-1">
+   761→                              <Link
+   762→                                href={category.href}
+   763→                                onClick={() => setIsOpen(false)}
+   764→                                className="inline-flex items-center gap-1.5 text-[#77e2c3] text-[12px] font-semibold hover:gap-2.5 transition-all"
+   765→                              >
+   766→                                Все услуги раздела
+   767→                                <ArrowRight className="w-3 h-3" />
+   768→                              </Link>
+   769→                            </div>
+   770→                          </div>
+   771→                        )}
+   772→                      </div>
+   773→                    )
+   774→                  })}
+   775→                </div>
+   776→              )}
+   777→
+   778→              {/* REGULAR SUBMENU items */}
+   779→              {activeNav.name !== "Услуги" && activeNav.submenu && (
+   780→                <div className="py-1">
+   781→                  {activeNav.submenu.map((sub) => (
+   782→                    <Link
+   783→                      key={sub.name}
+   784→                      href={sub.href}
+   785→                      onClick={() => setIsOpen(false)}
+   786→                      className="block px-5 py-3.5 text-white/75 hover:text-white text-[15px] font-medium transition-colors active:bg-white/[0.08] border-b border-white/[0.04] last:border-0"
+   787→                    >
+   788→                      {sub.name}
+   789→                    </Link>
+   790→                  ))}
+   791→                </div>
+   792→              )}
+   793→
+   794→              {/* NO SUBMENU: show description */}
+   795→              {activeNav.name !== "Услуги" && !activeNav.submenu && "description" in activeNav && activeNav.description && (
+   796→                <div className="px-5 py-4">
+   797→                  <p className="text-white/40 text-[14px] leading-relaxed">
+   798→                    {activeNav.description}
+   799→                  </p>
+   800→                  <div className="mt-4">
+   801→                    <Link
+   802→                      href={activeNav.href}
+   803→                      onClick={() => setIsOpen(false)}
+   804→                      className="inline-flex items-center gap-2 text-[#77e2c3] text-[14px] font-semibold hover:gap-3 transition-all"
+   805→                    >
+   806→                      Перейти в раздел
+   807→                      <ArrowRight className="w-3.5 h-3.5" />
+   808→                    </Link>
+   809→                  </div>
+   810→                </div>
+   811→              )}
+   812→
+   813→              {/* Section description (for items with submenu) */}
+   814→              {"description" in activeNav && activeNav.description && activeNav.submenu && (
+   815→                <div className="px-5 pt-4 pb-5 mt-2 border-t border-white/[0.06]">
+   816→                  <p className="text-white/30 text-[13px] leading-relaxed">
+   817→                    {activeNav.description}
+   818→                  </p>
+   819→                </div>
+   820→              )}
+   821→            </div>
+   822→          )}
+   823→        </div>
+   824→      </div>
+   825→
+   826→      {/* Mobile: Bottom CTA bar */}
+   827→      <div className="border-t border-white/[0.08] px-5 py-4 shrink-0 space-y-3">
+   828→        <Button
+   829→          asChild
+   830→          className="w-full bg-[#77e2c3] hover:bg-[#4dc9a5] text-[#00313C] font-semibold gap-2 text-[13px] uppercase tracking-wider h-11 rounded"
+   831→        >
+   832→          <Link href="/feedback?type=proposals" onClick={() => setIsOpen(false)}>
+   833→            Запросить КП
+   834→            <ArrowRight className="w-4 h-4" />
+   835→          </Link>
+   836→        </Button>
+   837→        <div className="flex items-center justify-between">
+   838→          <a href="tel:+74959374477" className="text-white/50 text-[13px] hover:text-white/80 transition-colors">
+   839→            +7 (495) 937-44-77
+   840→          </a>
+   841→          <div className="flex items-center gap-3">
+   842→            <a href="#" className="text-white/30 hover:text-[#77e2c3] transition-colors" aria-label="ВКонтакте">
+   843→              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.762 9.224h-2.57c-.236 0-.378.264-.246.462.618.93.618 2.076 0 3.006-.132.198.01.462.246.462h2.57c.33 0 .594-.264.594-.594V9.818c0-.33-.264-.594-.594-.594zM12 15.69c-2.038 0-3.69-1.652-3.69-3.69S9.962 8.31 12 8.31s3.69 1.652 3.69 3.69-1.652 3.69-3.69 3.69zm8.37-8.436h-3.276c-.236 0-.378-.264-.246-.462.618-.93.618-2.076 0-3.006-.132-.198.01-.462.246-.462h3.276c.33 0 .594.264.594.594v2.742c0 .33-.264.594-.594.594z"/></svg>
+   844→            </a>
+   845→            <a href="#" className="text-white/30 hover:text-[#77e2c3] transition-colors" aria-label="Telegram">
+   846→              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+   847→            </a>
+   848→          </div>
+   849→        </div>
+   850→      </div>
+   851→    </div>
+   852→
+   853→    {/* Desktop: Full-screen burger menu */}
+   854→    {isOpen && (
+   855→      <div className="hidden lg:flex fixed inset-0 z-[100] bg-[#00313C] flex-col" role="dialog" aria-modal="true">
+   856→        {/* Desktop Top bar: Logo + Close + Utilities */}
+   857→        <div className="flex items-center justify-between px-8 py-5 border-b border-white/10">
+   858→          <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center leading-none">
+   859→            <span
+   860→              className="text-[28px] font-normal tracking-tight text-white leading-none"
+   861→              style={{ fontFamily: "var(--font-russo), sans-serif" }}
+   862→            >
+   863→              арасака
+   864→            </span>
+   865→          </Link>
+   866→          <div className="flex items-center gap-3">
+   867→            <button
+   868→              className="text-white/40 hover:text-white/70 transition-colors"
+   869→              aria-label="Поиск"
+   870→            >
+   871→              <Search className="w-5 h-5" />
+   872→            </button>
+   873→            <button
+   874→              className="text-white/40 hover:text-white/70 transition-colors"
+   875→              aria-label="Версия для слабовидящих"
+   876→            >
+   877→              <Eye className="w-5 h-5" />
+   878→            </button>
+   879→            <div className="w-px h-4 bg-white/20" />
+   880→            <button className="flex text-white/40 hover:text-white/70 transition-colors text-sm items-center gap-1">
+   881→              RU
+   882→              <ChevronDown className="w-3 h-3" />
+   883→            </button>
+   884→            <div className="w-px h-4 bg-white/20 ml-1" />
+   885→            <button
+   886→              type="button"
+   887→              onClick={() => setIsOpen(false)}
+   888→              className="p-2 text-white/60 hover:text-white transition-colors"
+   889→              aria-label="Закрыть меню"
+   890→            >
+   891→              <X className="w-6 h-6" />
+   892→            </button>
+   893→          </div>
+   894→        </div>
+   895→
+   896→        {/* ══════════════════════════════════
+   897→           DESKTOP: 3-column layout
+   898→           ══════════════════════════════════ */}
+   899→        <div className="flex flex-1 min-h-0 overflow-hidden">
+   900→          {/* LEFT: Navigation categories */}
+   901→          <nav className="w-[240px] lg:w-[270px] shrink-0 border-r border-white/10 py-2 overflow-y-auto">
+   902→            {navigation.map((item) => {
+   903→              const hasSubmenu = !!(item.submenu || ("categories" in item))
+   904→              return (
+   905→                <button
+   906→                  key={item.name}
+   907→                  type="button"
+   908→                  onClick={() => {
+   909→                    if (hasSubmenu) {
+   910→                      setBurgerActive(burgerActive === item.name ? null : item.name)
+   911→                      setBurgerExpandedCategory(null)
+   912→                    } else {
+   913→                      setIsOpen(false)
+   914→                    }
+   915→                  }}
+   916→                  className={cn(
+   917→                    "w-full text-left flex items-center justify-between gap-2 px-7 py-3 text-[15px] font-medium transition-all",
+   918→                    burgerActive === item.name
+   919→                      ? "text-[#77e2c3] bg-white/[0.06]"
+   920→                      : "text-white/80 hover:text-white hover:bg-white/[0.04]"
+   921→                  )}
+   922→                >
+   923→                  <span>{item.name}</span>
+   924→                  {hasSubmenu && (
+   925→                    <ChevronRight className={cn(
+   926→                      "w-4 h-4 shrink-0 transition-transform duration-200",
+   927→                      burgerActive === item.name ? "text-[#77e2c3] rotate-0" : "text-white/30"
+   928→                    )} />
+   929→                  )}
+   930→                </button>
+   931→              )
+   932→            })}
+   933→          </nav>
+   934→
+   935→          {/* MIDDLE AREA: 2nd level + 3rd level columns */}
+   936→          <div className="flex-1 flex min-h-0 overflow-hidden">
+   937→            {/* ─── 2ND LEVEL COLUMN ─── */}
+   938→            <div className={cn(
+   939→              "py-8 px-8 overflow-y-auto",
+   940→              activeNav?.name === "Услуги" && burgerExpandedCategory !== null
+   941→                ? "w-[270px] shrink-0 border-r border-white/10"
+   942→                : "flex-1"
+   943→            )}>
+   944→              {/* Nothing selected — show prompt */}
+   945→              {!activeNav && (
+   946→                <div className="flex flex-col justify-center h-full">
+   947→                  <p className="text-white/30 text-[15px] leading-relaxed">
+   948→                    Выберите раздел меню слева, чтобы увидеть содержание
+   949→                  </p>
+   950→                </div>
+   951→              )}
+   952→
+   953→              {/* SERVICES: Categories list */}
+   954→              {activeNav && activeNav.name === "Услуги" && "categories" in activeNav && (
+   955→                <div className="flex flex-col h-full">
+   956→                  <div className="mb-4">
+   957→                    <Link
+   958→                      href={activeNav.href}
+   959→                      onClick={() => setIsOpen(false)}
+   960→                      className="inline-flex items-center gap-2 text-[#77e2c3] text-[15px] font-semibold hover:gap-3 transition-all"
+   961→                    >
+   962→                      Все услуги
+   963→                      <ArrowRight className="w-3.5 h-3.5" />
+   964→                    </Link>
+   965→                  </div>
+   966→                  <div className="space-y-0">
+   967→                    {activeNav.categories.map((category, idx) => {
+   968→                      const isActive = burgerExpandedCategory === idx
+   969→                      return (
+   970→                        <button
+   971→                          key={category.name}
+   972→                          type="button"
+   973→                          onClick={() => setBurgerExpandedCategory(isActive ? null : idx)}
+   974→                          className={cn(
+   975→                            "w-full text-left flex items-center justify-between gap-2 py-3 px-2 transition-all",
+   976→                            isActive
+   977→                              ? "text-[#77e2c3] bg-white/[0.06]"
+   978→                              : "text-white/80 hover:text-white hover:bg-white/[0.04]"
+   979→                          )}
+   980→                        >
+   981→                          <div className="flex items-center gap-2">
+   982→                            {category.highlight && (
+   983→                              <span className="w-1.5 h-1.5 bg-[#77e2c3] rounded-full" />
+   984→                            )}
+   985→                            <span className="text-[14px] font-medium">{category.name}</span>
+   986→                          </div>
+   987→                          <ChevronRight className={cn(
+   988→                            "w-4 h-4 shrink-0 transition-transform duration-200",
+   989→                            isActive ? "text-[#77e2c3]" : "text-white/30"
+   990→                          )} />
+   991→                        </button>
+   992→                      )
+   993→                    })}
+   994→                  </div>
+   995→                </div>
+   996→              )}
+   997→
+   998→              {/* REGULAR SUBMENU */}
+   999→              {activeNav && activeNav.name !== "Услуги" && activeNav.submenu && (
+  1000→                <div className="flex flex-col h-full">
+  1001→                  <div className="mb-6">
+  1002→                    <Link
+  1003→                      href={activeNav.href}
+  1004→                      onClick={() => setIsOpen(false)}
+  1005→                      className="inline-flex items-center gap-2 text-[#77e2c3] text-lg font-semibold hover:gap-3 transition-all"
+  1006→                    >
+  1007→                      {activeNav.name}
+  1008→                      <ArrowRight className="w-4 h-4" />
+  1009→                    </Link>
+  1010→                  </div>
+  1011→                  <div className="space-y-0">
+  1012→                    {activeNav.submenu.map((sub) => (
+  1013→                      <Link
+  1014→                        key={sub.name}
+  1015→                        href={sub.href}
+  1016→                        onClick={() => setIsOpen(false)}
+  1017→                        className="block py-3 text-white/80 hover:text-white text-[15px] font-medium transition-colors border-b border-white/[0.06]"
+  1018→                      >
+  1019→                        {sub.name}
+  1020→                      </Link>
+  1021→                    ))}
+  1022→                  </div>
+  1023→                  {"description" in activeNav && activeNav.description && (
+  1024→                    <div className="mt-8 pt-6 border-t border-white/10">
+  1025→                      <p className="text-white/40 text-[13px] leading-relaxed max-w-lg">
+  1026→                        {activeNav.description}
+  1027→                      </p>
+  1028→                    </div>
+  1029→                  )}
+  1030→                </div>
+  1031→              )}
+  1032→
+  1033→              {/* NO SUBMENU */}
+  1034→              {activeNav && activeNav.name !== "Услуги" && !activeNav.submenu && (
+  1035→                <div className="flex flex-col h-full">
+  1036→                  <div className="mb-6">
+  1037→                    <Link
+  1038→                      href={activeNav.href}
+  1039→                      onClick={() => setIsOpen(false)}
+  1040→                      className="inline-flex items-center gap-2 text-[#77e2c3] text-lg font-semibold hover:gap-3 transition-all"
+  1041→                    >
+  1042→                      {activeNav.name}
+  1043→                      <ArrowRight className="w-4 h-4" />
+  1044→                    </Link>
+  1045→                  </div>
+  1046→                  {"description" in activeNav && activeNav.description && (
+  1047→                    <p className="text-white/50 text-[14px] leading-relaxed max-w-lg">
+  1048→                      {activeNav.description}
+  1049→                    </p>
+  1050→                  )}
+  1051→                </div>
+  1052→              )}
+  1053→            </div>
+  1054→
+  1055→            {/* ─── 3RD LEVEL COLUMN: Services ─── */}
+  1056→            {activeNav?.name === "Услуги" && "categories" in activeNav && burgerExpandedCategory !== null && (
+  1057→              <div className="flex-1 py-8 px-8 overflow-y-auto">
+  1058→                <div className="flex flex-col h-full">
+  1059→                  <div className="mb-6">
+  1060→                    <Link
+  1061→                      href={activeNav.categories[burgerExpandedCategory].href}
+  1062→                      onClick={() => setIsOpen(false)}
+  1063→                      className="inline-flex items-center gap-2 text-[#77e2c3] text-lg font-semibold hover:gap-3 transition-all"
+  1064→                    >
+  1065→                      {activeNav.categories[burgerExpandedCategory].name}
+  1066→                      <ArrowRight className="w-4 h-4" />
+  1067→                    </Link>
+  1068→                  </div>
+  1069→                  <div className="space-y-0">
+  1070→                    {activeNav.categories[burgerExpandedCategory].services.map((service) => (
+  1071→                      <Link
+  1072→                        key={service.href}
+  1073→                        href={service.href}
+  1074→                        onClick={() => setIsOpen(false)}
+  1075→                        className="block py-3 text-white/70 hover:text-white text-[14px] leading-snug transition-colors border-b border-white/[0.06]"
+  1076→                      >
+  1077→                        {service.name}
+  1078→                      </Link>
+  1079→                    ))}
+  1080→                  </div>
+  1081→                  <div className="mt-6 pt-4 border-t border-white/10">
+  1082→                    <Link
+  1083→                      href={activeNav.categories[burgerExpandedCategory].href}
+  1084→                      onClick={() => setIsOpen(false)}
+  1085→                      className="inline-flex items-center gap-2 text-[#77e2c3] text-[13px] font-medium hover:gap-3 transition-all"
+  1086→                    >
+  1087→                      Перейти в раздел
+  1088→                      <ArrowRight className="w-3.5 h-3.5" />
+  1089→                    </Link>
+  1090→                  </div>
+  1091→                </div>
+  1092→              </div>
+  1093→            )}
+  1094→          </div>
+  1095→
+  1096→          {/* ─── RIGHT COLUMN: Contacts, CTA, policies ─── */}
+  1097→          <div className="w-[290px] shrink-0 border-l border-white/10 py-8 px-6 overflow-y-auto flex flex-col">
+  1098→            {/* Contacts */}
+  1099→            <div className="mb-7">
+  1100→              <h3 className="text-white/30 text-[11px] uppercase tracking-[0.2em] mb-4">Контакты</h3>
+  1101→              <div className="space-y-3">
+  1102→                <div>
+  1103→                  <div className="text-white/40 text-[10px] uppercase tracking-wider mb-1">Телефон</div>
+  1104→                  <a href="tel:+74959374477" className="text-white/80 text-[14px] font-medium hover:text-white transition-colors">
+  1105→                    +7 (495) 937-44-77
+  1106→                  </a>
+  1107→                </div>
+  1108→                <div>
+  1109→                  <div className="text-white/40 text-[10px] uppercase tracking-wider mb-1">Почта</div>
+  1110→                  <a href="mailto:info@arasaca.ru" className="text-white/80 text-[14px] font-medium hover:text-white transition-colors">
+  1111→                    info@arasaca.ru
+  1112→                  </a>
+  1113→                </div>
+  1114→                <div>
+  1115→                  <div className="text-white/40 text-[10px] uppercase tracking-wider mb-1">Адрес</div>
+  1116→                  <span className="text-white/50 text-[13px] leading-relaxed">
+  1117→                    Москва, Пресненская наб., 12
+  1118→                  </span>
+  1119→                </div>
+  1120→              </div>
+  1121→            </div>
+  1122→
+  1123→            {/* Social links */}
+  1124→            <div className="mb-7">
+  1125→              <h3 className="text-white/30 text-[11px] uppercase tracking-[0.2em] mb-3">Соцсети</h3>
+  1126→              <div className="flex items-center gap-3">
+  1127→                <a href="#" className="text-white/40 hover:text-[#77e2c3] transition-colors" aria-label="ВКонтакте">
+  1128→                  <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="currentColor"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.762 9.224h-2.57c-.236 0-.378.264-.246.462.618.93.618 2.076 0 3.006-.132.198.01.462.246.462h2.57c.33 0 .594-.264.594-.594V9.818c0-.33-.264-.594-.594-.594zM12 15.69c-2.038 0-3.69-1.652-3.69-3.69S9.962 8.31 12 8.31s3.69 1.652 3.69 3.69-1.652 3.69-3.69 3.69zm8.37-8.436h-3.276c-.236 0-.378-.264-.246-.462.618-.93.618-2.076 0-3.006-.132-.198.01-.462.246-.462h3.276c.33 0 .594.264.594.594v2.742c0 .33-.264.594-.594.594z"/></svg>
+  1129→                </a>
+  1130→                <a href="#" className="text-white/40 hover:text-[#77e2c3] transition-colors" aria-label="Telegram">
+  1131→                  <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+  1132→                </a>
+  1133→              </div>
+  1134→            </div>
+  1135→
+  1136→            {/* CTA Buttons */}
+  1137→            <div className="space-y-3 mb-7">
+  1138→              <Button
+  1139→                asChild
+  1140→                className="w-full bg-[#77e2c3] hover:bg-[#4dc9a5] text-[#00313C] font-semibold gap-2 text-[12px] uppercase tracking-wider h-10"
+  1141→              >
+  1142→                <Link href="/feedback?type=proposals" onClick={() => setIsOpen(false)}>
+  1143→                  Запросить КП
+  1144→                  <ArrowRight className="w-3.5 h-3.5" />
+  1145→                </Link>
+  1146→              </Button>
+  1147→              <Button
+  1148→                variant="outline"
+  1149→                asChild
+  1150→                className="w-full border-white/20 text-white/70 hover:bg-white/[0.06] hover:text-white font-medium gap-2 text-[12px] uppercase tracking-wider h-10"
+  1151→              >
+  1152→                <Link href="/subscribe" onClick={() => setIsOpen(false)}>
+  1153→                  Подписаться на дайджест
+  1154→                </Link>
+  1155→              </Button>
+  1156→            </div>
+  1157→
+  1158→            {/* Policies & legal */}
+  1159→            <div className="mt-auto">
+  1160→              <div className="border-t border-white/10 pt-5 space-y-2.5">
+  1161→                <Link
+  1162→                  href="/privacy"
+  1163→                  onClick={() => setIsOpen(false)}
+  1164→                  className="block text-white/30 hover:text-white/60 text-[12px] transition-colors"
+  1165→                >
+  1166→                  Политика конфиденциальности
+  1167→                </Link>
+  1168→                <Link
+  1169→                  href="/terms"
+  1170→                  onClick={() => setIsOpen(false)}
+  1171→                  className="block text-white/30 hover:text-white/60 text-[12px] transition-colors"
+  1172→                >
+  1173→                  Пользовательское соглашение
+  1174→                </Link>
+  1175→                <Link
+  1176→                  href="/legal"
+  1177→                  onClick={() => setIsOpen(false)}
+  1178→                  className="block text-white/30 hover:text-white/60 text-[12px] transition-colors"
+  1179→                >
+  1180→                  Правовая информация
+  1181→                </Link>
+  1182→                <Link
+  1183→                  href="/cookies"
+  1184→                  onClick={() => setIsOpen(false)}
+  1185→                  className="block text-white/30 hover:text-white/60 text-[12px] transition-colors"
+  1186→                >
+  1187→                  Использование cookies
+  1188→                </Link>
+  1189→              </div>
+  1190→              <div className="mt-4">
+  1191→                <span className="text-white/20 text-[11px]">© {new Date().getFullYear()} Арасака Консалтинг</span>
+  1192→              </div>
+  1193→            </div>
+  1194→          </div>
+  1195→        </div>
+  1196→      </div>
+  1197→    )}
+  1198→    </>
+  1199→  )
+  1200→}
+  1201→

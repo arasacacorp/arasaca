@@ -231,7 +231,7 @@ export default function PressCenterPage() {
   return (
     <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
       {/* ═══════════════════════════════════════════════════
-          HERO — Gray background (Pattern B)
+          HERO — Gray background
           ═══════════════════════════════════════════════════ */}
       <section
         className="relative overflow-hidden pt-16 lg:pt-[120px] pb-16 md:pb-20"
