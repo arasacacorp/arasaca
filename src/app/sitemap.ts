@@ -1,6 +1,15 @@
 import type { MetadataRoute } from "next";
 import { getCases } from "@/data/cases";
 import { industries } from "@/data/industries";
+import { consultingSubDirections } from "@/data/consultingServices";
+import { analyticsSubDirections } from "@/data/analyticsServices";
+import { technologiesSubDirections } from "@/data/technologiesServices";
+import { engineeringSubDirections } from "@/data/engineeringServices";
+import { hrSubDirections } from "@/data/hrServices";
+import { learningSubDirections } from "@/data/learningServices";
+import { communicationsSubDirections } from "@/data/communicationsServices";
+import { startupsSubDirections } from "@/data/startupsServices";
+import { territorialDevelopmentSubDirections } from "@/data/territorialDevelopmentServices";
 
 const BASE_URL = "https://arasaca.ru";
 
@@ -26,7 +35,7 @@ const staticPages: { path: string; priority: number; changefreq: string }[] = [
   { path: "/media/news/rebranding", priority: 0.5, changefreq: "monthly" },
   { path: "/pro-bono", priority: 0.6, changefreq: "monthly" },
   { path: "/lab", priority: 0.5, changefreq: "monthly" },
-  { path: "/sitemap", priority: 0.4, changefreq: "monthly" },
+  { path: "/map", priority: 0.4, changefreq: "monthly" },
   // Service category pages
   { path: "/services/consulting", priority: 0.8, changefreq: "monthly" },
   { path: "/services/analytics", priority: 0.8, changefreq: "monthly" },
@@ -47,18 +56,18 @@ const staticPages: { path: string; priority: number; changefreq: string }[] = [
   { path: "/services/research", priority: 0.7, changefreq: "monthly" },
 ];
 
-/** Service sub-pages with [slug] */
-const serviceSlugs: Record<string, string[]> = {
-  "/services/consulting": ["strategy", "operational-efficiency", "digital-transformation", "financial-consulting", "investment-advisory", "risk-management"],
-  "/services/analytics": ["market-analysis", "competitive-intelligence", "data-driven-decisions", "financial-modeling", "due-diligence", "benchmarking"],
-  "/services/technologies": ["digital-strategy", "ai-ml", "process-automation", "it-infrastructure", "cybersecurity", "data-platforms"],
-  "/services/engineering": ["project-management", "design-supervision", "cost-engineering", "technical-audit", "commissioning", "hse"],
-  "/services/hr": ["organizational-design", "talent-strategy", "compensation-benefits", "leadership-development", "corporate-culture", "hr-analytics"],
-  "/services/learning": ["corporate-training", "leadership-programs", "digital-skills", "knowledge-management", "assessment-centers", "mentoring"],
-  "/services/communications": ["brand-strategy", "corporate-communications", "digital-marketing", "media-relations", "internal-communications", "crisis-communications"],
-  "/services/startups": ["startup-consulting", "innovation-programs", "venture-advisory", "acceleration", "technology-transfer", "spin-off"],
-  "/services/territorial-development": ["master-planning", "urban-development", "regional-strategy", "investment-attractiveness", "infrastructure-planning", "public-spaces"],
-};
+/** Service sub-directions mapped from real data files */
+const serviceDataMap: { basePath: string; slugs: { slug: string }[] }[] = [
+  { basePath: "/services/consulting", slugs: consultingSubDirections },
+  { basePath: "/services/analytics", slugs: analyticsSubDirections },
+  { basePath: "/services/technologies", slugs: technologiesSubDirections },
+  { basePath: "/services/engineering", slugs: engineeringSubDirections },
+  { basePath: "/services/hr", slugs: hrSubDirections },
+  { basePath: "/services/learning", slugs: learningSubDirections },
+  { basePath: "/services/communications", slugs: communicationsSubDirections },
+  { basePath: "/services/startups", slugs: startupsSubDirections },
+  { basePath: "/services/territorial-development", slugs: territorialDevelopmentSubDirections },
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
@@ -73,11 +82,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
-  // 2. Service sub-pages (dynamic [slug])
-  for (const [basePath, slugs] of Object.entries(serviceSlugs)) {
-    for (const slug of slugs) {
+  // 2. Service sub-pages — generated from real data (no fabricated slugs)
+  for (const { basePath, slugs } of serviceDataMap) {
+    for (const item of slugs) {
       entries.push({
-        url: `${BASE_URL}${basePath}/${slug}`,
+        url: `${BASE_URL}${basePath}/${item.slug}`,
         lastModified: new Date(),
         changeFrequency: "monthly",
         priority: 0.6,
