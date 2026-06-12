@@ -1,0 +1,1220 @@
+     1→"use client";
+     2→
+     3→import { useState } from "react";
+     4→import { motion, AnimatePresence } from "framer-motion";
+     5→import Link from "next/link";
+     6→import { useParams } from "next/navigation";
+     7→import { ChevronRight, ArrowRight, CheckCircle2, Atom, Building2, Map, Laptop, Factory, Shield, Fuel, Cog, Plane, Leaf, Zap, Truck, Microscope, GraduationCap, ShoppingCart, Waves, Radio, FlaskConical, TreePine, Plus, Minus, Target, Users, Award, Mail, Phone, Briefcase, Layers, Newspaper, BarChart3 } from "lucide-react";
+     8→import { industries } from "@/data/industries";
+     9→import { cn } from "@/lib/utils";
+    10→
+    11→import { industryPageContent } from "@/data/industryPages";
+    12→import { servicesData, ServiceCategory } from "@/data/servicesData";
+    13→import { C } from "@/lib/colors";
+    14→
+    15→/* ─── Animation variants ─── */
+    16→const fadeUp = {
+    17→  hidden: { opacity: 0, y: 32 },
+    18→  visible: (i: number = 0) => ({
+    19→    opacity: 1,
+    20→    y: 0,
+    21→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    22→  }),
+    23→};
+    24→
+    25→const scaleIn = {
+    26→  hidden: { opacity: 0, scale: 0.85 },
+    27→  visible: (i: number = 0) => ({
+    28→    opacity: 1,
+    29→    scale: 1,
+    30→    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+    31→  }),
+    32→};
+    33→
+    34→// Industry-specific animation components
+    35→const IndustryAnimations: Record<string, React.FC<{ accentColor: string }>> = {
+    36→  nuclear: ({ accentColor }) => (
+    37→    <div className="relative w-80 h-80">
+    38→      <motion.div
+    39→        className="absolute inset-0 border-2 border-white/10 rounded-full"
+    40→        animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.6, 0.3] }}
+    41→        transition={{ duration: 3, repeat: Infinity }}
+    42→      />
+    43→      <div className="absolute inset-8 border border-white/20 rounded-full" />
+    44→      <div className="absolute inset-16 bg-white/5 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center">
+    45→        <Atom className="w-24 h-24" style={{ color: accentColor }} />
+    46→      </div>
+    47→      <motion.div
+    48→        className="absolute inset-0"
+    49→        animate={{ rotate: 360 }}
+    50→        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+    51→      >
+    52→        <div
+    53→          className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full shadow-lg"
+    54→          style={{ backgroundColor: accentColor, boxShadow: `0 0 20px ${accentColor}` }}
+    55→        />
+    56→      </motion.div>
+    57→      <motion.div
+    58→        className="absolute inset-0"
+    59→        animate={{ rotate: -360 }}
+    60→        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+    61→      >
+    62→        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-3 h-3 bg-white/60 rounded-full" />
+    63→      </motion.div>
+    64→      <motion.div
+    65→        className="absolute inset-0"
+    66→        animate={{ rotate: 360 }}
+    67→        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+    68→      >
+    69→        <div
+    70→          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full"
+    71→          style={{ backgroundColor: accentColor }}
+    72→        />
+    73→      </motion.div>
+    74→    </div>
+    75→  ),
+    76→
+    77→  construction: ({ accentColor }) => (
+    78→    <div className="relative w-80 h-80 flex items-center justify-center">
+    79→      <div className="relative">
+    80→        <motion.div
+    81→          animate={{ height: [200, 220, 200] }}
+    82→          transition={{ duration: 4, repeat: Infinity }}
+    83→          className="w-32 border-l-4 border-r-4 rounded-t-lg"
+    84→          style={{ borderColor: accentColor }}
+    85→        >
+    86→          <div className="grid grid-cols-3 gap-2 p-4">
+    87→            {[...Array(9)].map((_, i) => (
+    88→              <motion.div
+    89→                key={i}
+    90→                animate={{ opacity: [0.3, 1, 0.3] }}
+    91→                transition={{ duration: 2, delay: i * 0.2, repeat: Infinity }}
+    92→                className="w-4 h-4 bg-white/30"
+    93→              />
+    94→            ))}
+    95→          </div>
+    96→        </motion.div>
+    97→        <motion.div
+    98→          animate={{ rotate: [-5, 5, -5] }}
+    99→          transition={{ duration: 6, repeat: Infinity }}
+   100→          className="absolute -top-16 -right-20 w-40 h-1 origin-right"
+   101→          style={{ backgroundColor: accentColor }}
+   102→        >
+   103→          <div className="absolute right-0 w-1 h-24" style={{ backgroundColor: accentColor }} />
+   104→        </motion.div>
+   105→      </div>
+   106→    </div>
+   107→  ),
+   108→
+   109→  "oil-gas": ({ accentColor }) => (
+   110→    <div className="relative w-80 h-80 flex items-center justify-center">
+   111→      <motion.div
+   112→        animate={{ scale: [1, 1.1, 1], y: [0, -10, 0] }}
+   113→        transition={{ duration: 3, repeat: Infinity }}
+   114→        className="relative"
+   115→      >
+   116→        <div
+   117→          className="w-40 h-48 rounded-full"
+   118→          style={{
+   119→            background: `linear-gradient(180deg, ${accentColor}40, ${accentColor}20)`,
+   120→            borderRadius: "50% 50% 50% 50% / 40% 40% 60% 60%"
+   121→          }}
+   122→        />
+   123→        {[...Array(5)].map((_, i) => (
+   124→          <motion.div
+   125→            key={i}
+   126→            animate={{
+   127→              y: [0, -100],
+   128→              opacity: [0, 1, 0],
+   129→              scale: [0.5, 1, 0.5]
+   130→            }}
+   131→            transition={{
+   132→              duration: 3,
+   133→              delay: i * 0.5,
+   134→              repeat: Infinity
+   135→            }}
+   136→            className="absolute rounded-full w-4 h-4"
+   137→            style={{
+   138→              backgroundColor: accentColor,
+   139→              left: `${20 + i * 15}%`,
+   140→              bottom: "20%"
+   141→            }}
+   142→          />
+   143→        ))}
+   144→      </motion.div>
+   145→    </div>
+   146→  ),
+   147→
+   148→  it: ({ accentColor }) => (
+   149→    <div className="relative w-80 h-80 flex items-center justify-center">
+   150→      <motion.div
+   151→        animate={{ opacity: [0.5, 1, 0.5] }}
+   152→        transition={{ duration: 2, repeat: Infinity }}
+   153→        className="text-8xl font-mono"
+   154→        style={{ color: accentColor }}
+   155→      >
+   156→        {"</>"}
+   157→      </motion.div>
+   158→      {[...Array(10)].map((_, i) => (
+   159→        <motion.div
+   160→          key={i}
+   161→          animate={{
+   162→            y: [0, -200],
+   163→            opacity: [0, 1, 0],
+   164→            x: Math.random() * 20 - 10
+   165→          }}
+   166→          transition={{
+   167→            duration: 4 + Math.random() * 2,
+   168→            delay: i * 0.4,
+   169→            repeat: Infinity
+   170→          }}
+   171→          className="absolute text-xs font-mono opacity-50"
+   172→          style={{ color: accentColor, left: `${10 + i * 8}%`, bottom: "10%" }}
+   173→        >
+   174→          {Math.random() > 0.5 ? "1" : "0"}
+   175→        </motion.div>
+   176→      ))}
+   177→    </div>
+   178→  ),
+   179→
+   180→  manufacturing: ({ accentColor }) => (
+   181→    <div className="relative w-80 h-80 flex items-center justify-center">
+   182→      <motion.div
+   183→        animate={{ rotate: 360 }}
+   184→        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+   185→        className="relative"
+   186→      >
+   187→        <Cog className="w-32 h-32" style={{ color: accentColor }} />
+   188→      </motion.div>
+   189→      <motion.div
+   190→        animate={{ rotate: -360 }}
+   191→        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+   192→        className="absolute -right-8 -top-8"
+   193→      >
+   194→        <Cog className="w-20 h-20 text-white/60" />
+   195→      </motion.div>
+   196→      <motion.div
+   197→        animate={{ rotate: 360 }}
+   198→        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+   199→        className="absolute -left-12 top-4"
+   200→      >
+   201→        <Cog className="w-16 h-16 text-white/40" />
+   202→      </motion.div>
+   203→    </div>
+   204→  ),
+   205→
+   206→  defense: ({ accentColor }) => (
+   207→    <div className="relative w-80 h-80 flex items-center justify-center">
+   208→      <motion.div
+   209→        animate={{ scale: [1, 1.05, 1] }}
+   210→        transition={{ duration: 3, repeat: Infinity }}
+   211→      >
+   212→        <Shield className="w-40 h-40" style={{ color: accentColor }} />
+   213→      </motion.div>
+   214→      <motion.div
+   215→        animate={{ rotate: 360 }}
+   216→        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+   217→        className="absolute inset-0 flex items-center justify-center"
+   218→      >
+   219→        <div
+   220→          className="w-72 h-1 origin-left"
+   221→          style={{
+   222→            background: `linear-gradient(90deg, ${accentColor}, transparent)`
+   223→          }}
+   224→        />
+   225→      </motion.div>
+   226→    </div>
+   227→  ),
+   228→
+   229→  shipbuilding: ({ accentColor }) => (
+   230→    <div className="relative w-80 h-80 flex items-center justify-center overflow-hidden">
+   231→      <motion.div
+   232→        animate={{ y: [0, -10, 0] }}
+   233→        transition={{ duration: 3, repeat: Infinity }}
+   234→        className="absolute bottom-20"
+   235→      >
+   236→        <Waves className="w-64 h-20" style={{ color: accentColor }} />
+   237→      </motion.div>
+   238→      <motion.div
+   239→        animate={{ y: [0, -5, 0, -8, 0] }}
+   240→        transition={{ duration: 5, repeat: Infinity }}
+   241→        className="relative z-10"
+   242→      >
+   243→        <div className="w-40 h-20 bg-white/20 rounded-b-full" />
+   244→        <div className="w-20 h-32 bg-white/30 mx-auto -mt-16" />
+   245→      </motion.div>
+   246→    </div>
+   247→  ),
+   248→
+   249→  agro: ({ accentColor }) => (
+   250→    <div className="relative w-80 h-80 flex items-center justify-center">
+   251→      <motion.div
+   252→        animate={{ scaleY: [1, 1.1, 1] }}
+   253→        transition={{ duration: 3, repeat: Infinity }}
+   254→        className="relative"
+   255→      >
+   256→        <Leaf className="w-32 h-32" style={{ color: accentColor }} />
+   257→        {[...Array(4)].map((_, i) => (
+   258→          <motion.div
+   259→            key={i}
+   260→            animate={{
+   261→              y: [0, -50, -100],
+   262→              x: [0, 20 * (i % 2 === 0 ? 1 : -1), 0],
+   263→              rotate: [0, 180, 360],
+   264→              opacity: [1, 0.5, 0]
+   265→            }}
+   266→            transition={{
+   267→              duration: 4,
+   268→              delay: i * 1,
+   269→              repeat: Infinity
+   270→            }}
+   271→            className="absolute"
+   272→            style={{ left: `${i * 30 - 45}px`, top: "50%" }}
+   273→          >
+   274→            <Leaf className="w-6 h-6" style={{ color: accentColor }} />
+   275→          </motion.div>
+   276→        ))}
+   277→      </motion.div>
+   278→    </div>
+   279→  ),
+   280→
+   281→  aerospace: ({ accentColor }) => (
+   282→    <div className="relative w-80 h-80 flex items-center justify-center">
+   283→      <motion.div
+   284→        animate={{ x: [-100, 100], y: [0, -20, 0] }}
+   285→        transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
+   286→      >
+   287→        <Plane className="w-20 h-20 -rotate-45" style={{ color: accentColor }} />
+   288→      </motion.div>
+   289→      {[...Array(8)].map((_, i) => (
+   290→        <motion.div
+   291→          key={i}
+   292→          animate={{ opacity: [0.2, 1, 0.2] }}
+   293→          transition={{ duration: 2, delay: i * 0.3, repeat: Infinity }}
+   294→          className="absolute w-1 h-1 bg-white rounded-full"
+   295→          style={{
+   296→            left: `${10 + i * 12}%`,
+   297→            top: `${15 + (i % 3) * 25}%`
+   298→          }}
+   299→        />
+   300→      ))}
+   301→    </div>
+   302→  ),
+   303→
+   304→  energy: ({ accentColor }) => (
+   305→    <div className="relative w-80 h-80 flex items-center justify-center">
+   306→      <motion.div
+   307→        animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+   308→        transition={{ duration: 1.5, repeat: Infinity }}
+   309→      >
+   310→        <Zap className="w-32 h-32" style={{ color: accentColor }} />
+   311→      </motion.div>
+   312→      {[...Array(3)].map((_, i) => (
+   313→        <motion.div
+   314→          key={i}
+   315→          animate={{ scale: [1, 2], opacity: [0.5, 0] }}
+   316→          transition={{ duration: 2, delay: i * 0.6, repeat: Infinity }}
+   317→          className="absolute w-20 h-20 rounded-full border-2"
+   318→          style={{ borderColor: accentColor }}
+   319→        />
+   320→      ))}
+   321→    </div>
+   322→  ),
+   323→
+   324→  logistics: ({ accentColor }) => (
+   325→    <div className="relative w-80 h-80 flex items-center justify-center">
+   326→      <motion.div
+   327→        animate={{ x: [-50, 50, -50] }}
+   328→        transition={{ duration: 5, repeat: Infinity }}
+   329→      >
+   330→        <Truck className="w-24 h-24" style={{ color: accentColor }} />
+   331→      </motion.div>
+   332→      <motion.div
+   333→        animate={{ strokeDashoffset: [0, -100] }}
+   334→        transition={{ duration: 3, repeat: Infinity }}
+   335→        className="absolute w-full h-full"
+   336→      >
+   337→        <svg className="w-full h-full" viewBox="0 0 320 320">
+   338→          <path
+   339→            d="M0,160 Q160,100 320,160"
+   340→            fill="none"
+   341→            stroke={accentColor}
+   342→            strokeWidth="2"
+   343→            strokeDasharray="10,10"
+   344→            opacity="0.3"
+   345→          />
+   346→        </svg>
+   347→      </motion.div>
+   348→    </div>
+   349→  ),
+   350→
+   351→  healthcare: ({ accentColor }) => (
+   352→    <div className="relative w-80 h-80 flex items-center justify-center">
+   353→      <motion.div
+   354→        animate={{ scale: [1, 1.1, 1] }}
+   355→        transition={{ duration: 2, repeat: Infinity }}
+   356→        className="relative"
+   357→      >
+   358→        <div
+   359→          className="w-12 h-32 rounded-lg"
+   360→          style={{ backgroundColor: accentColor }}
+   361→        />
+   362→        <div
+   363→          className="w-32 h-12 rounded-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+   364→          style={{ backgroundColor: accentColor }}
+   365→        />
+   366→      </motion.div>
+   367→      <motion.div
+   368→        animate={{ strokeDashoffset: [0, -200] }}
+   369→        transition={{ duration: 2, repeat: Infinity }}
+   370→        className="absolute"
+   371→      >
+   372→        <svg width="200" height="60" viewBox="0 0 200 60">
+   373→          <path
+   374→            d="M0,30 L40,30 L50,10 L60,50 L70,30 L100,30 L110,10 L120,50 L130,30 L200,30"
+   375→            fill="none"
+   376→            stroke={accentColor}
+   377→            strokeWidth="2"
+   378→            strokeDasharray="200"
+   379→          />
+   380→        </svg>
+   381→      </motion.div>
+   382→    </div>
+   383→  ),
+   384→
+   385→  education: ({ accentColor }) => (
+   386→    <div className="relative w-80 h-80 flex items-center justify-center">
+   387→      <motion.div
+   388→        animate={{ rotateY: [0, 15, 0, -15, 0] }}
+   389→        transition={{ duration: 5, repeat: Infinity }}
+   390→        style={{ transformStyle: "preserve-3d" }}
+   391→      >
+   392→        <GraduationCap className="w-32 h-32" style={{ color: accentColor }} />
+   393→      </motion.div>
+   394→      {[...Array(6)].map((_, i) => (
+   395→        <motion.div
+   396→          key={i}
+   397→          animate={{
+   398→            y: [-20, -80],
+   399→            opacity: [0, 1, 0]
+   400→          }}
+   401→          transition={{
+   402→            duration: 3,
+   403→            delay: i * 0.5,
+   404→            repeat: Infinity
+   405→          }}
+   406→          className="absolute w-2 h-2 rounded-full"
+   407→          style={{
+   408→            backgroundColor: accentColor,
+   409→            left: `${20 + i * 12}%`
+   410→          }}
+   411→        />
+   412→      ))}
+   413→    </div>
+   414→  ),
+   415→
+   416→  retail: ({ accentColor }) => (
+   417→    <div className="relative w-80 h-80 flex items-center justify-center">
+   418→      <motion.div
+   419→        animate={{ x: [-20, 20, -20] }}
+   420→        transition={{ duration: 4, repeat: Infinity }}
+   421→      >
+   422→        <ShoppingCart className="w-28 h-28" style={{ color: accentColor }} />
+   423→      </motion.div>
+   424→      {[...Array(4)].map((_, i) => (
+   425→        <motion.div
+   426→          key={i}
+   427→          animate={{
+   428→            rotate: [0, 10, -10, 0],
+   429→            scale: [1, 1.1, 1]
+   430→          }}
+   431→          transition={{
+   432→            duration: 2,
+   433→            delay: i * 0.3,
+   434→            repeat: Infinity
+   435→          }}
+   436→          className="absolute text-2xl font-bold"
+   437→          style={{
+   438→            color: accentColor,
+   439→            left: `${15 + i * 25}%`,
+   440→            top: `${20 + (i % 2) * 50}%`
+   441→          }}
+   442→        >
+   443→          %
+   444→        </motion.div>
+   445→      ))}
+   446→    </div>
+   447→  ),
+   448→
+   449→  telecom: ({ accentColor }) => (
+   450→    <div className="relative w-80 h-80 flex items-center justify-center">
+   451→      <Radio className="w-24 h-24 relative z-10" style={{ color: accentColor }} />
+   452→      {[...Array(3)].map((_, i) => (
+   453→        <motion.div
+   454→          key={i}
+   455→          animate={{ scale: [1, 1.5], opacity: [0.6, 0] }}
+   456→          transition={{ duration: 2, delay: i * 0.5, repeat: Infinity }}
+   457→          className="absolute rounded-full border-2"
+   458→          style={{
+   459→            borderColor: accentColor,
+   460→            width: `${60 + i * 40}px`,
+   461→            height: `${60 + i * 40}px`
+   462→          }}
+   463→        />
+   464→      ))}
+   465→    </div>
+   466→  ),
+   467→
+   468→  chemicals: ({ accentColor }) => (
+   469→    <div className="relative w-80 h-80 flex items-center justify-center">
+   470→      <FlaskConical className="w-28 h-28" style={{ color: accentColor }} />
+   471→      {[...Array(8)].map((_, i) => (
+   472→        <motion.div
+   473→          key={i}
+   474→          animate={{
+   475→            y: [0, -150],
+   476→            opacity: [0, 1, 0],
+   477→            scale: [0.5, 1, 0.5]
+   478→          }}
+   479→          transition={{
+   480→            duration: 3,
+   481→            delay: i * 0.4,
+   482→            repeat: Infinity
+   483→          }}
+   484→          className="absolute w-3 h-3 rounded-full"
+   485→          style={{
+   486→            backgroundColor: accentColor,
+   487→            left: `${35 + (i % 4) * 10}%`,
+   488→            bottom: "20%"
+   489→          }}
+   490→        />
+   491→      ))}
+   492→    </div>
+   493→  ),
+   494→
+   495→  forestry: ({ accentColor }) => (
+   496→    <div className="relative w-80 h-80 flex items-center justify-center">
+   497→      <motion.div
+   498→        animate={{ scale: [1, 1.05, 1] }}
+   499→        transition={{ duration: 4, repeat: Infinity }}
+   500→        className="flex items-end gap-4"
+   501→      >
+   502→        <TreePine className="w-24 h-32" style={{ color: accentColor }} />
+   503→        <TreePine className="w-32 h-40 text-white/60" />
+   504→        <TreePine className="w-20 h-28" style={{ color: accentColor, opacity: 0.7 }} />
+   505→      </motion.div>
+   506→      {[...Array(5)].map((_, i) => (
+   507→        <motion.div
+   508→          key={i}
+   509→          animate={{
+   510→            y: [0, 200],
+   511→            x: [0, 50, -50, 0],
+   512→            rotate: [0, 360]
+   513→          }}
+   514→          transition={{
+   515→            duration: 5,
+   516→            delay: i * 0.8,
+   517→            repeat: Infinity
+   518→          }}
+   519→          className="absolute"
+   520→          style={{ left: `${20 + i * 15}%`, top: "10%" }}
+   521→        >
+   522→          <Leaf className="w-4 h-4" style={{ color: accentColor }} />
+   523→        </motion.div>
+   524→      ))}
+   525→    </div>
+   526→  ),
+   527→};
+   528→
+   529→// Default animation for industries without specific one
+   530→const DefaultAnimation: React.FC<{ accentColor: string }> = ({ accentColor }) => (
+   531→  <div className="relative w-80 h-80 flex items-center justify-center">
+   532→    <motion.div
+   533→      animate={{ scale: [1, 1.1, 1] }}
+   534→      transition={{ duration: 3, repeat: Infinity }}
+   535→      className="relative"
+   536→    >
+   537→      <div className="w-32 h-32 rounded-full bg-white/10 flex items-center justify-center">
+   538→        <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
+   539→          <div
+   540→            className="w-8 h-8 rounded-full"
+   541→            style={{ backgroundColor: accentColor }}
+   542→          />
+   543→        </div>
+   544→      </div>
+   545→    </motion.div>
+   546→  </div>
+   547→);
+   548→
+   549→// Accordion Item Component — matches /services/consulting/[slug] style
+   550→function AccordionItem({
+   551→  service,
+   552→  isOpen,
+   553→  onToggle,
+   554→  index
+   555→}: {
+   556→  service: ServiceCategory;
+   557→  isOpen: boolean;
+   558→  onToggle: () => void;
+   559→  index: number;
+   560→}) {
+   561→  return (
+   562→    <motion.div
+   563→      initial={{ opacity: 0, y: 10 }}
+   564→      whileInView={{ opacity: 1, y: 0 }}
+   565→      viewport={{ once: true }}
+   566→      transition={{ duration: 0.3, delay: index * 0.02 }}
+   567→      className="border-b last:border-b-0"
+   568→      style={{ borderColor: "#f0f0f0" }}
+   569→    >
+   570→      <button
+   571→        onClick={onToggle}
+   572→        className={cn(
+   573→          "w-full flex items-center justify-between py-4 px-5 md:px-6 text-left group transition-colors",
+   574→          isOpen ? "bg-white" : "hover:bg-white"
+   575→        )}
+   576→      >
+   577→        <span
+   578→          className={cn(
+   579→            "text-[14px] font-medium transition-colors",
+   580→            isOpen ? "text-[#008C95]" : "text-gray-900 group-hover:text-[#008C95]"
+   581→          )}
+   582→        >
+   583→          {service.name}
+   584→        </span>
+   585→        <div
+   586→          className={cn(
+   587→            "w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-md transition-all",
+   588→            isOpen ? "bg-[#e8f5f3]" : "border group-hover:border-[#008C95]"
+   589→          )}
+   590→          style={{ borderColor: isOpen ? undefined : "#e5e7eb" }}
+   591→        >
+   592→          {isOpen ? (
+   593→            <Minus className="w-3.5 h-3.5 text-[#008C95]" />
+   594→          ) : (
+   595→            <Plus className="w-3.5 h-3.5 text-gray-400 group-hover:text-[#008C95] transition-colors" />
+   596→          )}
+   597→        </div>
+   598→      </button>
+   599→
+   600→      <AnimatePresence>
+   601→        {isOpen && (
+   602→          <motion.div
+   603→            initial={{ height: 0, opacity: 0 }}
+   604→            animate={{ height: "auto", opacity: 1 }}
+   605→            exit={{ height: 0, opacity: 0 }}
+   606→            transition={{ duration: 0.2 }}
+   607→            className="overflow-hidden"
+   608→          >
+   609→            <div className="pb-5 px-5 md:px-6 pt-0">
+   610→              {/* Description with left accent bar */}
+   611→              <div className="flex gap-4 mb-4">
+   612→                <div className="flex-shrink-0 w-0.5 rounded-full" style={{ background: "#008C95" }} />
+   613→                <p className="text-[13px] leading-relaxed" style={{ color: "#6b7280" }}>
+   614→                  {service.description}
+   615→                </p>
+   616→              </div>
+   617→
+   618→              {/* Sub-services list */}
+   619→              <ul className="space-y-2.5 ml-[calc(0.125rem+1rem)]">
+   620→                {service.subServices.map((subService, idx) => (
+   621→                  <motion.li
+   622→                    key={subService.href}
+   623→                    initial={{ opacity: 0, x: -10 }}
+   624→                    animate={{ opacity: 1, x: 0 }}
+   625→                    transition={{ duration: 0.2, delay: idx * 0.05 }}
+   626→                  >
+   627→                    <Link
+   628→                      href={subService.href}
+   629→                      className="flex items-center gap-2.5 hover:text-[#008C95] transition-colors group"
+   630→                      style={{ color: "#6b7280" }}
+   631→                    >
+   632→                      <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: "#008C95" }} />
+   633→                      <span className="text-[13px] group-hover:translate-x-0.5 transition-transform">
+   634→                        {subService.name}
+   635→                      </span>
+   636→                    </Link>
+   637→                  </motion.li>
+   638→                ))}
+   639→              </ul>
+   640→
+   641→              {/* Link to main service page */}
+   642→              <div className="ml-[calc(0.125rem+1rem)] mt-4">
+   643→                <Link
+   644→                  href={service.href}
+   645→                  className="inline-flex items-center gap-1.5 text-[#008C95] font-medium text-[12px] hover:gap-2.5 transition-all"
+   646→                >
+   647→                  Подробнее о направлении
+   648→                  <ArrowRight className="w-3.5 h-3.5" />
+   649→                </Link>
+   650→              </div>
+   651→            </div>
+   652→          </motion.div>
+   653→        )}
+   654→      </AnimatePresence>
+   655→    </motion.div>
+   656→  );
+   657→}
+   658→
+   659→export default function IndustryPage() {
+   660→  const params = useParams();
+   661→  const slug = params.slug as string;
+   662→  const industry = industries.find((i) => i.slug === slug);
+   663→  const pageContent = industryPageContent[slug];
+   664→  const [openAccordion, setOpenAccordion] = useState<number>(0);
+   665→
+   666→  if (!industry) {
+   667→    return (
+   668→      <main className="min-h-screen bg-white flex items-center justify-center">
+   669→        <div className="text-center">
+   670→          <h1 className="text-4xl font-bold text-gray-900 mb-4">Отрасль не найдена</h1>
+   671→          <Link href="/industries" className="text-[#008C95] hover:underline">
+   672→            Вернуться к списку отраслей
+   673→          </Link>
+   674→        </div>
+   675→      </main>
+   676→    );
+   677→  }
+   678→
+   679→  const Icon = industry.icon;
+   680→
+   681→  return (
+   682→    <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
+   683→      {/* ═══════════════════════════════════════════════════
+   684→          HERO — Dark background with diagonal lines + stats grid
+   685→          ═══════════════════════════════════════════════════ */}
+   686→      <section className="relative overflow-hidden pt-16 lg:pt-[120px]" style={{ background: C.dark }}>
+   687→        {/* Decorative diagonal lines */}
+   688→        <div
+   689→          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   690→          style={{
+   691→            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   692→          }}
+   693→        />
+   694→        {/* Decorative glow */}
+   695→        <div
+   696→          className="pointer-events-none absolute -right-40 -top-20 h-[500px] w-[500px] rounded-full blur-[180px]"
+   697→          style={{ background: "rgba(224,78,57,0.10)" }}
+   698→        />
+   699→        <div
+   700→          className="pointer-events-none absolute -left-20 bottom-0 h-[300px] w-[300px] rounded-full blur-[120px]"
+   701→          style={{ background: "rgba(0,140,149,0.08)" }}
+   702→        />
+   703→
+   704→        <div className="container-kept relative z-10">
+   705→          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between py-6 md:py-10 lg:py-12">
+   706→            {/* LEFT: Label + heading + text + buttons */}
+   707→            <motion.div
+   708→              className="flex-1"
+   709→              variants={fadeUp}
+   710→              initial="hidden"
+   711→              animate="visible"
+   712→              custom={0.1}
+   713→            >
+   714→              {/* Breadcrumb */}
+   715→              <motion.nav
+   716→                className="flex items-center gap-2 mb-6"
+   717→                initial={{ opacity: 0 }}
+   718→                animate={{ opacity: 1 }}
+   719→                transition={{ duration: 0.5, delay: 0.1 }}
+   720→              >
+   721→                <Link href="/" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+   722→                  Главная
+   723→                </Link>
+   724→                <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   725→                <Link href="/industries" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+   726→                  Отрасли
+   727→                </Link>
+   728→                <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   729→                <span className="text-[12px] font-medium" style={{ color: C.mint }}>{industry.name}</span>
+   730→              </motion.nav>
+   731→
+   732→              {/* Badge — Ключевая отрасль */}
+   733→              {industry.isCore && (
+   734→                <motion.div
+   735→                  className="mb-4"
+   736→                  initial={{ opacity: 0, y: 12 }}
+   737→                  animate={{ opacity: 1, y: 0 }}
+   738→                  transition={{ duration: 0.5, delay: 0.1 }}
+   739→                >
+   740→                  <span
+   741→                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+   742→                    style={{
+   743→                      background: "rgba(255,255,255,0.2)",
+   744→                      color: "rgba(255,255,255,0.95)",
+   745→                      borderRadius: "2px",
+   746→                    }}
+   747→                  >
+   748→                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-white" />
+   749→                    Ключевая отрасль
+   750→                  </span>
+   751→                </motion.div>
+   752→              )}
+   753→
+   754→              {/* Main heading */}
+   755→              <motion.h1
+   756→                className="mb-4 max-w-lg"
+   757→                style={{
+   758→                  fontFamily: "var(--font-russo)",
+   759→                  fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   760→                  fontWeight: 700,
+   761→                  lineHeight: 1.25,
+   762→                  letterSpacing: "-0.01em",
+   763→                  color: C.white,
+   764→                }}
+   765→                initial={{ opacity: 0, y: 16 }}
+   766→                animate={{ opacity: 1, y: 0 }}
+   767→                transition={{ duration: 0.6, delay: 0.15 }}
+   768→              >
+   769→                {industry.name}
+   770→              </motion.h1>
+   771→
+   772→              {/* Tagline */}
+   773→              {pageContent?.tagline && (
+   774→                <motion.p
+   775→                  className="mb-2 max-w-md text-[15px] font-medium leading-relaxed"
+   776→                  style={{ color: C.mint }}
+   777→                  initial={{ opacity: 0, y: 12 }}
+   778→                  animate={{ opacity: 1, y: 0 }}
+   779→                  transition={{ duration: 0.6, delay: 0.25 }}
+   780→                >
+   781→                  {pageContent.tagline}
+   782→                </motion.p>
+   783→              )}
+   784→
+   785→              {/* Description */}
+   786→              <motion.p
+   787→                className="mb-6 max-w-md text-[14px] font-light leading-relaxed"
+   788→                style={{ color: "rgba(255,255,255,0.55)" }}
+   789→                initial={{ opacity: 0, y: 12 }}
+   790→                animate={{ opacity: 1, y: 0 }}
+   791→                transition={{ duration: 0.6, delay: 0.3 }}
+   792→              >
+   793→                {industry.description}
+   794→              </motion.p>
+   795→
+   796→              {/* CTA buttons */}
+   797→              <motion.div
+   798→                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
+   799→                initial={{ opacity: 0, y: 12 }}
+   800→                animate={{ opacity: 1, y: 0 }}
+   801→                transition={{ duration: 0.6, delay: 0.45 }}
+   802→              >
+   803→                <Link href="/feedback?type=proposals" className="sm:auto">
+   804→                  <motion.span
+   805→                    className="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white w-full sm:w-auto"
+   806→                    style={{ background: C.dna, borderRadius: "4px" }}
+   807→                    whileHover={{ background: C.dnaHover, transition: { duration: 0.3 } }}
+   808→                  >
+   809→                    Запросить КП
+   810→                    <ArrowRight className="h-4 w-4" />
+   811→                  </motion.span>
+   812→                </Link>
+   813→                <Link href="/feedback?type=callback" className="sm:auto">
+   814→                  <motion.span
+   815→                    className="inline-flex items-center justify-center gap-2 border px-7 py-3 text-sm font-medium uppercase tracking-[0.05em] w-full sm:w-auto"
+   816→                    style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)", borderRadius: "4px" }}
+   817→                    whileHover={{
+   818→                      borderColor: C.mint,
+   819→                      color: C.mint,
+   820→                      transition: { duration: 0.3 },
+   821→                    }}
+   822→                  >
+   823→                    Заказать звонок
+   824→                  </motion.span>
+   825→                </Link>
+   826→              </motion.div>
+   827→            </motion.div>
+   828→
+   829→            {/* RIGHT: Stats — 4 cards in 2x2 grid */}
+   830→            <motion.div
+   831→              className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:w-[420px] lg:flex-shrink-0 lg:gap-4"
+   832→              variants={fadeUp}
+   833→              initial="hidden"
+   834→              animate="visible"
+   835→              custom={0.3}
+   836→            >
+   837→              {[
+   838→                { number: String(servicesData.length), label: "направлений", icon: Briefcase, accent: C.dna },
+   839→                { number: "30+", label: "отраслей", icon: BarChart3, accent: C.mintDark },
+   840→                { number: "50+", label: "экспертов", icon: Users, accent: C.orange },
+   841→                { number: "500+", label: "проектов", icon: Building2, accent: C.dna },
+   842→              ].map((stat, index) => (
+   843→                <motion.div
+   844→                  key={stat.label}
+   845→                  className="relative overflow-hidden rounded-lg p-5 md:p-6"
+   846→                  style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }}
+   847→                  variants={scaleIn}
+   848→                  initial="hidden"
+   849→                  animate="visible"
+   850→                  custom={0.4 + index * 0.08}
+   851→                >
+   852→                  {/* Top accent */}
+   853→                  <div
+   854→                    className="absolute left-0 top-0 h-0.5 w-full"
+   855→                    style={{ background: `linear-gradient(90deg, ${stat.accent}, ${stat.accent}50)` }}
+   856→                  />
+   857→                  <stat.icon className="mb-3 h-5 w-5" style={{ color: stat.accent }} />
+   858→                  <div
+   859→                    className="text-2xl font-bold leading-none md:text-3xl"
+   860→                    style={{ fontFamily: "var(--font-russo)", color: C.white }}
+   861→                  >
+   862→                    {stat.number}
+   863→                  </div>
+   864→                  <div className="mt-1.5 text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.45)" }}>
+   865→                    {stat.label}
+   866→                  </div>
+   867→                </motion.div>
+   868→              ))}
+   869→            </motion.div>
+   870→          </div>
+   871→        </div>
+   872→      </section>
+   873→
+   874→      {/* Intro Section - White background with industry description */}
+   875→      {pageContent?.intro && pageContent.intro.length > 0 && (
+   876→        <section className="py-16 lg:py-24 bg-white">
+   877→          <div className="container-kept">
+   878→            <motion.div
+   879→              initial={{ opacity: 0, y: 20 }}
+   880→              whileInView={{ opacity: 1, y: 0 }}
+   881→              viewport={{ once: true }}
+   882→              transition={{ duration: 0.6 }}
+   883→              className="max-w-4xl"
+   884→            >
+   885→              <h2 className="heading-section text-gray-900 mb-6">
+   886→                Об отрасли
+   887→              </h2>
+   888→              {pageContent.intro.map((paragraph, index) => (
+   889→                <motion.p
+   890→                  key={index}
+   891→                  initial={{ opacity: 0, y: 10 }}
+   892→                  whileInView={{ opacity: 1, y: 0 }}
+   893→                  viewport={{ once: true }}
+   894→                  transition={{ duration: 0.4, delay: index * 0.1 }}
+   895→                  className="text-[14px] font-normal leading-relaxed text-gray-600 mb-4 last:mb-0"
+   896→                >
+   897→                  {paragraph}
+   898→                </motion.p>
+   899→              ))}
+   900→            </motion.div>
+   901→          </div>
+   902→        </section>
+   903→      )}
+   904→
+   905→      {/* Services Section — matches /services/consulting/[slug] style */}
+   906→      <section className="py-20 md:py-28" style={{ background: "#f1f2f4" }}>
+   907→        <div className="container-kept">
+   908→          <div className="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-16">
+   909→            {/* Left column - Sticky title */}
+   910→            <div className="lg:sticky lg:top-32 lg:self-start">
+   911→              <motion.span
+   912→                className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+   913→                style={{ color: "#008C95" }}
+   914→                initial={{ opacity: 0 }}
+   915→                whileInView={{ opacity: 1 }}
+   916→                viewport={{ once: true }}
+   917→                transition={{ duration: 0.5 }}
+   918→              >
+   919→                Услуги
+   920→              </motion.span>
+   921→              <h2 className="heading-section mb-4" style={{ color: "#1a1a1a" }}>
+   922→                Услуги направления
+   923→              </h2>
+   924→              <p className="text-[13px] leading-relaxed" style={{ color: "#6b7280" }}>
+   925→                Полный перечень услуг для компаний в отрасли {industry.name.toLowerCase()}
+   926→              </p>
+   927→            </div>
+   928→
+   929→            {/* Right column - Accordion */}
+   930→            <motion.div
+   931→              initial={{ opacity: 0, y: 20 }}
+   932→              whileInView={{ opacity: 1, y: 0 }}
+   933→              viewport={{ once: true }}
+   934→              transition={{ duration: 0.6 }}
+   935→              className="rounded-lg overflow-hidden border"
+   936→              style={{ background: "#ffffff", borderColor: "#f0f0f0" }}
+   937→            >
+   938→              {servicesData.map((service, index) => (
+   939→                <AccordionItem
+   940→                  key={service.id}
+   941→                  service={service}
+   942→                  isOpen={openAccordion === index}
+   943→                  onToggle={() => setOpenAccordion(openAccordion === index ? -1 : index)}
+   944→                  index={index}
+   945→                />
+   946→              ))}
+   947→            </motion.div>
+   948→          </div>
+   949→        </div>
+   950→      </section>
+   951→
+   952→      {/* Преимущества — dark background, matches consulting methodology style */}
+   953→      <section className="py-20 md:py-28" style={{ background: "#00313C" }}>
+   954→        <div className="container-kept">
+   955→          {/* Section header */}
+   956→          <motion.div
+   957→            className="mb-14 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   958→            initial={{ opacity: 0, y: 32 }}
+   959→            whileInView={{ opacity: 1, y: 0 }}
+   960→            viewport={{ once: true, amount: 0.2 }}
+   961→            transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
+   962→          >
+   963→            <div>
+   964→              <motion.span
+   965→                className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+   966→                style={{ color: "#77e2c3" }}
+   967→                initial={{ opacity: 0 }}
+   968→                whileInView={{ opacity: 1 }}
+   969→                viewport={{ once: true }}
+   970→                transition={{ duration: 0.5 }}
+   971→              >
+   972→                Преимущества
+   973→              </motion.span>
+   974→              <h2 className="heading-section" style={{ color: "#ffffff" }}>
+   975→                Почему мы
+   976→              </h2>
+   977→            </div>
+   978→            <p className="text-[14px] font-normal leading-relaxed max-w-sm lg:text-right" style={{ color: "rgba(255,255,255,0.5)" }}>
+   979→              Глубокая экспертиза в отрасли {industry.name.toLowerCase()} и подтверждённый практический результат — от стратегии до реализации проектов.
+   980→            </p>
+   981→          </motion.div>
+   982→
+   983→          {/* 3 Cards */}
+   984→          <div className="grid md:grid-cols-3 gap-5">
+   985→            {[
+   986→              {
+   987→                icon: Target,
+   988→                title: "Отраслевая экспертиза",
+   989→                description: "Глубокое понимание специфики, вызовов и трендов отрасли " + industry.name.toLowerCase(),
+   990→                step: "01",
+   991→              },
+   992→              {
+   993→                icon: Users,
+   994→                title: "Команда экспертов",
+   995→                description: "Специалисты с реальным опытом работы в ведущих компаниях отрасли",
+   996→                step: "02",
+   997→              },
+   998→              {
+   999→                icon: Award,
+  1000→                title: "Доказанный результат",
+  1001→                description: "Успешно реализованные проекты и долгосрочные партнёрства с лидерами рынка",
+  1002→                step: "03",
+  1003→              },
+  1004→            ].map((item, index) => (
+  1005→              <motion.div
+  1006→                key={index}
+  1007→                initial={{ opacity: 0, y: 32 }}
+  1008→                whileInView={{ opacity: 1, y: 0 }}
+  1009→                viewport={{ once: true, amount: 0.2 }}
+  1010→                transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 0.61, 0.36, 1] }}
+  1011→              >
+  1012→                <div
+  1013→                  className="relative overflow-hidden rounded-lg p-6 md:p-8 h-full"
+  1014→                  style={{ background: "rgba(255,255,255,0.05)" }}
+  1015→                >
+  1016→                  <div className="relative z-10">
+  1017→                    {/* Icon */}
+  1018→                    <div
+  1019→                      className="flex h-12 w-12 items-center justify-center rounded-lg mb-5"
+  1020→                      style={{ background: "rgba(0,140,149,0.15)" }}
+  1021→                    >
+  1022→                      <item.icon className="h-6 w-6" style={{ color: "#008C95" }} />
+  1023→                    </div>
+  1024→
+  1025→                    {/* Step label */}
+  1026→                    <span
+  1027→                      className="block text-[11px] font-semibold uppercase tracking-[0.2em] mb-2"
+  1028→                      style={{ color: "#77e2c3" }}
+  1029→                    >
+  1030→                      {item.step}
+  1031→                    </span>
+  1032→
+  1033→                    {/* Title */}
+  1034→                    <h3
+  1035→                      className="text-lg font-bold mb-2"
+  1036→                      style={{ color: "#ffffff" }}
+  1037→                    >
+  1038→                      {item.title}
+  1039→                    </h3>
+  1040→
+  1041→                    {/* Description */}
+  1042→                    <p
+  1043→                      className="text-[13px] leading-relaxed"
+  1044→                      style={{ color: "rgba(255,255,255,0.5)" }}
+  1045→                    >
+  1046→                      {item.description}
+  1047→                    </p>
+  1048→                  </div>
+  1049→                </div>
+  1050→              </motion.div>
+  1051→            ))}
+  1052→          </div>
+  1053→        </div>
+  1054→      </section>
+  1055→
+  1056→      {/* Навигация / Полезные ссылки — matches /industries listing style */}
+  1057→      <section className="bg-white py-20 md:py-28">
+  1058→        <div className="container-kept">
+  1059→          {/* Section header */}
+  1060→          <motion.div
+  1061→            className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+  1062→            initial={{ opacity: 0, y: 32 }}
+  1063→            whileInView={{ opacity: 1, y: 0 }}
+  1064→            viewport={{ once: true, amount: 0.2 }}
+  1065→            transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
+  1066→          >
+  1067→            <div>
+  1068→              <motion.span
+  1069→                className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+  1070→                style={{ color: "#008C95" }}
+  1071→                initial={{ opacity: 0 }}
+  1072→                whileInView={{ opacity: 1 }}
+  1073→                viewport={{ once: true }}
+  1074→                transition={{ duration: 0.5 }}
+  1075→              >
+  1076→                Навигация
+  1077→              </motion.span>
+  1078→              <h2 className="heading-section" style={{ color: "#1a1a1a" }}>
+  1079→                Полезные ссылки
+  1080→              </h2>
+  1081→            </div>
+  1082→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: "#6b7280" }}>
+  1083→              Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании
+  1084→            </p>
+  1085→          </motion.div>
+  1086→
+  1087→          {/* Cards + CTA row */}
+  1088→          <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+  1089→            {/* Left: 6 navigation cards */}
+  1090→            <div className="flex-1 flex">
+  1091→              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 w-full h-full auto-rows-fr">
+  1092→                {[
+  1093→                  { title: "О компании", description: "Миссия, ценности, команда", bg: "#00313C", textColor: "#ffffff", href: "/about", icon: Building2 },
+  1094→                  { title: "Услуги", description: "9 направлений консалтинга", bg: "#E04E39", textColor: "#ffffff", href: "/services", icon: Briefcase },
+  1095→                  { title: "Решения", description: "Цифровые продукты и платформы", bg: "#ffffff", textColor: "#1a1a1a", href: "/solutions/master-planning", icon: Layers },
+  1096→                  { title: "Пресс-центр", description: "Новости, пресс-релизы, СМИ", bg: "#008C95", textColor: "#ffffff", href: "/media", icon: Newspaper },
+  1097→                  { title: "Карьера", description: "Присоединяйтесь к команде", bg: "#4dc9a5", textColor: "#ffffff", href: "/career", icon: Users },
+  1098→                  { title: "Контакты", description: "Свяжитесь с нами", bg: "#00313C", textColor: "#ffffff", href: "/contacts", icon: Mail },
+  1099→                ].map((card, index) => {
+  1100→                  const isWhite = card.bg === "#ffffff";
+  1101→                  return (
+  1102→                    <motion.div
+  1103→                      key={card.title}
+  1104→                      className="flex"
+  1105→                      initial={{ opacity: 0, scale: 0.85 }}
+  1106→                      whileInView={{ opacity: 1, scale: 1 }}
+  1107→                      viewport={{ once: true, amount: 0.2 }}
+  1108→                      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 0.61, 0.36, 1] }}
+  1109→                    >
+  1110→                      <Link href={card.href} className="group block h-full w-full">
+  1111→                        <motion.div
+  1112→                          className={cn(
+  1113→                            "relative flex flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300 h-full",
+  1114→                            isWhite && "border shadow-sm group-hover:shadow-md",
+  1115→                          )}
+  1116→                          style={{ background: card.bg, color: card.textColor, borderColor: isWhite ? "#e5e7eb" : undefined, minHeight: "130px" }}
+  1117→                          whileHover={{ y: -3, transition: { duration: 0.25 } }}
+  1118→                        >
+  1119→                          {card.bg === "#00313C" && (
+  1120→                            <div
+  1121→                              className="pointer-events-none absolute inset-0 opacity-[0.06]"
+  1122→                              style={{
+  1123→                                backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`,
+  1124→                                backgroundSize: "20px 20px",
+  1125→                              }}
+  1126→                            />
+  1127→                          )}
+  1128→                          {isWhite && (
+  1129→                            <div
+  1130→                              className="pointer-events-none absolute inset-0 opacity-[0.1]"
+  1131→                              style={{
+  1132→                                backgroundImage: `radial-gradient(circle, #008C95 1px, transparent 1px)`,
+  1133→                                backgroundSize: "12px 12px",
+  1134→                              }}
+  1135→                            />
+  1136→                          )}
+  1137→
+  1138→                          {/* Colored accent bar on left */}
+  1139→                          <div
+  1140→                            className="pointer-events-none absolute left-0 top-0 h-full w-1"
+  1141→                            style={{ background: isWhite ? "#008C95" : "rgba(255,255,255,0.4)" }}
+  1142→                          />
+  1143→
+  1144→                          <div className="relative z-10">
+  1145→                            <div className="flex items-center gap-2">
+  1146→                              {card.icon && (
+  1147→                                <card.icon className="h-4 w-4 opacity-60" />
+  1148→                              )}
+  1149→                              <span className="block text-sm font-semibold md:text-base">{card.title}</span>
+  1150→                            </div>
+  1151→                            <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+  1152→                          </div>
+  1153→
+  1154→                          <div className="relative z-10 flex justify-end">
+  1155→                            <div
+  1156→                              className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+  1157→                              style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}
+  1158→                            >
+  1159→                              <ArrowRight className="h-4 w-4" style={{ color: isWhite ? "#008C95" : "#ffffff" }} />
+  1160→                            </div>
+  1161→                          </div>
+  1162→                        </motion.div>
+  1163→                      </Link>
+  1164→                    </motion.div>
+  1165→                  );
+  1166→                })}
+  1167→              </div>
+  1168→            </div>
+  1169→
+  1170→            {/* Right: CTA panel */}
+  1171→            <motion.div
+  1172→              className="lg:w-[340px] flex-shrink-0"
+  1173→              initial={{ opacity: 0, y: 32 }}
+  1174→              whileInView={{ opacity: 1, y: 0 }}
+  1175→              viewport={{ once: true, amount: 0.2 }}
+  1176→              transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
+  1177→            >
+  1178→              <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg p-6 md:p-8" style={{ background: "#00313C" }}>
+  1179→                {/* Decorative pattern */}
+  1180→                <div
+  1181→                  className="pointer-events-none absolute inset-0 opacity-[0.03]"
+  1182→                  style={{
+  1183→                    backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+  1184→                  }}
+  1185→                />
+  1186→
+  1187→                <div className="relative z-10">
+  1188→                  {/* Decorative line */}
+  1189→                  <div className="h-px w-12 mb-5" style={{ background: "#77e2c3" }} />
+  1190→
+  1191→                  <h3
+  1192→                    className="text-xl font-bold leading-tight mb-2"
+  1193→                    style={{ fontFamily: "var(--font-russo)", color: "#ffffff" }}
+  1194→                  >
+  1195→                    Начните сотрудничество
+  1196→                  </h3>
+  1197→                  <p className="text-[13px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+  1198→                    Оставьте заявку — мы свяжемся с&nbsp;вами, обсудим задачу и&nbsp;подготовим индивидуальное предложение.
+  1199→                  </p>
+  1200→                </div>
+  1201→
+  1202→                <div className="relative z-10 flex flex-col gap-3">
+  1203→                  <Link href="/feedback?type=proposals" className="group/kp inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300" style={{ background: "#008C95" }}>
+  1204→                    Запросить КП
+  1205→                    <ArrowRight className="w-3.5 h-3.5 group-hover/kp:translate-x-0.5 transition-transform" />
+  1206→                  </Link>
+  1207→                  <Link href="/feedback?type=callback" className="group/cb inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider transition-all duration-300 border" style={{ color: "rgba(255,255,255,0.7)", borderColor: "rgba(255,255,255,0.15)" }}>
+  1208→                    Обратный звонок
+  1209→                    <Phone className="w-3.5 h-3.5 group-hover/cb:translate-x-0.5 transition-transform" />
+  1210→                  </Link>
+  1211→                </div>
+  1212→              </div>
+  1213→            </motion.div>
+  1214→          </div>
+  1215→        </div>
+  1216→      </section>
+  1217→    </main>
+  1218→  );
+  1219→}
+  1220→

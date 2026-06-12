@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 import {
   ArrowRight,
   ChevronRight,
@@ -192,18 +192,7 @@ export default function AnalyticsSubDirectionPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   if (!direction) {
-    return (
-      <main className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Направление не найдено
-          </h1>
-          <Link href="/services/analytics" className="text-[#008C95] hover:underline">
-            Вернуться к аналитике
-          </Link>
-        </div>
-      </main>
-    );
+    notFound();
   }
 
   const IconComponent = iconMap[direction.icon] || Search;

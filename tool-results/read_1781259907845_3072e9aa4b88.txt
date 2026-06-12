@@ -1,0 +1,783 @@
+     1→"use client";
+     2→
+     3→import { useState, useRef } from "react";
+     4→import { motion } from "framer-motion";
+     5→import Link from "next/link";
+     6→import { useParams } from "next/navigation";
+     7→import {
+     8→  ArrowRight,
+     9→  ChevronRight,
+    10→  ChevronLeft,
+    11→  RefreshCw,
+    12→  Shield,
+    13→  Code,
+    14→  Lightbulb,
+    15→  Cog,
+    16→  Cloud,
+    17→  Plus,
+    18→  Minus,
+    19→  Phone,
+    20→  Mail,
+    21→  Briefcase,
+    22→  Building2,
+    23→  Users,
+    24→  Newspaper,
+    25→  Layers,
+    26→  ClipboardList,
+    27→  BarChart3,
+    28→} from "lucide-react";
+    29→import { cn } from "@/lib/utils";
+    30→import { technologiesSubDirections, getTechnologiesSubDirectionBySlug } from "@/data/technologiesServices";
+    31→import { C } from "@/lib/colors";
+    32→
+    33→/* ─── Animation variants ─── */
+    34→const fadeUp = {
+    35→  hidden: { opacity: 0, y: 32 },
+    36→  visible: (i: number = 0) => ({
+    37→    opacity: 1,
+    38→    y: 0,
+    39→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    40→  }),
+    41→};
+    42→
+    43→const scaleIn = {
+    44→  hidden: { opacity: 0, scale: 0.85 },
+    45→  visible: (i: number = 0) => ({
+    46→    opacity: 1,
+    47→    scale: 1,
+    48→    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+    49→  }),
+    50→};
+    51→
+    52→// Icon mapping
+    53→const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    54→  RefreshCw,
+    55→  Shield,
+    56→  Code,
+    57→  Lightbulb,
+    58→  Cog,
+    59→  Cloud,
+    60→};
+    61→
+    62→/* ─── Quick Links data ─── */
+    63→const quickLinks = [
+    64→  {
+    65→    title: "О компании",
+    66→    description: "Миссия, ценности, команда",
+    67→    bg: "#00313C",
+    68→    textColor: "#ffffff",
+    69→    href: "/about",
+    70→    icon: Building2,
+    71→  },
+    72→  {
+    73→    title: "Услуги",
+    74→    description: "9 направлений консалтинга",
+    75→    bg: "#E04E39",
+    76→    textColor: "#ffffff",
+    77→    href: "/services",
+    78→    icon: Briefcase,
+    79→  },
+    80→  {
+    81→    title: "Решения",
+    82→    description: "Цифровые продукты и платформы",
+    83→    bg: "#ffffff",
+    84→    textColor: "#1a1a1a",
+    85→    href: "/solutions/master-planning",
+    86→    icon: Layers,
+    87→  },
+    88→  {
+    89→    title: "Пресс-центр",
+    90→    description: "Новости, пресс-релизы, СМИ",
+    91→    bg: "#008C95",
+    92→    textColor: "#ffffff",
+    93→    href: "/media",
+    94→    icon: Newspaper,
+    95→  },
+    96→  {
+    97→    title: "Карьера",
+    98→    description: "Присоединяйтесь к команде",
+    99→    bg: "#4dc9a5",
+   100→    textColor: "#ffffff",
+   101→    href: "/career",
+   102→    icon: Users,
+   103→  },
+   104→  {
+   105→    title: "Контакты",
+   106→    description: "Свяжитесь с нами",
+   107→    bg: "#00313C",
+   108→    textColor: "#ffffff",
+   109→    href: "/contacts",
+   110→    icon: Mail,
+   111→  },
+   112→];
+   113→
+   114→// Accordion Item Component
+   115→function ServiceAccordionItem({
+   116→  service,
+   117→  isOpen,
+   118→  onToggle,
+   119→  index,
+   120→}: {
+   121→  service: { name: string; description: string; isTop?: boolean };
+   122→  isOpen: boolean;
+   123→  onToggle: () => void;
+   124→  index: number;
+   125→}) {
+   126→  return (
+   127→    <motion.div
+   128→      initial={{ opacity: 0, y: 10 }}
+   129→      whileInView={{ opacity: 1, y: 0 }}
+   130→      viewport={{ once: true }}
+   131→      transition={{ duration: 0.3, delay: index * 0.02 }}
+   132→      className="border-b last:border-b-0"
+   133→      style={{ borderColor: C.borderLight }}
+   134→    >
+   135→      <button
+   136→        onClick={onToggle}
+   137→        className={cn(
+   138→          "w-full flex items-center justify-between py-4 px-5 md:px-6 text-left group transition-colors",
+   139→          isOpen ? "bg-white" : "hover:bg-white"
+   140→        )}
+   141→      >
+   142→        <div className="flex items-center gap-3 pr-4">
+   143→          {/* Left accent dot for top services */}
+   144→          {service.isTop && (
+   145→            <span className="inline-block h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ background: C.orange }} />
+   146→          )}
+   147→          <span
+   148→            className={cn(
+   149→              "text-[14px] font-medium transition-colors",
+   150→              isOpen ? "text-[#008C95]" : "text-gray-900 group-hover:text-[#008C95]"
+   151→            )}
+   152→          >
+   153→            {service.name}
+   154→          </span>
+   155→        </div>
+   156→        <div
+   157→          className={cn(
+   158→            "w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-md transition-all",
+   159→            isOpen ? "bg-[#e8f5f3]" : "border group-hover:border-[#008C95]"
+   160→          )}
+   161→          style={{ borderColor: isOpen ? undefined : C.border }}
+   162→        >
+   163→          {isOpen ? (
+   164→            <Minus className="w-3.5 h-3.5 text-[#008C95]" />
+   165→          ) : (
+   166→            <Plus className="w-3.5 h-3.5 text-gray-400 group-hover:text-[#008C95] transition-colors" />
+   167→          )}
+   168→        </div>
+   169→      </button>
+   170→
+   171→      {isOpen && (
+   172→        <motion.div
+   173→          initial={{ height: 0, opacity: 0 }}
+   174→          animate={{ height: "auto", opacity: 1 }}
+   175→          exit={{ height: 0, opacity: 0 }}
+   176→          transition={{ duration: 0.2 }}
+   177→          className="overflow-hidden"
+   178→        >
+   179→          <div className="pb-5 px-5 md:px-6 pt-0">
+   180→            <div className="flex gap-4">
+   181→              {/* Left accent bar */}
+   182→              <div className="flex-shrink-0 w-0.5 rounded-full" style={{ background: C.dna }} />
+   183→              <p className="text-[13px] leading-relaxed" style={{ color: C.textMuted }}>
+   184→                {service.description}
+   185→              </p>
+   186→            </div>
+   187→          </div>
+   188→        </motion.div>
+   189→      )}
+   190→    </motion.div>
+   191→  );
+   192→}
+   193→
+   194→export default function TechnologiesSubDirectionPage() {
+   195→  const params = useParams();
+   196→  const slug = params.slug as string;
+   197→  const direction = getTechnologiesSubDirectionBySlug(slug);
+   198→  const [openAccordion, setOpenAccordion] = useState<number>(0);
+   199→  const scrollContainerRef = useRef<HTMLDivElement>(null);
+   200→
+   201→  if (!direction) {
+   202→    return (
+   203→      <main className="min-h-screen bg-white flex items-center justify-center">
+   204→        <div className="text-center">
+   205→          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+   206→            Направление не найдено
+   207→          </h1>
+   208→          <Link href="/services/technologies" className="text-[#008C95] hover:underline">
+   209→            Вернуться к технологиям
+   210→          </Link>
+   211→        </div>
+   212→      </main>
+   213→    );
+   214→  }
+   215→
+   216→  const IconComponent = iconMap[direction.icon] || RefreshCw;
+   217→
+   218→  // Get all other directions for carousel
+   219→  const otherDirections = technologiesSubDirections.filter((d) => d.slug !== slug);
+   220→
+   221→  const scroll = (direction: "left" | "right") => {
+   222→    if (scrollContainerRef.current) {
+   223→      const scrollAmount = 320;
+   224→      scrollContainerRef.current.scrollBy({
+   225→        left: direction === "left" ? -scrollAmount : scrollAmount,
+   226→        behavior: "smooth",
+   227→      });
+   228→    }
+   229→  };
+   230→
+   231→  return (
+   232→    <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
+   233→            {/* ═══════════════════════════════════════════════════
+   234→          HERO — Dark background with diagonal lines + stats grid
+   235→          ═══════════════════════════════════════════════════ */}
+   236→      <section className="relative overflow-hidden pt-16 lg:pt-[120px]" style={{ background: C.dark }}>
+   237→        {/* Decorative diagonal lines */}
+   238→        <div
+   239→          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   240→          style={{
+   241→            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   242→          }}
+   243→        />
+   244→        {/* Decorative glow */}
+   245→        <div
+   246→          className="pointer-events-none absolute -right-40 -top-20 h-[500px] w-[500px] rounded-full blur-[180px]"
+   247→          style={{ background: "rgba(224,78,57,0.10)" }}
+   248→        />
+   249→        <div
+   250→          className="pointer-events-none absolute -left-20 bottom-0 h-[300px] w-[300px] rounded-full blur-[120px]"
+   251→          style={{ background: "rgba(0,140,149,0.08)" }}
+   252→        />
+   253→
+   254→        <div className="container-kept relative z-10">
+   255→          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between py-6 md:py-10 lg:py-12">
+   256→            {/* LEFT: Label + heading + text + buttons */}
+   257→            <motion.div
+   258→              className="flex-1"
+   259→              variants={fadeUp}
+   260→              initial="hidden"
+   261→              animate="visible"
+   262→              custom={0.1}
+   263→            >
+   264→              {/* Breadcrumb */}
+   265→              <motion.nav
+   266→                className="flex items-center gap-2 mb-6"
+   267→                initial={{ opacity: 0 }}
+   268→                animate={{ opacity: 1 }}
+   269→                transition={{ duration: 0.5, delay: 0.1 }}
+   270→              >
+   271→                <Link href="/" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+   272→                  Главная
+   273→                </Link>
+   274→                <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   275→                <Link href="/services" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+   276→                  Услуги
+   277→                </Link>
+   278→                <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   279→                <Link href="/services/technologies" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+   280→                  Технологии
+   281→                </Link>
+   282→                <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   283→                <span className="text-[12px] font-medium" style={{ color: C.mint }}>{direction.shortTitle}</span>
+   284→              </motion.nav>
+   285→
+   286→              {/* Badge */}
+   287→              <motion.div
+   288→                className="mb-4"
+   289→                initial={{ opacity: 0, y: 12 }}
+   290→                animate={{ opacity: 1, y: 0 }}
+   291→                transition={{ duration: 0.5, delay: 0.1 }}
+   292→              >
+   293→                <span
+   294→                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+   295→                  style={{
+   296→                    background: "rgba(0,140,149,0.15)",
+   297→                    color: C.mint,
+   298→                    borderRadius: "2px",
+   299→                  }}
+   300→                >
+   301→                  <IconComponent className="h-3 w-3" />
+   302→                  Направление технологий
+   303→                </span>
+   304→              </motion.div>
+   305→
+   306→              {/* Main heading */}
+   307→              <motion.h1
+   308→                className="mb-4 max-w-lg"
+   309→                style={{
+   310→                  fontFamily: "var(--font-russo)",
+   311→                  fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   312→                  fontWeight: 700,
+   313→                  lineHeight: 1.25,
+   314→                  letterSpacing: "-0.01em",
+   315→                  color: C.white,
+   316→                }}
+   317→                initial={{ opacity: 0, y: 16 }}
+   318→                animate={{ opacity: 1, y: 0 }}
+   319→                transition={{ duration: 0.6, delay: 0.15 }}
+   320→              >
+   321→                {direction.title}
+   322→              </motion.h1>
+   323→
+   324→              {/* Subtitle */}
+   325→              <motion.p
+   326→                className="mb-6 max-w-md text-[14px] font-light leading-relaxed"
+   327→                style={{ color: "rgba(255,255,255,0.55)" }}
+   328→                initial={{ opacity: 0, y: 12 }}
+   329→                animate={{ opacity: 1, y: 0 }}
+   330→                transition={{ duration: 0.6, delay: 0.3 }}
+   331→              >
+   332→                {direction.description}
+   333→              </motion.p>
+   334→
+   335→              {/* CTA buttons */}
+   336→              <motion.div
+   337→                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
+   338→                initial={{ opacity: 0, y: 12 }}
+   339→                animate={{ opacity: 1, y: 0 }}
+   340→                transition={{ duration: 0.6, delay: 0.45 }}
+   341→              >
+   342→                <Link href="/feedback?type=proposals" className="sm:auto">
+   343→                  <motion.span
+   344→                    className="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white w-full sm:w-auto"
+   345→                    style={{ background: C.dna, borderRadius: "4px" }}
+   346→                    whileHover={{ background: C.dnaHover, transition: { duration: 0.3 } }}
+   347→                  >
+   348→                    Запросить КП
+   349→                    <ArrowRight className="h-4 w-4" />
+   350→                  </motion.span>
+   351→                </Link>
+   352→                <Link href="/feedback?type=callback" className="sm:auto">
+   353→                  <motion.span
+   354→                    className="inline-flex items-center justify-center gap-2 border px-7 py-3 text-sm font-medium uppercase tracking-[0.05em] w-full sm:w-auto"
+   355→                    style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)", borderRadius: "4px" }}
+   356→                    whileHover={{
+   357→                      borderColor: C.mint,
+   358→                      color: C.mint,
+   359→                      transition: { duration: 0.3 },
+   360→                    }}
+   361→                  >
+   362→                    Заказать звонок
+   363→                  </motion.span>
+   364→                </Link>
+   365→              </motion.div>
+   366→            </motion.div>
+   367→
+   368→            {/* RIGHT: Stats — 4 cards in 2x2 grid */}
+   369→            <motion.div
+   370→              className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:w-[420px] lg:flex-shrink-0 lg:gap-4"
+   371→              variants={fadeUp}
+   372→              initial="hidden"
+   373→              animate="visible"
+   374→              custom={0.3}
+   375→            >
+   376→              {[
+   377→                { number: String(direction.services.length), label: "услуг", icon: ClipboardList, accent: C.dna },
+   378→                { number: "30+", label: "отраслей", icon: BarChart3, accent: C.mintDark },
+   379→                { number: "50+", label: "экспертов", icon: Users, accent: C.orange },
+   380→                { number: "500+", label: "проектов", icon: Briefcase, accent: C.dna },
+   381→              ].map((stat, index) => (
+   382→                <motion.div
+   383→                  key={stat.label}
+   384→                  className="relative overflow-hidden rounded-lg p-5 md:p-6"
+   385→                  style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }}
+   386→                  variants={scaleIn}
+   387→                  initial="hidden"
+   388→                  animate="visible"
+   389→                  custom={0.4 + index * 0.08}
+   390→                >
+   391→                  {/* Top accent */}
+   392→                  <div
+   393→                    className="absolute left-0 top-0 h-0.5 w-full"
+   394→                    style={{ background: `linear-gradient(90deg, ${stat.accent}, ${stat.accent}50)` }}
+   395→                  />
+   396→                  <stat.icon className="mb-3 h-5 w-5" style={{ color: stat.accent }} />
+   397→                  <div
+   398→                    className="text-2xl font-bold leading-none md:text-3xl"
+   399→                    style={{ fontFamily: "var(--font-russo)", color: C.white }}
+   400→                  >
+   401→                    {stat.number}
+   402→                  </div>
+   403→                  <div className="mt-1.5 text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.45)" }}>
+   404→                    {stat.label}
+   405→                  </div>
+   406→                </motion.div>
+   407→              ))}
+   408→            </motion.div>
+   409→          </div>
+   410→        </div>
+   411→      </section>
+   412→
+   413→      {/* ═══════════════════════════════════════════════════
+   414→          SERVICES — Accordion list with styled header
+   415→          ═══════════════════════════════════════════════════ */}
+   416→      <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   417→        <div className="container-kept">
+   418→          <div className="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-16">
+   419→            {/* Left column - Sticky title */}
+   420→            <div className="lg:sticky lg:top-32 lg:self-start">
+   421→              <motion.span
+   422→                className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+   423→                style={{ color: C.dna }}
+   424→                initial={{ opacity: 0 }}
+   425→                whileInView={{ opacity: 1 }}
+   426→                viewport={{ once: true }}
+   427→                transition={{ duration: 0.5 }}
+   428→              >
+   429→                Услуги
+   430→              </motion.span>
+   431→              <h2 className="heading-section mb-4" style={{ color: C.textDark }}>
+   432→                Услуги направления
+   433→              </h2>
+   434→              <p className="text-[13px] leading-relaxed" style={{ color: C.textMuted }}>
+   435→                Полный перечень услуг в рамках {direction.shortTitle.toLowerCase()}
+   436→              </p>
+   437→            </div>
+   438→
+   439→            {/* Right column - Accordion */}
+   440→            <motion.div
+   441→              initial={{ opacity: 0, y: 20 }}
+   442→              whileInView={{ opacity: 1, y: 0 }}
+   443→              viewport={{ once: true }}
+   444→              transition={{ duration: 0.6 }}
+   445→              className="rounded-lg overflow-hidden border"
+   446→              style={{ background: C.white, borderColor: C.borderLight }}
+   447→            >
+   448→              {direction.services.map((service, index) => (
+   449→                <ServiceAccordionItem
+   450→                  key={index}
+   451→                  service={service}
+   452→                  isOpen={openAccordion === index}
+   453→                  onToggle={() => setOpenAccordion(openAccordion === index ? -1 : index)}
+   454→                  index={index}
+   455→                />
+   456→              ))}
+   457→            </motion.div>
+   458→          </div>
+   459→        </div>
+   460→      </section>
+   461→
+   462→      {/* ═══════════════════════════════════════════════════
+   463→          OTHER DIRECTIONS — Dark background carousel
+   464→          ═══════════════════════════════════════════════════ */}
+   465→      <section className="py-16 lg:py-24 relative overflow-hidden" style={{ background: C.dark }}>
+   466→        <div className="container-kept relative z-10">
+   467→          <motion.div
+   468→            initial={{ opacity: 0, y: 20 }}
+   469→            whileInView={{ opacity: 1, y: 0 }}
+   470→            viewport={{ once: true }}
+   471→            transition={{ duration: 0.6 }}
+   472→          >
+   473→            {/* Header row */}
+   474→            <div className="flex items-center justify-between mb-10">
+   475→              <div>
+   476→                <span
+   477→                  className="mb-3 inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+   478→                  style={{
+   479→                    background: "rgba(0,140,149,0.15)",
+   480→                    color: C.mint,
+   481→                    borderRadius: "2px",
+   482→                  }}
+   483→                >
+   484→                  Направления
+   485→                </span>
+   486→                <h2
+   487→                  className="mt-3"
+   488→                  style={{
+   489→                    fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
+   490→                    fontWeight: 700,
+   491→                    lineHeight: 1.25,
+   492→                    color: C.white,
+   493→                  }}
+   494→                >
+   495→                  Другие направления технологий
+   496→                </h2>
+   497→              </div>
+   498→
+   499→              {/* Navigation arrows */}
+   500→              <div className="flex items-center gap-2">
+   501→                <button
+   502→                  onClick={() => scroll("left")}
+   503→                  className="w-10 h-10 flex items-center justify-center rounded-md border transition-all"
+   504→                  style={{
+   505→                    borderColor: "rgba(255,255,255,0.15)",
+   506→                    color: "rgba(255,255,255,0.6)",
+   507→                  }}
+   508→                  onMouseEnter={(e) => {
+   509→                    e.currentTarget.style.borderColor = C.dna;
+   510→                    e.currentTarget.style.background = C.dna;
+   511→                    e.currentTarget.style.color = "#fff";
+   512→                  }}
+   513→                  onMouseLeave={(e) => {
+   514→                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+   515→                    e.currentTarget.style.background = "transparent";
+   516→                    e.currentTarget.style.color = "rgba(255,255,255,0.6)";
+   517→                  }}
+   518→                  aria-label="Прокрутить влево"
+   519→                >
+   520→                  <ChevronLeft className="w-5 h-5" />
+   521→                </button>
+   522→                <button
+   523→                  onClick={() => scroll("right")}
+   524→                  className="w-10 h-10 flex items-center justify-center rounded-md border transition-all"
+   525→                  style={{
+   526→                    borderColor: "rgba(255,255,255,0.15)",
+   527→                    color: "rgba(255,255,255,0.6)",
+   528→                  }}
+   529→                  onMouseEnter={(e) => {
+   530→                    e.currentTarget.style.borderColor = C.dna;
+   531→                    e.currentTarget.style.background = C.dna;
+   532→                    e.currentTarget.style.color = "#fff";
+   533→                  }}
+   534→                  onMouseLeave={(e) => {
+   535→                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
+   536→                    e.currentTarget.style.background = "transparent";
+   537→                    e.currentTarget.style.color = "rgba(255,255,255,0.6)";
+   538→                  }}
+   539→                  aria-label="Прокрутить вправо"
+   540→                >
+   541→                  <ChevronRight className="w-5 h-5" />
+   542→                </button>
+   543→              </div>
+   544→            </div>
+   545→
+   546→            {/* Scrollable cards container */}
+   547→            <div
+   548→              ref={scrollContainerRef}
+   549→              className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
+   550→              style={{
+   551→                scrollbarWidth: "none",
+   552→                msOverflowStyle: "none",
+   553→                WebkitOverflowScrolling: "touch",
+   554→              }}
+   555→            >
+   556→              {otherDirections.map((relDirection) => {
+   557→                const RelIcon = iconMap[relDirection.icon] || RefreshCw;
+   558→                return (
+   559→                  <motion.div
+   560→                    key={relDirection.id}
+   561→                    initial={{ opacity: 0, y: 20 }}
+   562→                    whileInView={{ opacity: 1, y: 0 }}
+   563→                    viewport={{ once: true }}
+   564→                    transition={{ duration: 0.4 }}
+   565→                    className="flex-shrink-0 w-[280px]"
+   566→                  >
+   567→                    <Link
+   568→                      href={`/services/technologies/${relDirection.slug}`}
+   569→                      className="group block h-full rounded-xl p-6 transition-all duration-300"
+   570→                      style={{
+   571→                        background: "rgba(255,255,255,0.05)",
+   572→                        border: "1px solid rgba(255,255,255,0.08)",
+   573→                      }}
+   574→                      onMouseEnter={(e) => {
+   575→                        e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+   576→                        e.currentTarget.style.borderColor = "rgba(0,140,149,0.4)";
+   577→                      }}
+   578→                      onMouseLeave={(e) => {
+   579→                        e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+   580→                        e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+   581→                      }}
+   582→                    >
+   583→                      {/* Icon */}
+   584→                      <div
+   585→                        className="w-11 h-11 flex items-center justify-center rounded-lg mb-4 transition-colors duration-300"
+   586→                        style={{ background: "rgba(0,140,149,0.15)" }}
+   587→                      >
+   588→                        <RelIcon className="w-5 h-5" style={{ color: C.dna }} />
+   589→                      </div>
+   590→                      {/* Title */}
+   591→                      <h3
+   592→                        className="mb-2 text-[15px] font-semibold transition-colors duration-300"
+   593→                        style={{ color: C.white }}
+   594→                      >
+   595→                        {relDirection.shortTitle}
+   596→                      </h3>
+   597→                      {/* Description */}
+   598→                      <p
+   599→                        className="text-[13px] leading-relaxed line-clamp-2"
+   600→                        style={{ color: "rgba(255,255,255,0.5)" }}
+   601→                      >
+   602→                        {relDirection.description}
+   603→                      </p>
+   604→                      {/* Arrow indicator */}
+   605→                      <div
+   606→                        className="mt-4 flex items-center gap-1.5 text-[12px] font-medium transition-all duration-300"
+   607→                        style={{ color: C.dna }}
+   608→                      >
+   609→                        Подробнее
+   610→                        <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+   611→                      </div>
+   612→                    </Link>
+   613→                  </motion.div>
+   614→                );
+   615→              })}
+   616→            </div>
+   617→
+   618→            {/* Link to all technologies */}
+   619→            <div className="mt-10">
+   620→              <Link
+   621→                href="/services/technologies"
+   622→                className="inline-flex items-center gap-2 font-medium transition-all duration-300 hover:gap-3"
+   623→                style={{ color: C.mint }}
+   624→              >
+   625→                Все направления технологий
+   626→                <ArrowRight className="w-4 h-4" />
+   627→              </Link>
+   628→            </div>
+   629→          </motion.div>
+   630→        </div>
+   631→      </section>
+   632→
+   633→      {/* ═══════════════════════════════════════════════════
+   634→          QUICK LINKS — Navigation cards + CTA panel
+   635→          ═══════════════════════════════════════════════════ */}
+   636→      <section className="bg-white py-20 md:py-28">
+   637→        <div className="container-kept">
+   638→          {/* Section header */}
+   639→          <motion.div
+   640→            className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   641→            initial={{ opacity: 0, y: 32 }}
+   642→            whileInView={{ opacity: 1, y: 0 }}
+   643→            viewport={{ once: true, amount: 0.2 }}
+   644→            transition={{ duration: 0.7 }}
+   645→          >
+   646→            <div>
+   647→              <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>
+   648→                Навигация
+   649→              </span>
+   650→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   651→                Полезные ссылки
+   652→              </h2>
+   653→            </div>
+   654→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   655→              Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании
+   656→            </p>
+   657→          </motion.div>
+   658→
+   659→          {/* Cards + CTA row */}
+   660→          <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+   661→            {/* Left: 6 navigation cards */}
+   662→            <div className="flex-1 flex">
+   663→              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 w-full h-full auto-rows-fr">
+   664→                {quickLinks.map((card, index) => {
+   665→                  const isWhite = card.bg === C.white;
+   666→                  return (
+   667→                    <motion.div
+   668→                      key={card.title}
+   669→                      className="flex"
+   670→                      initial={{ opacity: 0, scale: 0.85 }}
+   671→                      whileInView={{ opacity: 1, scale: 1 }}
+   672→                      viewport={{ once: true, amount: 0.2 }}
+   673→                      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 0.61, 0.36, 1] }}
+   674→                    >
+   675→                      <Link href={card.href} className="group block h-full w-full">
+   676→                        <motion.div
+   677→                          className={cn(
+   678→                            "relative flex flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300 h-full",
+   679→                            isWhite && "border shadow-sm group-hover:shadow-md",
+   680→                          )}
+   681→                          style={{ background: card.bg, color: card.textColor, borderColor: isWhite ? C.border : undefined, minHeight: "130px" }}
+   682→                          whileHover={{ y: -3, transition: { duration: 0.25 } }}
+   683→                        >
+   684→                          {card.bg === C.dark && (
+   685→                            <div
+   686→                              className="pointer-events-none absolute inset-0 opacity-[0.06]"
+   687→                              style={{
+   688→                                backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`,
+   689→                                backgroundSize: "20px 20px",
+   690→                              }}
+   691→                            />
+   692→                          )}
+   693→                          {isWhite && (
+   694→                            <div
+   695→                              className="pointer-events-none absolute inset-0 opacity-[0.1]"
+   696→                              style={{
+   697→                                backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`,
+   698→                                backgroundSize: "12px 12px",
+   699→                              }}
+   700→                            />
+   701→                          )}
+   702→
+   703→                          {/* Colored accent bar on left */}
+   704→                          <div
+   705→                            className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   706→                            style={{ background: isWhite ? C.dna : "rgba(255,255,255,0.4)" }}
+   707→                          />
+   708→
+   709→                          <div className="relative z-10">
+   710→                            <div className="flex items-center gap-2">
+   711→                              {card.icon && (
+   712→                                <card.icon className="h-4 w-4 opacity-60" />
+   713→                              )}
+   714→                              <span className="block text-sm font-semibold md:text-base">{card.title}</span>
+   715→                            </div>
+   716→                            <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+   717→                          </div>
+   718→
+   719→                          <div className="relative z-10 flex justify-end">
+   720→                            <div
+   721→                              className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   722→                              style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}
+   723→                            >
+   724→                              <ArrowRight className="h-4 w-4" style={{ color: isWhite ? C.dna : "#ffffff" }} />
+   725→                            </div>
+   726→                          </div>
+   727→                        </motion.div>
+   728→                      </Link>
+   729→                    </motion.div>
+   730→                  );
+   731→                })}
+   732→              </div>
+   733→            </div>
+   734→
+   735→            {/* Right: CTA panel */}
+   736→            <motion.div
+   737→              className="lg:w-[340px] flex-shrink-0"
+   738→              initial={{ opacity: 0, y: 32 }}
+   739→              whileInView={{ opacity: 1, y: 0 }}
+   740→              viewport={{ once: true, amount: 0.2 }}
+   741→              transition={{ duration: 0.7, delay: 0.3 }}
+   742→            >
+   743→              <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg p-6 md:p-8" style={{ background: C.dark }}>
+   744→                {/* Decorative pattern */}
+   745→                <div
+   746→                  className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   747→                  style={{
+   748→                    backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+   749→                  }}
+   750→                />
+   751→
+   752→                <div className="relative z-10">
+   753→                  <div className="h-px w-12 mb-5" style={{ background: C.mint }} />
+   754→                  <h3
+   755→                    className="text-xl font-bold leading-tight mb-2"
+   756→                    style={{ fontFamily: "var(--font-russo)", color: "#ffffff" }}
+   757→                  >
+   758→                    Начните сотрудничество
+   759→                  </h3>
+   760→                  <p className="text-[13px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+   761→                    Оставьте заявку — мы свяжемся с&nbsp;вами, обсудим задачу и&nbsp;подготовим индивидуальное предложение.
+   762→                  </p>
+   763→                </div>
+   764→
+   765→                <div className="relative z-10 flex flex-col gap-3">
+   766→                  <Link href="/feedback?type=proposals" className="group/kp inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300" style={{ background: C.dna }}>
+   767→                    <Mail className="h-4 w-4" />
+   768→                    Запросить КП
+   769→                  </Link>
+   770→                  <Link href="/feedback?type=callback" className="group/cb inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider border transition-all duration-300" style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.8)" }}>
+   771→                    <Phone className="h-4 w-4" />
+   772→                    Обратный звонок
+   773→                  </Link>
+   774→                </div>
+   775→              </div>
+   776→            </motion.div>
+   777→          </div>
+   778→        </div>
+   779→      </section>
+   780→    </main>
+   781→  );
+   782→}
+   783→

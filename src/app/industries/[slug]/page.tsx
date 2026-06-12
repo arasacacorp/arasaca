@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 import { ChevronRight, ArrowRight, CheckCircle2, Atom, Building2, Map, Laptop, Factory, Shield, Fuel, Cog, Plane, Leaf, Zap, Truck, Microscope, GraduationCap, ShoppingCart, Waves, Radio, FlaskConical, TreePine, Plus, Minus, Target, Users, Award, Mail, Phone, Briefcase, Layers, Newspaper, BarChart3 } from "lucide-react";
 import { industries } from "@/data/industries";
 import { cn } from "@/lib/utils";
@@ -664,16 +664,7 @@ export default function IndustryPage() {
   const [openAccordion, setOpenAccordion] = useState<number>(0);
 
   if (!industry) {
-    return (
-      <main className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Отрасль не найдена</h1>
-          <Link href="/industries" className="text-[#008C95] hover:underline">
-            Вернуться к списку отраслей
-          </Link>
-        </div>
-      </main>
-    );
+    notFound();
   }
 
   const Icon = industry.icon;

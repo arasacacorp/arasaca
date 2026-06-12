@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 import {
   ChevronRight,
   ArrowRight,
@@ -110,16 +110,7 @@ export default function CaseDetailPage() {
   const caseData = getCaseBySlug(slug);
 
   if (!caseData) {
-    return (
-      <main className="min-h-screen flex items-center justify-center" style={{ background: C.muted }}>
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4" style={{ color: C.textDark }}>Кейс не найден</h1>
-          <Link href="/cases" className="text-[#008C95] hover:underline">
-            Вернуться к списку кейсов
-          </Link>
-        </div>
-      </main>
-    );
+    notFound();
   }
 
   const category = caseData.tags[0]?.label || "Проект";

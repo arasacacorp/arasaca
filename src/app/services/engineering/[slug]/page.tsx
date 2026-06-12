@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 import {
   ArrowRight,
   ChevronRight,
@@ -195,18 +195,7 @@ export default function EngineeringSubDirectionPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   if (!direction) {
-    return (
-      <main className="min-h-screen flex items-center justify-center" style={{ background: C.muted }}>
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4" style={{ color: C.textDark }}>
-            Направление не найдено
-          </h1>
-          <Link href="/services/engineering" className="text-[#008C95] hover:underline">
-            Вернуться к инжинирингу
-          </Link>
-        </div>
-      </main>
-    );
+    notFound();
   }
 
   const IconComponent = iconMap[direction.icon] || FileSearch;
