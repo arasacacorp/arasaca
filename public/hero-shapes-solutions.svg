@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" fill="none">
+  <defs>
+    <!-- Large bubble — deep glass -->
+    <radialGradient id="b1" cx="38%" cy="32%" r="65%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+      <stop offset="30%" stop-color="rgba(255,255,255,0.15)"/>
+      <stop offset="70%" stop-color="rgba(255,255,255,0.06)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </radialGradient>
+    <!-- Medium bubble -->
+    <radialGradient id="b2" cx="36%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.30)"/>
+      <stop offset="35%" stop-color="rgba(255,255,255,0.12)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </radialGradient>
+    <!-- Small bubble -->
+    <radialGradient id="b3" cx="34%" cy="28%" r="58%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
+      <stop offset="40%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.01)"/>
+    </radialGradient>
+    <!-- Shine highlight -->
+    <radialGradient id="shine" cx="28%" cy="22%" r="35%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.50)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+    <!-- Rim light -->
+    <radialGradient id="rim" cx="50%" cy="50%" r="50%">
+      <stop offset="85%" stop-color="rgba(255,255,255,0)"/>
+      <stop offset="95%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ══ Large bubble — center-right area ══ -->
+  <circle cx="620" cy="100" r="130" fill="url(#b1)" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+  <ellipse cx="585" cy="52" rx="50" ry="24" fill="rgba(255,255,255,0.18)" transform="rotate(-25 585 52)"/>
+  <circle cx="620" cy="100" r="130" fill="url(#shine)" />
+  <circle cx="620" cy="100" r="130" fill="url(#rim)" />
+
+  <!-- ══ Big medium bubble — right ══ -->
+  <circle cx="780" cy="300" r="100" fill="url(#b2)" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+  <ellipse cx="750" cy="262" rx="35" ry="18" fill="rgba(255,255,255,0.14)" transform="rotate(-20 750 262)"/>
+  <circle cx="780" cy="300" r="100" fill="url(#shine)" />
+  <circle cx="780" cy="300" r="100" fill="url(#rim)" />
+
+  <!-- ══ Medium bubble — center ══ -->
+  <circle cx="480" cy="260" r="75" fill="url(#b2)" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+  <ellipse cx="458" cy="232" rx="24" ry="13" fill="rgba(255,255,255,0.12)" transform="rotate(-18 458 232)"/>
+  <circle cx="480" cy="260" r="75" fill="url(#shine)" />
+
+  <!-- ══ Medium-small bubble — bottom ══ -->
+  <circle cx="600" cy="420" r="55" fill="url(#b3)" stroke="rgba(255,255,255,0.12)" stroke-width="0.8"/>
+  <ellipse cx="587" cy="400" rx="17" ry="10" fill="rgba(255,255,255,0.10)" transform="rotate(-12 587 400)"/>
+  <circle cx="600" cy="420" r="55" fill="url(#shine)" />
+
+  <!-- ══ Small bubble — top-center ══ -->
+  <circle cx="420" cy="80" r="40" fill="url(#b3)" stroke="rgba(255,255,255,0.10)" stroke-width="0.8"/>
+  <ellipse cx="410" cy="66" rx="12" ry="7" fill="rgba(255,255,255,0.08)" transform="rotate(-15 410 66)"/>
+
+  <!-- ══ Tiny bubble ══ -->
+  <circle cx="820" cy="460" r="30" fill="url(#b3)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+
+  <!-- ══ Small bubble — mid ══ -->
+  <circle cx="700" cy="190" r="25" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.10)" stroke-width="0.5"/>
+
+  <!-- ══ Extra tiny bubbles ══ -->
+  <circle cx="500" cy="440" r="18" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+  <circle cx="370" cy="180" r="14" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+  <circle cx="850" cy="120" r="22" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>
+</svg>

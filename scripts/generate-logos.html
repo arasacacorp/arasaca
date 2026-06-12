@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'Russo One';
+    src: url('/home/z/my-project/public/brand/russo-one-cyrillic-400-normal.woff2') format('woff2'),
+         url('/home/z/my-project/public/brand/russo-one-cyrillic-400-normal.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  .logo-card {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Russo One', sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  /* Standard logo cards (horizontal, for headers/documents) */
+  .logo-h {
+    width: 480px;
+    height: 200px;
+    font-size: 52px;
+  }
+
+  .logo-h.white-bg   { background: #ffffff; color: #008b96; }
+  .logo-h.gray-bg    { background: #f1f2f4; color: #008b96; }
+  .logo-h.dark-bg    { background: #00313C; color: #ffffff; }
+
+  /* Social media logo cards (1080x1080 square) */
+  .logo-social {
+    width: 1080px;
+    height: 1080px;
+    font-size: 140px;
+  }
+
+  .logo-social.white-bg   { background: #ffffff; color: #008b96; }
+  .logo-social.gray-bg    { background: #f1f2f4; color: #008b96; }
+  .logo-social.dark-bg    { background: #00313C; color: #ffffff; }
+</style>
+</head>
+<body style="background:#ddd; padding:40px;">
+
+  <!-- Standard horizontal logos -->
+  <div id="logo-white" class="logo-card logo-h white-bg">арасака</div>
+  <br><br>
+  <div id="logo-gray" class="logo-card logo-h gray-bg">арасака</div>
+  <br><br>
+  <div id="logo-dark" class="logo-card logo-h dark-bg">арасака</div>
+
+  <br><br><hr><br><br>
+
+  <!-- Social media 1080x1080 logos -->
+  <div id="social-white" class="logo-card logo-social white-bg">арасака</div>
+  <br><br>
+  <div id="social-gray" class="logo-card logo-social gray-bg">арасака</div>
+  <br><br>
+  <div id="social-dark" class="logo-card logo-social dark-bg">арасака</div>
+
+</body>
+</html>

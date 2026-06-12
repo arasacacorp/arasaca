@@ -1,3 +1,8 @@
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+Host: https://arasaca.ru
+
 User-agent: Googlebot
 Allow: /
 
@@ -12,3 +17,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://arasaca.ru/sitemap.xml

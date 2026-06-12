@@ -44,72 +44,60 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --radius: 0rem;
+  
+  /* SIBUR Color Palette */
+  --sibur-dna: #008C95;
+  --sibur-dark-teal: #00313C;
+  --sibur-mint: #77e2c3;
+  --sibur-orange: #E04E39;
+  
+  /* Background */
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  
+  /* Primary - SIBUR DNA */
+  --primary: #008C95;
+  --primary-foreground: #ffffff;
+  
+  /* Secondary - Light teal */
+  --secondary: #e8f5f3;
+  --secondary-foreground: #008C95;
+  
+  /* Muted */
+  --muted: #f1f2f4;
+  --muted-foreground: #6b7280;
+  
+  /* Accent - Mint */
+  --accent: #77e2c3;
+  --accent-foreground: #00313C;
+  
+  /* Destructive / CTA - Bright Orange */
+  --destructive: #E04E39;
+  --border: #e5e7eb;
+  --input: #f3f4f6;
+  --ring: #008C95;
+  
+  /* Chart colors */
+  --chart-1: #008C95;
+  --chart-2: #00313C;
+  --chart-3: #77e2c3;
+  --chart-4: #E04E39;
+  --chart-5: #f1f2f4;
+  
+  /* Sidebar */
+  --sidebar: #00313C;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #77e2c3;
+  --sidebar-primary-foreground: #00313C;
+  --sidebar-accent: #008C95;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #00313C;
+  --sidebar-ring: #77e2c3;
 }
 
 @layer base {
@@ -117,6 +105,351 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  ::selection {
+    background: #77e2c3;
+    color: #00313C;
+  }
+}
+
+/* SIBUR Color Utility Classes */
+.bg-sibur-dna { background-color: #008C95; }
+.bg-sibur-dark { background-color: #00313C; }
+.bg-sibur-mint { background-color: #77e2c3; }
+.bg-sibur-orange { background-color: #E04E39; }
+.bg-sibur-light { background-color: #e8f5f3; }
+
+.text-sibur-dna { color: #008C95; }
+.text-sibur-dark { color: #00313C; }
+.text-sibur-mint { color: #77e2c3; }
+.text-sibur-orange { color: #E04E39; }
+
+.border-sibur-dna { border-color: #008C95; }
+.border-sibur-dark { border-color: #00313C; }
+.border-sibur-mint { border-color: #77e2c3; }
+
+/* Hover utilities */
+.hover\:bg-sibur-dna:hover { background-color: #007a82; }
+.hover\:bg-sibur-orange:hover { background-color: #c94330; }
+.hover\:text-sibur-dna:hover { color: #008C95; }
+.hover\:text-sibur-mint:hover { color: #77e2c3; }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+/* Stagger delays */
+.stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.stagger-2 { animation-delay: 0.2s; opacity: 0; }
+.stagger-3 { animation-delay: 0.3s; opacity: 0; }
+.stagger-4 { animation-delay: 0.4s; opacity: 0; }
+.stagger-5 { animation-delay: 0.5s; opacity: 0; }
+
+/* Accent line */
+.accent-line-sibur {
+  height: 3px;
+  background: #008C95;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f2f4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #008C95;
+}
+
+/* Section padding */
+.section-padding {
+  padding: 80px 0;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 60px 0;
+  }
+}
+
+/* Container */
+.container-kept {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+@media (max-width: 768px) {
+  .container-kept {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Container for sidebar layouts */
+.container-sidebar {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar-left {
+  width: 380px;
+  flex-shrink: 0;
+}
+
+.content-right {
+  flex: 1;
+}
+
+/* Category tag SIBUR style */
+.category-tag-sibur {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #008C95;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Arrow link SIBUR style */
+.arrow-link-sibur {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #008C95;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.arrow-link-sibur:hover {
+  gap: 12px;
+}
+
+.arrow-link-sibur svg {
+  transition: transform 0.3s ease;
+}
+
+.arrow-link-sibur:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* SIBUR sidebar style */
+.sidebar-sibur {
+  background: #00313C;
+  color: white;
+}
+
+/* Card hover effect SIBUR style */
+.card-sibur {
+  border-bottom: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.card-sibur:hover {
+  background: #f8f9fa;
+}
+
+.card-sibur:hover .arrow-icon {
+  color: #008C95;
+  transform: translate(2px, -2px);
+}
+
+.arrow-icon {
+  color: #9ca3af;
+  transition: all 0.3s ease;
+}
+
+/* Header SIBUR style */
+.header-sibur {
+  background: white;
+}
+
+.header-sibur.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer SIBUR style */
+.footer-sibur {
+  background: #00313C;
+  color: white;
+}
+
+/* ===========================================
+   TYPOGRAPHY SCALE - Consistent across all pages
+   Based on kept.ru design system
+   =========================================== */
+
+/* Page title - H1 */
+.heading-page {
+  font-size: 1.75rem; /* 28px */
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 1024px) {
+  .heading-page {
+    font-size: 2.25rem; /* 36px */
+  }
+}
+
+/* Section title - H2 */
+.heading-section {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 1024px) {
+  .heading-section {
+    font-size: 1.875rem; /* 30px */
+  }
+}
+
+/* Subsection title - H3 */
+.heading-subsection {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+@media (min-width: 1024px) {
+  .heading-subsection {
+    font-size: 1.25rem; /* 20px */
+  }
+}
+
+/* Card title - H4 */
+.heading-card {
+  font-size: 1rem; /* 16px */
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+@media (min-width: 1024px) {
+  .heading-card {
+    font-size: 1.125rem; /* 18px */
+  }
+}
+
+/* Body text - large */
+.text-body-lg {
+  font-size: 1rem; /* 16px */
+  line-height: 1.7;
+}
+
+@media (min-width: 1024px) {
+  .text-body-lg {
+    font-size: 1.125rem; /* 18px */
+  }
+}
+
+/* Body text - default */
+.text-body {
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.65;
+}
+
+@media (min-width: 1024px) {
+  .text-body {
+    font-size: 1rem; /* 16px */
+  }
+}
+
+/* Small text / caption */
+.text-caption {
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.5;
+}
+
+/* Tagline / Lead text */
+.text-lead {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+@media (min-width: 1024px) {
+  .text-lead {
+    font-size: 1.25rem; /* 20px */
+  }
+}
+
+/* Section description */
+.text-section-desc {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
+@media (min-width: 1024px) {
+  .text-section-desc {
+    font-size: 1rem; /* 16px */
+  }
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Fallback: если Framer Motion не загрузился, контент должен быть видим */
+/* Это защитит от ситуации, когда JS не подгрузился или анимации не сработали */
+noscript + * [style*="opacity: 0"] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Безопасный fallback: через 3 секунды все motion-элементы становятся видимыми */
+/* в случае если Framer Motion анимации не сработали */
+@keyframes motion-fallback {
+  from { opacity: 0; transform: translateY(32px); }
+  to { opacity: 1; transform: none; }
 }

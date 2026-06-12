@@ -1,37 +1,60 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Manrope, Russo_One } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { SITE, organizationJsonLd, webSiteJsonLd } from "@/lib/seo";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Manrope font for entire site
+const manrope = Manrope({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-manrope",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Russo One for logo (Arasaka-style futuristic font)
+const russoOne = Russo_One({
+  weight: "400",
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-russo",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
-  icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
-  },
+  title: `${SITE.name} — Консалтинговая компания`,
+  description:
+    "Арасака — консалтинговая компания. Управленческий консалтинг, цифровая трансформация, инвестиционное консультирование, инжиниринг и развитие территорий для компаний, нацеленных на устойчивый рост.",
+  keywords: [
+    "консалтинг", "управленческий консалтинг", "цифровая трансформация",
+    "инвестиции", "бизнес-консалтинг", "Арасака", "стратегия",
+    "финансовое моделирование", "инжиниринг", "мастер-планирование",
+    "развитие территорий", "HR консалтинг", "аналитика", "ТЭО",
+    "бизнес-план", "операционная эффективность", "инновации",
+  ],
+  authors: [{ name: SITE.name, url: SITE.url }],
+  icons: { icon: "/favicon.ico" },
+  metadataBase: new URL(SITE.url),
   openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
-    url: "https://chat.z.ai",
-    siteName: "Z.ai",
+    title: `${SITE.name} — Консалтинговая компания`,
+    description:
+      "Структурируем сложное, реализуем важное. Управленческий консалтинг, цифровая трансформация и инвестиционное консультирование для устойчивого роста вашего бизнеса.",
+    url: SITE.url,
+    siteName: SITE.name,
     type: "website",
+    locale: SITE.locale,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
+    title: `${SITE.name} — Консалтинговая компания`,
+    description:
+      "Структурируем сложное, реализуем важное. Консалтинг для устойчивого роста.",
+  },
+  alternates: { canonical: SITE.url },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-video-preview": -1, "max-image-preview": "large" },
   },
 };
 
@@ -41,11 +64,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ru" suppressHydrationWarning className={`${manrope.variable} ${russoOne.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd()) }}
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className="antialiased bg-background text-foreground"
+        style={{ fontFamily: "'Manrope', sans-serif" }}
       >
-        {children}
+        <div className="relative flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </div>
         <Toaster />
       </body>
     </html>
