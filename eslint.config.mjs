@@ -44,7 +44,7 @@ const eslintConfig = [...nextCoreWebVitals, ...nextTypescript, {
     "no-useless-escape": "off",
   },
 }, {
-  ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts", "examples/**", "skills", "upload/**", "arasaca-repo/**", "watchdog.js", "start-dev.sh", "keep-alive.sh"]
+  ignores: ["node_modules/**", ".next/**", "out/**", "build/**", "next-env.d.ts", "examples/**", "skills", "upload/**", "arasaca-repo/**", "watchdog.js", "watchdog-arasaca.js", "start-dev.sh", "keep-alive.sh"]
 }];
 
 export default eslintConfig;
