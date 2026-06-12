@@ -2,8 +2,6 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-// Using <img> instead of Next.js Image for case study screenshots
-// (Next.js optimizer has issues with these screenshots)
 import {
   ChevronRight,
   ArrowRight,
@@ -22,6 +20,9 @@ import {
   Phone,
   Briefcase,
   TrendingUp,
+  Monitor,
+  Tablet,
+  ArrowUpRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { C } from "@/lib/colors";
@@ -125,6 +126,9 @@ export default function ServiceSlugPageTemplate(
   // → Hero + Accordion + Carousel + QuickLinks
 }`;
 
+/* ─── Screenshot helper ─── */
+const S = "/cases/arasaka-website";
+
 export default function ArasakaCasePage() {
   const category = "Коммуникации и бренд";
 
@@ -224,13 +228,21 @@ export default function ArasakaCasePage() {
         </div>
       </section>
 
-      {/* ═══ HERO MOCKUP IMAGE ═══ */}
+      {/* ═══ HERO MOCKUP — Full-width hero screenshot ═══ */}
       <section className="py-16 lg:py-24" style={{ background: C.dark }}>
         <div className="container-kept relative z-10">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
-            <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-              <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)` }} />
-              <img src="/cases/arasaka-website/hero-mockup.jpg" alt="Корпоративный сайт Арасака — главная страница" width={1440} height={900} className="w-full h-auto relative z-10" loading="eager" />
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+              {/* Browser chrome */}
+              <div className="flex items-center gap-2 px-5 py-3" style={{ background: "rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                <span className="h-3 w-3 rounded-full" style={{ background: "#ff5f57" }} />
+                <span className="h-3 w-3 rounded-full" style={{ background: "#febc2e" }} />
+                <span className="h-3 w-3 rounded-full" style={{ background: "#28c840" }} />
+                <div className="ml-3 flex-1 max-w-md">
+                  <div className="rounded-md px-3 py-1 text-[11px] font-mono" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.35)" }}>arasaca.ru</div>
+                </div>
+              </div>
+              <img src={`${S}/after-desktop-home.jpg`} alt="Корпоративный сайт Арасака — главная страница" width={2880} height={1800} className="w-full h-auto" loading="eager" />
             </div>
           </motion.div>
         </div>
@@ -267,40 +279,100 @@ export default function ArasakaCasePage() {
         </div>
       </section>
 
-      {/* ═══ BEFORE/AFTER ═══ */}
-      <section className="py-16 lg:py-24" style={{ background: C.muted }}>
-        <div className="container-kept">
+      {/* ═══ BEFORE / AFTER — Premium split ═══ */}
+      <section className="py-20 md:py-28" style={{ background: C.dark }}>
+        <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)` }} />
+        <div className="container-kept relative z-10">
           <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
-            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Трансформация</span>
-            <h2 className="heading-section" style={{ color: C.textDark }}>До и после</h2>
+            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.mint }}>Трансформация</span>
+            <h2 className="heading-section" style={{ color: C.white }}>До и после</h2>
           </motion.div>
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
-            <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
-              <img src="/cases/arasaka-website/before-after.jpg" alt="Сравнение дизайна до и после" width={1448} height={506} className="w-full h-auto" />
+
+          {/* Desktop: Side by side with labels */}
+          <div className="grid md:grid-cols-2 gap-5 mb-8">
+            {/* BEFORE */}
+            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div className="flex items-center gap-2 px-5 py-3" style={{ background: "rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: C.textMuted }} />
+                  <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>До — exenta.ru</span>
+                </div>
+                <img src={`${S}/before-desktop.jpg`} alt="Сайт до редизайна — exenta.ru" width={2880} height={1800} className="w-full h-auto" />
+              </div>
+            </motion.div>
+            {/* AFTER */}
+            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.15}>
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(119,226,195,0.2)" }}>
+                <div className="flex items-center gap-2 px-5 py-3" style={{ background: "rgba(0,140,149,0.08)", borderBottom: "1px solid rgba(119,226,195,0.15)" }}>
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: C.mint }} />
+                  <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: C.mint }}>После — arasaca.ru</span>
+                </div>
+                <img src={`${S}/after-desktop-home.jpg`} alt="Сайт после редизайна — arasaca.ru" width={2880} height={1800} className="w-full h-auto" />
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Mobile comparison */}
+          <motion.div className="flex justify-center gap-4 md:gap-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
+            {/* Before mobile */}
+            <div className="w-[160px] md:w-[200px]">
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div className="flex items-center justify-center gap-1.5 px-3 py-2" style={{ background: "rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                  <Smartphone className="h-3 w-3" style={{ color: "rgba(255,255,255,0.3)" }} />
+                  <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.35)" }}>До</span>
+                </div>
+                <img src={`${S}/before-mobile.jpg`} alt="Мобильная версия до редизайна" width={780} height={1688} className="w-full h-auto" />
+              </div>
+            </div>
+            {/* After mobile */}
+            <div className="w-[160px] md:w-[200px]">
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(119,226,195,0.2)" }}>
+                <div className="flex items-center justify-center gap-1.5 px-3 py-2" style={{ background: "rgba(0,140,149,0.08)", borderBottom: "1px solid rgba(119,226,195,0.15)" }}>
+                  <Smartphone className="h-3 w-3" style={{ color: C.mint }} />
+                  <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: C.mint }}>После</span>
+                </div>
+                <img src={`${S}/after-mobile-home.jpg`} alt="Мобильная версия после редизайна" width={780} height={1688} className="w-full h-auto" />
+              </div>
+            </div>
+            {/* After tablet */}
+            <div className="hidden md:block w-[200px]">
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(119,226,195,0.2)" }}>
+                <div className="flex items-center justify-center gap-1.5 px-3 py-2" style={{ background: "rgba(0,140,149,0.08)", borderBottom: "1px solid rgba(119,226,195,0.15)" }}>
+                  <Tablet className="h-3 w-3" style={{ color: C.mint }} />
+                  <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: C.mint }}>Планшет</span>
+                </div>
+                <img src={`${S}/after-tablet-home.jpg`} alt="Планшетная версия после редизайна" width={1536} height={2048} className="w-full h-auto" />
+              </div>
             </div>
           </motion.div>
-          <motion.div className="grid md:grid-cols-2 gap-6 mt-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
-            <div className="relative rounded-lg p-6" style={{ background: "#ffffff", border: `1px solid ${C.borderLight}` }}>
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: C.textMuted }} />
-              <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: C.textMuted }}>До</span>
-              <h3 className="text-lg font-bold mt-2 mb-3" style={{ color: C.textDark }}>Типовой шаблон</h3>
-              <ul className="space-y-2">
-                {["Серые hero-секции без характера", "Дублирующийся код (2800 строк на странице)", "Противоречивая статистика между страницами", "Мёртвые маршруты и сиротские директории", "Отсутствие дизайн-системы и токенов", "Неоптимизированный мобильный опыт"].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-[13px]" style={{ color: C.textMid }}><span className="mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ background: C.textMuted }} />{item}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="relative rounded-lg p-6" style={{ background: "#ffffff", border: `1px solid ${C.borderLight}` }}>
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: C.dna }} />
-              <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: C.dna }}>После</span>
-              <h3 className="text-lg font-bold mt-2 mb-3" style={{ color: C.textDark }}>Кастомная дизайн-система</h3>
-              <ul className="space-y-2">
-                {["Тёмные hero с диагональными паттернами и glassmorphism", "Модульная архитектура (23 строки вместо 2800)", "Единый источник статистики (companyStats.ts)", "Чистая структура с 301-редиректами", "20 design-токенов (C.*) и шаблоны страниц", "Mobile-first responsive, Lighthouse 100"].map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-[13px]" style={{ color: C.textMid }}><CheckCircle2 className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: C.dna }} />{item}</li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
+
+          {/* Before/After text cards */}
+          <div className="grid md:grid-cols-2 gap-6 mt-10">
+            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.25}>
+              <div className="relative rounded-lg p-6" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: "rgba(255,255,255,0.2)" }} />
+                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)" }}>До</span>
+                <h3 className="text-lg font-bold mt-2 mb-3" style={{ color: C.white }}>Типовой шаблон</h3>
+                <ul className="space-y-2">
+                  {["Серые hero-секции без характера", "Дублирующийся код (2800 строк на странице)", "Противоречивая статистика между страницами", "Мёртвые маршруты и сиротские директории", "Отсутствие дизайн-системы и токенов", "Неоптимизированный мобильный опыт"].map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-[13px]" style={{ color: "rgba(255,255,255,0.5)" }}><span className="mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ background: "rgba(255,255,255,0.25)" }} />{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
+              <div className="relative rounded-lg p-6" style={{ background: "rgba(0,140,149,0.08)", border: "1px solid rgba(119,226,195,0.15)" }}>
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: C.mint }} />
+                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: C.mint }}>После</span>
+                <h3 className="text-lg font-bold mt-2 mb-3" style={{ color: C.white }}>Кастомная дизайн-система</h3>
+                <ul className="space-y-2">
+                  {["Тёмные hero с диагональными паттернами и glassmorphism", "Модульная архитектура (23 строки вместо 2800)", "Единый источник статистики (companyStats.ts)", "Чистая структура с 301-редиректами", "20 design-токенов (C.*) и шаблоны страниц", "Mobile-first responsive, Lighthouse 100"].map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-[13px]" style={{ color: "rgba(255,255,255,0.7)" }}><CheckCircle2 className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: C.mint }} />{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -334,6 +406,83 @@ export default function ArasakaCasePage() {
         </div>
       </section>
 
+      {/* ═══ PAGES GALLERY — Premium mosaic grid ═══ */}
+      <section className="py-20 md:py-28" style={{ background: C.muted }}>
+        <div className="container-kept">
+          <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Экраны</span>
+            <h2 className="heading-section" style={{ color: C.textDark }}>Каждая страница — на уровне</h2>
+          </motion.div>
+
+          {/* Mosaic grid: 2 big + 3 small on desktop */}
+          <div className="grid gap-5 lg:grid-cols-[1fr_1fr_0.7fr] lg:grid-rows-[auto_auto]">
+            {/* Row 1: Homepage (large) */}
+            <motion.div className="lg:col-span-2 lg:row-span-2" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+              <div className="group relative rounded-2xl overflow-hidden h-full" style={{ border: `1px solid ${C.borderLight}`, background: "#fff" }}>
+                <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: C.muted, borderBottom: `1px solid ${C.borderLight}` }}>
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: C.dna }} />
+                  <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: C.dna }}>Главная</span>
+                  <Monitor className="h-3 w-3 ml-auto" style={{ color: C.textMuted }} />
+                </div>
+                <div className="overflow-hidden">
+                  <img src={`${S}/after-desktop-home.jpg`} alt="Главная страница Арасака" width={2880} height={1800} className="w-full h-auto transition-transform duration-700 group-hover:scale-[1.02]" />
+                </div>
+              </div>
+            </motion.div>
+            {/* Row 1 right: Services */}
+            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.1}>
+              <div className="group relative rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.borderLight}`, background: "#fff" }}>
+                <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: C.muted, borderBottom: `1px solid ${C.borderLight}` }}>
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: C.orange }} />
+                  <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: C.textDark }}>Услуги</span>
+                </div>
+                <div className="overflow-hidden">
+                  <img src={`${S}/after-desktop-services.jpg`} alt="Страница услуг" width={2880} height={1800} className="w-full h-auto transition-transform duration-700 group-hover:scale-[1.02]" />
+                </div>
+              </div>
+            </motion.div>
+            {/* Row 2 right: About */}
+            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.15}>
+              <div className="group relative rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.borderLight}`, background: "#fff" }}>
+                <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: C.muted, borderBottom: `1px solid ${C.borderLight}` }}>
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: C.mintDark }} />
+                  <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: C.textDark }}>О компании</span>
+                </div>
+                <div className="overflow-hidden">
+                  <img src={`${S}/after-desktop-about.jpg`} alt="Страница «О компании»" width={2880} height={1800} className="w-full h-auto transition-transform duration-700 group-hover:scale-[1.02]" />
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Second row: Industries + Press center */}
+          <div className="grid gap-5 mt-5 md:grid-cols-2">
+            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
+              <div className="group relative rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.borderLight}`, background: "#fff" }}>
+                <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: C.muted, borderBottom: `1px solid ${C.borderLight}` }}>
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: C.dna }} />
+                  <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: C.textDark }}>Отрасли</span>
+                </div>
+                <div className="overflow-hidden">
+                  <img src={`${S}/after-desktop-industries.jpg`} alt="Страница отраслей" width={2880} height={1800} className="w-full h-auto transition-transform duration-700 group-hover:scale-[1.02]" />
+                </div>
+              </div>
+            </motion.div>
+            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.25}>
+              <div className="group relative rounded-2xl overflow-hidden" style={{ border: `1px solid ${C.borderLight}`, background: "#fff" }}>
+                <div className="flex items-center gap-2 px-4 py-2.5" style={{ background: C.muted, borderBottom: `1px solid ${C.borderLight}` }}>
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: C.orange }} />
+                  <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: C.textDark }}>Пресс-центр</span>
+                </div>
+                <div className="overflow-hidden">
+                  <img src={`${S}/after-desktop-press.jpg`} alt="Пресс-центр" width={2880} height={1800} className="w-full h-auto transition-transform duration-700 group-hover:scale-[1.02]" />
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* ═══ TECH STACK ═══ */}
       <section className="py-16 lg:py-24 relative overflow-hidden" style={{ background: C.dark }}>
         <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)` }} />
@@ -342,7 +491,7 @@ export default function ArasakaCasePage() {
             <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.mint }}>Технологии</span>
             <h2 className="heading-section" style={{ color: C.white }}>Стек и архитектура</h2>
           </motion.div>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 mb-12">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {techStack.map((tech, i) => (
               <motion.div key={tech.name} variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={i * 0.08}>
                 <div className="relative overflow-hidden rounded-lg p-6 h-full" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
@@ -354,11 +503,6 @@ export default function ArasakaCasePage() {
               </motion.div>
             ))}
           </div>
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
-            <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-              <img src="/cases/arasaka-website/tech-stack.jpg" alt="Страница услуг — архитектура сервисов" width={1440} height={900} className="w-full h-auto" />
-            </div>
-          </motion.div>
         </div>
       </section>
 
@@ -408,36 +552,88 @@ export default function ArasakaCasePage() {
               ))}
             </motion.div>
           </div>
-          <motion.div className="mt-10" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
-            <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
-              <img src="/cases/arasaka-website/code-review.jpg" alt="Архитектура кода — шаблоны и дизайн-система" width={1440} height={900} className="w-full h-auto" />
-            </div>
-          </motion.div>
         </div>
       </section>
 
-      {/* ═══ RESPONSIVE ═══ */}
-      <section className="py-16 lg:py-24" style={{ background: C.muted }}>
-        <div className="container-kept">
+      {/* ═══ RESPONSIVE — Device showcase ═══ */}
+      <section className="py-20 md:py-28" style={{ background: C.dark }}>
+        <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)` }} />
+        <div className="container-kept relative z-10">
           <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
-            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Адаптивность</span>
-            <h2 className="heading-section" style={{ color: C.textDark }}>На всех устройствах</h2>
+            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.mint }}>Адаптивность</span>
+            <h2 className="heading-section" style={{ color: C.white }}>На всех устройствах</h2>
           </motion.div>
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
-            <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
-              <img src="/cases/arasaka-website/responsive-devices.jpg" alt="Адаптивная вёрстка — десктоп, планшет, мобильный" width={1080} height={988} className="w-full h-auto" />
+
+          {/* Desktop screenshot with browser chrome */}
+          <motion.div className="mb-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+              <div className="flex items-center gap-2 px-5 py-3" style={{ background: "rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                <span className="h-3 w-3 rounded-full" style={{ background: "#ff5f57" }} />
+                <span className="h-3 w-3 rounded-full" style={{ background: "#febc2e" }} />
+                <span className="h-3 w-3 rounded-full" style={{ background: "#28c840" }} />
+                <div className="ml-3 flex-1 max-w-md">
+                  <div className="rounded-md px-3 py-1 text-[11px] font-mono" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.35)" }}>arasaca.ru — Desktop</div>
+                </div>
+                <Monitor className="h-4 w-4" style={{ color: "rgba(255,255,255,0.3)" }} />
+              </div>
+              <img src={`${S}/after-desktop-home.jpg`} alt="Десктопная версия сайта" width={2880} height={1800} className="w-full h-auto" />
             </div>
           </motion.div>
-          <motion.div className="grid sm:grid-cols-3 gap-5 mt-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
+
+          {/* Mobile + Tablet row */}
+          <div className="flex justify-center gap-4 md:gap-8">
+            <motion.div className="w-[140px] md:w-[180px]" variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={0.1}>
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(119,226,195,0.2)" }}>
+                <div className="flex items-center justify-center gap-1.5 px-3 py-2" style={{ background: "rgba(0,140,149,0.08)", borderBottom: "1px solid rgba(119,226,195,0.15)" }}>
+                  <Smartphone className="h-3 w-3" style={{ color: C.mint }} />
+                  <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: C.mint }}>Главная</span>
+                </div>
+                <img src={`${S}/after-mobile-home.jpg`} alt="Мобильная главная" width={780} height={1688} className="w-full h-auto" />
+              </div>
+            </motion.div>
+            <motion.div className="w-[140px] md:w-[180px]" variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={0.15}>
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(119,226,195,0.2)" }}>
+                <div className="flex items-center justify-center gap-1.5 px-3 py-2" style={{ background: "rgba(0,140,149,0.08)", borderBottom: "1px solid rgba(119,226,195,0.15)" }}>
+                  <Smartphone className="h-3 w-3" style={{ color: C.mint }} />
+                  <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: C.mint }}>Услуги</span>
+                </div>
+                <img src={`${S}/after-mobile-services.jpg`} alt="Мобильная страница услуг" width={780} height={1688} className="w-full h-auto" />
+              </div>
+            </motion.div>
+            <motion.div className="w-[140px] md:w-[180px]" variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(119,226,195,0.2)" }}>
+                <div className="flex items-center justify-center gap-1.5 px-3 py-2" style={{ background: "rgba(0,140,149,0.08)", borderBottom: "1px solid rgba(119,226,195,0.15)" }}>
+                  <Smartphone className="h-3 w-3" style={{ color: C.mint }} />
+                  <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: C.mint }}>О компании</span>
+                </div>
+                <img src={`${S}/after-mobile-about.jpg`} alt="Мобильная «О компании»" width={780} height={1688} className="w-full h-auto" />
+              </div>
+            </motion.div>
+            <motion.div className="hidden md:block w-[180px]" variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={0.25}>
+              <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(119,226,195,0.2)" }}>
+                <div className="flex items-center justify-center gap-1.5 px-3 py-2" style={{ background: "rgba(0,140,149,0.08)", borderBottom: "1px solid rgba(119,226,195,0.15)" }}>
+                  <Tablet className="h-3 w-3" style={{ color: C.mint }} />
+                  <span className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: C.mint }}>Планшет</span>
+                </div>
+                <img src={`${S}/after-tablet-home.jpg`} alt="Планшетная версия" width={1536} height={2048} className="w-full h-auto" />
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Stats row */}
+          <motion.div className="grid sm:grid-cols-3 gap-5 mt-10" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
             {[
-              { label: "Mobile-first", desc: "Все 16 страниц оптимизированы для мобильных, начиная с 320px" },
-              { label: "Touch-friendly", desc: "Минимум 44px для интерактивных элементов, жесты прокрутки" },
-              { label: "Breakpoints", desc: "sm:640px, md:768px, lg:1024px — три уровня адаптации" },
+              { label: "Mobile-first", desc: "Все 16 страниц оптимизированы для мобильных, начиная с 320px", icon: Smartphone },
+              { label: "Touch-friendly", desc: "Минимум 44px для интерактивных элементов, жесты прокрутки", icon: Layers },
+              { label: "3 breakpoint'а", desc: "sm:640px, md:768px, lg:1024px — полная адаптация", icon: Monitor },
             ].map((item) => (
-              <div key={item.label} className="relative rounded-lg p-5" style={{ background: "#ffffff", border: `1px solid ${C.borderLight}` }}>
-                <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.dna }} />
-                <h4 className="text-[14px] font-semibold mb-1" style={{ color: C.textDark }}>{item.label}</h4>
-                <p className="text-[12px] leading-relaxed" style={{ color: C.textMuted }}>{item.desc}</p>
+              <div key={item.label} className="relative rounded-lg p-5" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: C.mint }} />
+                <div className="flex items-center gap-3 mb-2">
+                  <item.icon className="h-4 w-4" style={{ color: C.mint }} />
+                  <h4 className="text-[14px] font-semibold" style={{ color: C.white }}>{item.label}</h4>
+                </div>
+                <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>{item.desc}</p>
               </div>
             ))}
           </motion.div>
@@ -445,38 +641,31 @@ export default function ArasakaCasePage() {
       </section>
 
       {/* ═══ РЕЗУЛЬТАТ ═══ */}
-      <section className="relative overflow-hidden py-20 md:py-28" style={{ background: C.dark }}>
-        <div className="pointer-events-none absolute -right-40 top-0 h-[500px] w-[500px] rounded-full blur-[180px]" style={{ background: "rgba(0,140,149,0.1)" }} />
-        <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)` }} />
-        <div className="container-kept relative z-10">
+      <section className="relative overflow-hidden py-20 md:py-28 bg-white">
+        <div className="container-kept">
           <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
-            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.mint }}>Итог</span>
-            <h2 className="heading-section" style={{ color: "#ffffff" }}>Результат</h2>
+            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Итог</span>
+            <h2 className="heading-section" style={{ color: C.textDark }}>Результат</h2>
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
-            <div className="relative overflow-hidden rounded-lg p-8 md:p-10 mb-10" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: C.mint }} />
+            <div className="relative overflow-hidden rounded-lg p-8 md:p-10 mb-10" style={{ background: C.muted, border: `1px solid ${C.borderLight}` }}>
+              <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: C.dna }} />
               <div className="flex items-center gap-3 mb-5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ background: "rgba(0,140,149,0.15)" }}><CheckCircle2 className="h-5 w-5" style={{ color: C.dna }} /></div>
-                <span className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: C.mint }}>Достигнуто</span>
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ background: C.light }}><CheckCircle2 className="h-5 w-5" style={{ color: C.dna }} /></div>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: C.dna }}>Достигнуто</span>
               </div>
-              <div className="space-y-4 text-[15px] leading-relaxed" style={{ color: "rgba(255,255,255,0.8)" }}>
+              <div className="space-y-4 text-[15px] leading-relaxed" style={{ color: C.textMid }}>
                 <p>Создан с нуля корпоративный сайт консалтинговой компании Арасака — 16 полноценных страниц, 40+ подстраниц услуг, пресс-центр с 50+ публикациями, единая дизайн-система из 20 токенов и 2 универсальных шаблона.</p>
                 <p>Проведён масштабный рефакторинг: удалено 7000+ строк бойлерплейта и дублирующегося кода, Homepage сокращён с 2806 до 23 строк (99.2%), 9 дублирующихся интерфейсов объединены в единый сервисный реестр, Header сокращён на 96 строк хардкода.</p>
                 <p>Сайт загружается менее чем за 1.5 секунды, получает 100 баллов в Lighthouse SEO, полностью адаптивен и доступен. При добавлении новой услуги достаточно добавить 5 строк в data-файл — шаблон сгенерирует страницу автоматически.</p>
               </div>
             </div>
           </motion.div>
-          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
-            <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-              <img src="/cases/arasaka-website/performance-metrics.jpg" alt="Страница «О компании» — метрики и результаты" width={1440} height={900} className="w-full h-auto" />
-            </div>
-          </motion.div>
         </div>
       </section>
 
       {/* ═══ СТРУКТУРА САЙТА ═══ */}
-      <section className="py-20 md:py-28 bg-white">
+      <section className="py-20 md:py-28" style={{ background: C.muted }}>
         <div className="container-kept">
           <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
             <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Карта сайта</span>
@@ -495,7 +684,7 @@ export default function ArasakaCasePage() {
             ].map((page, i) => (
               <motion.div key={page.title} variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={i * 0.06}>
                 <Link href={page.href} className="group block h-full">
-                  <div className="relative overflow-hidden rounded-lg p-5 h-full transition-all duration-300 group-hover:shadow-md" style={{ background: C.muted, border: `1px solid ${C.borderLight}` }}>
+                  <div className="relative overflow-hidden rounded-lg p-5 h-full transition-all duration-300 group-hover:shadow-md" style={{ background: "#ffffff", border: `1px solid ${C.borderLight}` }}>
                     <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.dna }} />
                     <div className="text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-russo)", color: C.dna }}>{page.count}</div>
                     <h4 className="text-[14px] font-semibold mb-1" style={{ color: C.textDark }}>{page.title}</h4>
@@ -509,7 +698,7 @@ export default function ArasakaCasePage() {
       </section>
 
       {/* ═══ СВЯЗАННЫЕ УСЛУГИ ═══ */}
-      <section className="py-20 md:py-28" style={{ background: C.muted }}>
+      <section className="py-20 md:py-28 bg-white">
         <div className="container-kept">
           <motion.div className="mb-10" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
             <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Экспертиза</span>
@@ -523,7 +712,7 @@ export default function ArasakaCasePage() {
             ].map((service, index) => (
               <motion.div key={service.name} variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={index * 0.08}>
                 <Link href={service.href} className="group block h-full">
-                  <div className="relative flex flex-col gap-2 overflow-hidden rounded-lg p-5 md:p-6 transition-all duration-300 group-hover:shadow-lg border h-full" style={{ borderColor: C.borderLight, background: "#ffffff" }}>
+                  <div className="relative flex flex-col gap-2 overflow-hidden rounded-lg p-5 md:p-6 transition-all duration-300 group-hover:shadow-lg border h-full" style={{ borderColor: C.borderLight, background: C.muted }}>
                     <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.dna }} />
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg" style={{ background: C.light }}><Briefcase className="h-5 w-5" style={{ color: C.dna }} /></div>
@@ -540,7 +729,7 @@ export default function ArasakaCasePage() {
       </section>
 
       {/* ═══ QUICK LINKS ═══ */}
-      <section className="py-20 md:py-28 bg-white">
+      <section className="py-20 md:py-28" style={{ background: C.muted }}>
         <div className="container-kept">
           <motion.div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
             <div>
