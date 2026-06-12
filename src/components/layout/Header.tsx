@@ -224,6 +224,8 @@ export function Header() {
     if (path === "/pro-bono") return "dark"
     if (path === "/sitemap") return "dark"
     if (path === "/feedback") return "dark"
+    if (path === "/privacy") return "dark"
+    if (path === "/terms") return "dark"
     // Teal (#008C95) hero pages
     if (/^\/cases\/[^/]+$/.test(path)) return "teal"
     // Light mint (#e8f5f3) hero pages
