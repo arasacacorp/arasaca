@@ -44,14 +44,6 @@ const staticPages: { path: string; priority: number; changefreq: string }[] = [
   { path: "/services/communications", priority: 0.8, changefreq: "monthly" },
   { path: "/services/startups", priority: 0.8, changefreq: "monthly" },
   { path: "/services/territorial-development", priority: 0.8, changefreq: "monthly" },
-  { path: "/services/urban", priority: 0.7, changefreq: "monthly" },
-  { path: "/services/urban/master-planning", priority: 0.7, changefreq: "monthly" },
-  { path: "/services/urban/infrastructure", priority: 0.7, changefreq: "monthly" },
-  { path: "/services/urban/territory-economics", priority: 0.7, changefreq: "monthly" },
-  { path: "/services/market-research", priority: 0.7, changefreq: "monthly" },
-  { path: "/services/data-analytics", priority: 0.7, changefreq: "monthly" },
-  { path: "/services/economic-research", priority: 0.7, changefreq: "monthly" },
-  { path: "/services/research", priority: 0.7, changefreq: "monthly" },
 ];
 
 /** Service sub-directions mapped from real data files */

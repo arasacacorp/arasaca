@@ -359,3 +359,27 @@ Stage Summary:
 - SEO metadata полностью сохранена (перенесена из layout.tsx в page.tsx)
 - Визуально ничего не изменилось для пользователя
 - Оставшиеся 23 layout.tsx (about, career, cases, etc.) — нужны для metadata "use client" страниц, оставлены без изменений
+---
+Task ID: 4
+Agent: main
+Task: Stage 4 — Удаление дублирующихся/сиротских маршрутов
+
+Work Log:
+- Проверил все 8 канонических URL → все возвращают 200
+- Проверил все 8 сиротских URL → все возвращают 200 (до удаления)
+- Обнаружил что слаги НЕ совпадают: market-research ≠ market-analytics, urban/* ≠ territorial-development/*
+- Обновил src/app/map/page.tsx: удалил 4 сиротские ссылки из "Аналитика", удалил весь блок "Урбанистика"
+- Обновил src/app/sitemap.ts: удалил 8 сиротских записей (urban/*, market-research, data-analytics, economic-research, research)
+- Добавил 8 редиректов (301 permanent) в next.config.ts: сиротские URL → канонические
+- Удалил 5 директорий: research/, data-analytics/, economic-research/, market-research/, urban/ (18 файлов)
+- Lint чист (ошибки только в watchdog-arasaca.js — не наш файл)
+- Все 8 канонических URL → 200 ✅
+- Все 8 сиротских URL → 308 (permanent redirect) ✅
+- Редиректы ведут на правильные канонические URL ✅
+- Agent Browser: все проверки пройдены, JS ошибок нет
+
+Stage Summary:
+- Удалено 5 сиротских директорий (18 файлов, ~2 500 строк кода)
+- Настроено 8 постоянных редиректов (301)
+- Обновлены карта сайта и sitemap.xml — сиротских ссылок больше нет
+- Канонические страницы работают без изменений для пользователя

@@ -175,10 +175,7 @@ const categories: Cat[] = [
           { name: "Рыночная аналитика и конкурентные исследования", href: "/services/analytics/market-analytics" },
           { name: "Экономические и отраслевые исследования", href: "/services/analytics/economic-research" },
           { name: "Аналитика данных и моделирование", href: "/services/analytics/data-analytics" },
-          { name: "Аналитика данных (статическая)", href: "/services/data-analytics" },
-          { name: "Экономические исследования (статическая)", href: "/services/economic-research" },
-          { name: "Исследования (статическая)", href: "/services/research" },
-          { name: "Маркетинговые исследования (статическая)", href: "/services/market-research" },
+
         ],
       },
       {
@@ -249,15 +246,7 @@ const categories: Cat[] = [
           { name: "Механизмы реализации и институциональные модели", href: "/services/territorial-development/implementation-mechanisms" },
         ],
       },
-      {
-        title: "Урбанистика",
-        links: [
-          { name: "Урбанистика — обзор", href: "/services/urban" },
-          { name: "Мастер-планирование", href: "/services/urban/master-planning" },
-          { name: "Экономика территорий", href: "/services/urban/territory-economics" },
-          { name: "Инфраструктура", href: "/services/urban/infrastructure" },
-        ],
-      },
+
     ],
   },
 

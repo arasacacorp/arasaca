@@ -7,6 +7,53 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+
+  async redirects() {
+    return [
+      // ── Orphan analytics routes → canonical ──
+      {
+        source: "/services/research",
+        destination: "/services/analytics",
+        permanent: true,
+      },
+      {
+        source: "/services/data-analytics",
+        destination: "/services/analytics/data-analytics",
+        permanent: true,
+      },
+      {
+        source: "/services/economic-research",
+        destination: "/services/analytics/economic-research",
+        permanent: true,
+      },
+      {
+        source: "/services/market-research",
+        destination: "/services/analytics/market-analytics",
+        permanent: true,
+      },
+      // ── Orphan urban routes → canonical territorial-development ──
+      {
+        source: "/services/urban",
+        destination: "/services/territorial-development",
+        permanent: true,
+      },
+      {
+        source: "/services/urban/master-planning",
+        destination: "/services/territorial-development/spatial-strategic-planning",
+        permanent: true,
+      },
+      {
+        source: "/services/urban/territory-economics",
+        destination: "/services/territorial-development/economic-modeling",
+        permanent: true,
+      },
+      {
+        source: "/services/urban/infrastructure",
+        destination: "/services/territorial-development/implementation-mechanisms",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
