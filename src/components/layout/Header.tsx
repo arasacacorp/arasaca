@@ -133,7 +133,7 @@ const navigation = [
   },
   {
     name: "Решения",
-    href: "/solutions/master-planning",
+    href: "/solutions",
     inHeader: true,
     description: "Продукты и платформенные решения для управления развитием территорий и инвестиционными программами.",
     submenu: [
@@ -171,7 +171,7 @@ const navigation = [
 const keptNavItems = [
   { name: "Услуги", href: "/services" },
   { name: "Отрасли", href: "/industries" },
-  { name: "Решения", href: "/solutions/master-planning" },
+  { name: "Решения", href: "/solutions" },
   { name: "Пресс-центр", href: "/press-center" },
   { name: "Контакты", href: "/contacts" },
 ]
