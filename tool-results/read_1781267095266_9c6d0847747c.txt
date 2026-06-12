@@ -1,0 +1,829 @@
+     1→"use client";
+     2→
+     3→import { motion } from "framer-motion";
+     4→import Link from "next/link";
+     5→import { cn } from "@/lib/utils";
+     6→import {
+     7→  ChevronRight,
+     8→  ArrowRight,
+     9→  Target,
+    10→  MessageSquare,
+    11→  BarChart3,
+    12→  Layers,
+    13→  Heart,
+    14→  Quote,
+    15→  HandHeart,
+    16→  Building2,
+    17→  Phone,
+    18→  Mail,
+    19→  Briefcase,
+    20→  Newspaper,
+    21→  Users,
+    22→} from "lucide-react";
+    23→import { C } from "@/lib/colors";
+    24→
+    25→/* ─── Animation variants ─── */
+    26→const fadeUp = {
+    27→  hidden: { opacity: 0, y: 32 },
+    28→  visible: (i: number = 0) => ({
+    29→    opacity: 1,
+    30→    y: 0,
+    31→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    32→  }),
+    33→};
+    34→
+    35→const fadeIn = {
+    36→  hidden: { opacity: 0 },
+    37→  visible: (i: number = 0) => ({
+    38→    opacity: 1,
+    39→    transition: { duration: 0.8, delay: i * 0.12 },
+    40→  }),
+    41→};
+    42→
+    43→const scaleIn = {
+    44→  hidden: { opacity: 0, scale: 0.85 },
+    45→  visible: (i: number = 0) => ({
+    46→    opacity: 1,
+    47→    scale: 1,
+    48→    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+    49→  }),
+    50→};
+    51→
+    52→const vp = { once: true, amount: 0.2 as const };
+    53→
+    54→/* ─── Section label component ─── */
+    55→function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+    56→  return (
+    57→    <motion.span
+    58→      className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+    59→      style={{ color: light ? C.mint : C.dna }}
+    60→      variants={fadeIn}
+    61→      initial="hidden"
+    62→      whileInView="visible"
+    63→      viewport={vp}
+    64→    >
+    65→      {children}
+    66→    </motion.span>
+    67→  );
+    68→}
+    69→
+    70→/* ═══════════════════════════════════════════════════════
+    71→   DATA (text content preserved as-is)
+    72→   ═══════════════════════════════════════════════════════ */
+    73→const tagline = "Инсайты, которые двигают бизнес.";
+    74→
+    75→const leadText = [
+    76→  "Арасака — одна из наиболее динамично развивающихся компаний, осуществляющих консалтинг и аутсорсинг инвестиционных проектов. Лидер на рынке инвестиционного консалтинга, специализирующийся на разработке и реализации стратегий для среднего и крупного бизнеса.",
+    77→  "Мы предоставляем комплексные решения в области финансово-экономических моделей, бизнес-планов, маркетинговых исследований и технико-экономических обоснований (ТЭО) для крупных промышленных и индустриальных компаний. Наша цель — помочь клиентам минимизировать риски, повысить эффективность и достигать устойчивых результатов через профессиональную экспертизу и индивидуальный подход.",
+    78→];
+    79→
+    80→const projectClients = [
+    81→  "ГК «Росатом»",
+    82→  "ПАО «Новатэк»",
+    83→  "ПАО «Сибур»",
+    84→  "Группа «ПИК»",
+    85→];
+    86→
+    87→const stats = [
+    88→  { value: "10+", label: "отраслей экономики" },
+    89→  { value: "80+", label: "проектов ежегодно" },
+    90→  { value: "8 лет", label: "работаем с бизнесом" },
+    91→  { value: "7", label: "направлений бизнеса" },
+    92→  { value: "60+", label: "консультантов" },
+    93→  { value: "75%", label: "повторных заказов" },
+    94→  { value: "40+", label: "благодарственных писем" },
+    95→  { value: "27%", label: "рост заказов ежегодно" },
+    96→  { value: "9", label: "направлений консалтинга" },
+    97→  { value: "36", label: "охватываемых сфер" },
+    98→  { value: "100+", label: "задач решаем" },
+    99→];
+   100→
+   101→const principles = [
+   102→  {
+   103→    icon: Target,
+   104→    title: "Ориентируемся на долгосрочную ценность",
+   105→    text: "Мы предлагаем решения, которые приносят устойчивые результаты, а не просто краткосрочный эффект.",
+   106→  },
+   107→  {
+   108→    icon: MessageSquare,
+   109→    title: "Говорим правду, даже когда это сложно",
+   110→    text: "Наша независимость и честность — основа доверия. Мы не боимся поднимать неудобные вопросы, если это в интересах клиента.",
+   111→  },
+   112→  {
+   113→    icon: BarChart3,
+   114→    title: "Работаем на стыке данных, стратегии и интуиции",
+   115→    text: "Соединяем аналитическую точность с бизнес-чутьём, чтобы находить действительно работающие решения.",
+   116→  },
+   117→  {
+   118→    icon: Layers,
+   119→    title: "Углубляемся в суть, действуем системно",
+   120→    text: "Мы не просто консультируем — разбираемся в бизнесе клиента до деталей, чтобы построить стратегию, которая работает.",
+   121→  },
+   122→  {
+   123→    icon: Heart,
+   124→    title: "Делаем успех клиента — своим приоритетом",
+   125→    text: "Мы не просто советуем, а сопровождаем на каждом этапе изменений, чтобы вместе достигать реальных результатов.",
+   126→  },
+   127→];
+   128→
+   129→const industryHighlights = [
+   130→  "Атомная энергетика",
+   131→  "Нефть и газ",
+   132→  "Машиностроение",
+   133→  "Судостроение",
+   134→  "Строительство",
+   135→  "ИТ-индустрия",
+   136→  "Медицина",
+   137→  "Производство",
+   138→  "Госсектор",
+   139→];
+   140→
+   141→/* ─── Quick Links cards ─── */
+   142→const sectionCards = [
+   143→  {
+   144→    title: "О компании",
+   145→    description: "Миссия, ценности, команда",
+   146→    bg: C.dark,
+   147→    textColor: C.white,
+   148→    href: "/about",
+   149→    icon: Building2,
+   150→  },
+   151→  {
+   152→    title: "Услуги",
+   153→    description: "9 направлений консалтинга",
+   154→    bg: C.orange,
+   155→    textColor: C.white,
+   156→    href: "/services",
+   157→    icon: Briefcase,
+   158→  },
+   159→  {
+   160→    title: "Решения",
+   161→    description: "Цифровые продукты и платформы",
+   162→    bg: C.white,
+   163→    textColor: C.textDark,
+   164→    href: "/solutions",
+   165→    icon: Layers,
+   166→  },
+   167→  {
+   168→    title: "Пресс-центр",
+   169→    description: "Новости, пресс-релизы, СМИ",
+   170→    bg: C.dna,
+   171→    textColor: C.white,
+   172→    href: "/press-center",
+   173→    icon: Newspaper,
+   174→  },
+   175→  {
+   176→    title: "Карьера",
+   177→    description: "Присоединяйтесь к команде",
+   178→    bg: C.mintDark,
+   179→    textColor: C.white,
+   180→    href: "/career",
+   181→    icon: Users,
+   182→  },
+   183→  {
+   184→    title: "Контакты",
+   185→    description: "Свяжитесь с нами",
+   186→    bg: C.dark,
+   187→    textColor: C.white,
+   188→    href: "/contacts",
+   189→    icon: Mail,
+   190→  },
+   191→];
+   192→
+   193→/* ═══════════════════════════════════════════════════════
+   194→   PAGE
+   195→   ═══════════════════════════════════════════════════════ */
+   196→export default function AboutPage() {
+   197→  return (
+   198→    <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
+   199→      {/* ═══════════════════════════════════════════════════
+   200→          HERO — Gray background (Pattern B)
+   201→          ═══════════════════════════════════════════════════ */}
+   202→      <section
+   203→        className="relative overflow-hidden pt-16 lg:pt-[120px] pb-16 md:pb-20"
+   204→        style={{ background: C.muted }}
+   205→      >
+   206→        <div className="container-kept relative z-10 pt-6 md:pt-10 lg:pt-12">
+   207→          {/* Breadcrumbs */}
+   208→          <motion.nav
+   209→            className="flex items-center gap-2 mb-6"
+   210→            initial={{ opacity: 0 }}
+   211→            animate={{ opacity: 1 }}
+   212→            transition={{ duration: 0.5, delay: 0.1 }}
+   213→          >
+   214→            <Link href="/" className="text-[12px] transition-colors hover:text-[#008C95]" style={{ color: C.textMuted }}>
+   215→              Главная
+   216→            </Link>
+   217→            <ChevronRight className="w-3 h-3" style={{ color: C.border }} />
+   218→            <span className="text-[12px] font-medium" style={{ color: C.dna }}>О компании</span>
+   219→          </motion.nav>
+   220→
+   221→          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+   222→            <div>
+   223→              <motion.span
+   224→                className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+   225→                style={{ color: C.dna }}
+   226→                initial={{ opacity: 0 }}
+   227→                animate={{ opacity: 1 }}
+   228→                transition={{ duration: 0.5, delay: 0.15 }}
+   229→              >
+   230→                О нас
+   231→              </motion.span>
+   232→
+   233→              <motion.h1
+   234→                className="mb-4"
+   235→                style={{
+   236→                  fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   237→                  fontWeight: 700,
+   238→                  lineHeight: 1.25,
+   239→                  letterSpacing: "-0.01em",
+   240→                  color: C.textDark,
+   241→                }}
+   242→                initial={{ opacity: 0, y: 16 }}
+   243→                animate={{ opacity: 1, y: 0 }}
+   244→                transition={{ duration: 0.6, delay: 0.2 }}
+   245→              >
+   246→                {tagline}
+   247→              </motion.h1>
+   248→
+   249→              <motion.p
+   250→                className="max-w-md text-[14px] font-normal leading-relaxed"
+   251→                style={{ color: C.textMuted }}
+   252→                initial={{ opacity: 0, y: 12 }}
+   253→                animate={{ opacity: 1, y: 0 }}
+   254→                transition={{ duration: 0.6, delay: 0.3 }}
+   255→              >
+   256→                Консалтинг и аутсорсинг инвестиционных проектов. Комплексные решения для среднего и крупного бизнеса.
+   257→              </motion.p>
+   258→            </div>
+   259→
+   260→            {/* CTA cards */}
+   261→            <motion.div
+   262→              className="flex flex-col sm:flex-row lg:flex-col gap-3 lg:w-[280px] lg:flex-shrink-0"
+   263→              initial={{ opacity: 0, x: 20 }}
+   264→              animate={{ opacity: 1, x: 0 }}
+   265→              transition={{ duration: 0.6, delay: 0.35 }}
+   266→            >
+   267→              <Link href="/feedback?type=proposals" className="group/kp flex-1">
+   268→                <div
+   269→                  className="relative overflow-hidden rounded-lg p-5 transition-all duration-300 group-hover/kp:shadow-lg h-full flex flex-col justify-center"
+   270→                  style={{ background: C.dark }}
+   271→                >
+   272→                  <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: "rgba(255,255,255,0.5)" }} />
+   273→                  <div
+   274→                    className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   275→                    style={{
+   276→                      backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.3) 30px, rgba(255,255,255,0.3) 31px)`,
+   277→                    }}
+   278→                  />
+   279→                  <div className="relative z-10">
+   280→                    <div className="flex items-center gap-2.5 mb-2">
+   281→                      <div className="flex h-8 w-8 items-center justify-center rounded-md" style={{ background: "rgba(255,255,255,0.15)" }}>
+   282→                        <Mail className="h-4 w-4" style={{ color: "#ffffff" }} />
+   283→                      </div>
+   284→                      <span className="text-[14px] font-bold" style={{ color: "#ffffff" }}>Запросить КП</span>
+   285→                    </div>
+   286→                    <p className="text-[11px] leading-relaxed pl-[42px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+   287→                      Индивидуальное предложение под вашу задачу
+   288→                    </p>
+   289→                  </div>
+   290→                </div>
+   291→              </Link>
+   292→              <Link href="/feedback?type=callback" className="group/cb flex-1">
+   293→                <div
+   294→                  className="relative overflow-hidden rounded-lg p-5 transition-all duration-300 group-hover/cb:shadow-lg h-full flex flex-col justify-center"
+   295→                  style={{ background: C.white }}
+   296→                >
+   297→                  <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.orange }} />
+   298→                  <div className="relative z-10">
+   299→                    <div className="flex items-center gap-2.5 mb-2">
+   300→                      <div className="flex h-8 w-8 items-center justify-center rounded-md" style={{ background: `${C.orange}15` }}>
+   301→                        <Phone className="h-4 w-4" style={{ color: C.orange }} />
+   302→                      </div>
+   303→                      <span className="text-[14px] font-bold" style={{ color: C.textDark }}>Обратный звонок</span>
+   304→                    </div>
+   305→                    <p className="text-[11px] leading-relaxed pl-[42px]" style={{ color: C.textMuted }}>
+   306→                      Перезвоним в удобное для вас время
+   307→                    </p>
+   308→                  </div>
+   309→                </div>
+   310→              </Link>
+   311→            </motion.div>
+   312→          </div>
+   313→        </div>
+   314→      </section>
+   315→
+   316→      {/* ═══════════════════════════════════════════════════
+   317→          КТО МЫ — White background
+   318→          ═══════════════════════════════════════════════════ */}
+   319→      <section className="py-16 lg:py-24 bg-white">
+   320→        <div className="container-kept">
+   321→          <motion.div
+   322→            initial={{ opacity: 0, y: 20 }}
+   323→            whileInView={{ opacity: 1, y: 0 }}
+   324→            viewport={vp}
+   325→            transition={{ duration: 0.6 }}
+   326→            className="max-w-3xl"
+   327→          >
+   328→            <SectionLabel>О компании</SectionLabel>
+   329→            {leadText.map((paragraph, i) => (
+   330→              <p
+   331→                key={i}
+   332→                className="text-[15px] leading-relaxed mb-6 last:mb-0"
+   333→                style={{ color: C.textMid }}
+   334→              >
+   335→                {paragraph}
+   336→              </p>
+   337→            ))}
+   338→          </motion.div>
+   339→
+   340→          {/* Projects quote block */}
+   341→          <motion.div
+   342→            initial={{ opacity: 0, y: 20 }}
+   343→            whileInView={{ opacity: 1, y: 0 }}
+   344→            viewport={vp}
+   345→            transition={{ duration: 0.5, delay: 0.1 }}
+   346→            className="mt-16"
+   347→          >
+   348→            <div
+   349→              className="relative overflow-hidden rounded-lg p-8 lg:p-10"
+   350→              style={{ background: C.dark }}
+   351→            >
+   352→              {/* Decorative pattern */}
+   353→              <div
+   354→                className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   355→                style={{
+   356→                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+   357→                }}
+   358→              />
+   359→              {/* Accent line on left */}
+   360→              <div className="pointer-events-none absolute left-0 top-0 h-full w-1.5" style={{ background: C.dna }} />
+   361→
+   362→              <div className="relative z-10">
+   363→                <Quote className="w-10 h-10 mb-4" style={{ color: C.dna, opacity: 0.6 }} />
+   364→                <p className="text-xl lg:text-2xl font-medium leading-snug mb-6" style={{ color: "#ffffff" }}>
+   365→                  В активе Арасака — множество масштабных проектов. В их числе:{" "}
+   366→                  {projectClients.join(", ")} и др.
+   367→                </p>
+   368→                <Link
+   369→                  href="/industries"
+   370→                  className="inline-flex items-center gap-2 font-medium transition-colors"
+   371→                  style={{ color: C.mint }}
+   372→                >
+   373→                  Все отрасли
+   374→                  <ArrowRight className="w-4 h-4" />
+   375→                </Link>
+   376→              </div>
+   377→            </div>
+   378→          </motion.div>
+   379→
+   380→          {/* Pro Bono */}
+   381→          <motion.div
+   382→            initial={{ opacity: 0, y: 20 }}
+   383→            whileInView={{ opacity: 1, y: 0 }}
+   384→            viewport={vp}
+   385→            transition={{ duration: 0.5, delay: 0.15 }}
+   386→            className="mt-6"
+   387→          >
+   388→            <Link href="/pro-bono" className="group block">
+   389→              <div
+   390→                className="relative overflow-hidden rounded-lg p-6 transition-all duration-300 group-hover:shadow-lg border"
+   391→                style={{ background: C.light, borderColor: `${C.dna}20` }}
+   392→              >
+   393→                <div className="flex items-center gap-4">
+   394→                  <div
+   395→                    className="flex h-14 w-14 items-center justify-center rounded-xl shrink-0"
+   396→                    style={{ background: `${C.dna}15` }}
+   397→                  >
+   398→                    <HandHeart className="w-7 h-7" style={{ color: C.dna }} />
+   399→                  </div>
+   400→                  <div className="flex-1 min-w-0">
+   401→                    <h3
+   402→                      className="text-lg font-semibold transition-colors mb-1"
+   403→                      style={{ color: C.textDark }}
+   404→                    >
+   405→                      Услуги Pro Bono
+   406→                    </h3>
+   407→                    <p className="text-[13px] leading-relaxed" style={{ color: C.textMuted }}>
+   408→                      Мы оказываем консалтинговую поддержку на безвозмездной основе
+   409→                      НКО и социальным проектам. Подробнее о том, чем можем помочь и
+   410→                      как с нами связаться — на отдельной странице.
+   411→                    </p>
+   412→                  </div>
+   413→                  <ArrowRight
+   414→                    className="w-6 h-6 shrink-0 transition-transform group-hover:translate-x-1"
+   415→                    style={{ color: C.dna }}
+   416→                  />
+   417→                </div>
+   418→              </div>
+   419→            </Link>
+   420→          </motion.div>
+   421→        </div>
+   422→      </section>
+   423→
+   424→      {/* ═══════════════════════════════════════════════════
+   425→          АРАСАКА В ЦИФРАХ — Muted background
+   426→          ═══════════════════════════════════════════════════ */}
+   427→      <section className="py-16 lg:py-24" style={{ background: C.muted }}>
+   428→        <div className="container-kept">
+   429→          <motion.div
+   430→            className="mb-12"
+   431→            variants={fadeUp}
+   432→            initial="hidden"
+   433→            whileInView="visible"
+   434→            viewport={vp}
+   435→          >
+   436→            <SectionLabel>Факты и цифры</SectionLabel>
+   437→            <h2
+   438→              className="heading-section"
+   439→              style={{ color: C.textDark }}
+   440→            >
+   441→              Арасака в цифрах
+   442→            </h2>
+   443→          </motion.div>
+   444→          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+   445→            {stats.map((stat, index) => (
+   446→              <motion.div
+   447→                key={stat.label}
+   448→                variants={scaleIn}
+   449→                initial="hidden"
+   450→                whileInView="visible"
+   451→                viewport={vp}
+   452→                custom={index * 0.06}
+   453→              >
+   454→                <div
+   455→                  className="relative overflow-hidden rounded-lg p-6 text-center border h-full"
+   456→                  style={{ background: C.white, borderColor: C.border }}
+   457→                >
+   458→                  {/* Top accent line */}
+   459→                  <div className="pointer-events-none absolute left-0 top-0 h-1 w-full" style={{ background: `${C.dna}40` }} />
+   460→                  <div
+   461→                    className="text-2xl lg:text-3xl font-bold mb-1"
+   462→                    style={{ color: C.dna }}
+   463→                  >
+   464→                    {stat.value}
+   465→                  </div>
+   466→                  <div className="text-[12px] font-medium" style={{ color: C.textMuted }}>
+   467→                    {stat.label}
+   468→                  </div>
+   469→                </div>
+   470→              </motion.div>
+   471→            ))}
+   472→          </div>
+   473→        </div>
+   474→      </section>
+   475→
+   476→      {/* ═══════════════════════════════════════════════════
+   477→          КЛИЕНТЫ — White background
+   478→          ═══════════════════════════════════════════════════ */}
+   479→      <section className="py-16 lg:py-24 bg-white">
+   480→        <div className="container-kept">
+   481→          <motion.div
+   482→            initial={{ opacity: 0, y: 20 }}
+   483→            whileInView={{ opacity: 1, y: 0 }}
+   484→            viewport={vp}
+   485→            transition={{ duration: 0.6 }}
+   486→          >
+   487→            <div
+   488→              className="relative overflow-hidden rounded-lg p-8 lg:p-10 border"
+   489→              style={{ background: C.muted, borderColor: C.border }}
+   490→            >
+   491→              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+   492→                <div className="max-w-2xl">
+   493→                  <div className="flex items-center gap-3 mb-4">
+   494→                    <div
+   495→                      className="flex h-12 w-12 items-center justify-center rounded-xl"
+   496→                      style={{ background: `${C.dna}15` }}
+   497→                    >
+   498→                      <Building2 className="w-6 h-6" style={{ color: C.dna }} />
+   499→                    </div>
+   500→                    <h2 className="heading-section" style={{ color: C.textDark }}>
+   501→                      Клиенты
+   502→                    </h2>
+   503→                  </div>
+   504→                  <p className="text-[14px] leading-relaxed mb-4" style={{ color: C.textMid }}>
+   505→                    Нам доверяют клиенты из списка ТОП 100 крупнейших компаний России. С нами на постоянной основе работают крупнейшие российские и международные компании из промышленного, финансового и государственного секторов — а также стартапы и представители малого бизнеса.
+   506→                  </p>
+   507→                  <p className="text-[13px] mb-6" style={{ color: C.textMuted }}>
+   508→                    В их числе: Росатом, Сибур, Новатэк, Атомэнергомаш, Группа ПИК, Клуб Лидеров и другие.
+   509→                  </p>
+   510→                  <Link
+   511→                    href="/customers"
+   512→                    className="inline-flex items-center gap-2 font-medium transition-all hover:gap-3"
+   513→                    style={{ color: C.dna }}
+   514→                  >
+   515→                    Все клиенты
+   516→                    <ArrowRight className="w-4 h-4" />
+   517→                  </Link>
+   518→                </div>
+   519→              </div>
+   520→            </div>
+   521→          </motion.div>
+   522→        </div>
+   523→      </section>
+   524→
+   525→      {/* ═══════════════════════════════════════════════════
+   526→          КЛИЕНТЫ И ОТРАСЛИ — Muted background
+   527→          ═══════════════════════════════════════════════════ */}
+   528→      <section className="py-16 lg:py-24" style={{ background: C.muted }}>
+   529→        <div className="container-kept">
+   530→          <motion.div
+   531→            initial={{ opacity: 0, y: 20 }}
+   532→            whileInView={{ opacity: 1, y: 0 }}
+   533→            viewport={vp}
+   534→            transition={{ duration: 0.6 }}
+   535→            className="flex flex-col md:flex-row md:items-end md:justify-between gap-8"
+   536→          >
+   537→            <div>
+   538→              <SectionLabel>Отрасли</SectionLabel>
+   539→              <h2 className="heading-section mb-4" style={{ color: C.textDark }}>
+   540→                Клиенты и отрасли
+   541→              </h2>
+   542→              <p className="text-[14px] max-w-xl mb-6" style={{ color: C.textMuted }}>
+   543→                Работаем с ключевыми отраслями экономики — от атомной энергетики
+   544→                и нефтегаза до строительства, IT и госсектора.
+   545→              </p>
+   546→              <div className="flex flex-wrap gap-2">
+   547→                {industryHighlights.map((name) => (
+   548→                  <span
+   549→                    key={name}
+   550→                    className="px-4 py-2 text-[12px] font-medium rounded-md border"
+   551→                    style={{
+   552→                      background: C.white,
+   553→                      color: C.textMid,
+   554→                      borderColor: C.border,
+   555→                    }}
+   556→                  >
+   557→                    {name}
+   558→                  </span>
+   559→                ))}
+   560→              </div>
+   561→            </div>
+   562→            <Link
+   563→              href="/industries"
+   564→              className="inline-flex items-center gap-2 px-6 py-3 font-medium shrink-0 transition-colors"
+   565→              style={{
+   566→                border: `2px solid ${C.dna}`,
+   567→                color: C.dna,
+   568→              }}
+   569→            >
+   570→              Все отрасли
+   571→              <ArrowRight className="w-4 h-4" />
+   572→            </Link>
+   573→          </motion.div>
+   574→        </div>
+   575→      </section>
+   576→
+   577→      {/* ═══════════════════════════════════════════════════
+   578→          КЛЮЧЕВЫЕ ПРИНЦИПЫ — Dark/Teal background
+   579→          ═══════════════════════════════════════════════════ */}
+   580→      <section className="relative overflow-hidden py-16 lg:py-24" style={{ background: C.dna }}>
+   581→        {/* Decorative glow */}
+   582→        <div
+   583→          className="pointer-events-none absolute -right-40 top-0 h-[500px] w-[500px] rounded-full blur-[180px]"
+   584→          style={{ background: "rgba(119,226,195,0.12)" }}
+   585→        />
+   586→        {/* Diagonal lines pattern */}
+   587→        <div
+   588→          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   589→          style={{
+   590→            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.3) 40px, rgba(255,255,255,0.3) 41px)`,
+   591→          }}
+   592→        />
+   593→
+   594→        <div className="container-kept relative z-10">
+   595→          <motion.div
+   596→            variants={fadeUp}
+   597→            initial="hidden"
+   598→            whileInView="visible"
+   599→            viewport={vp}
+   600→          >
+   601→            <SectionLabel light>Принципы</SectionLabel>
+   602→            <h2 className="text-3xl font-bold leading-tight text-white md:text-4xl mb-4">
+   603→              Ключевые принципы работы
+   604→            </h2>
+   605→            <p className="text-white/80 max-w-2xl mb-14">
+   606→              То, как мы работаем с клиентами и почему нам доверяют.
+   607→            </p>
+   608→          </motion.div>
+   609→          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+   610→            {principles.map((item, index) => (
+   611→              <motion.div
+   612→                key={item.title}
+   613→                variants={fadeUp}
+   614→                initial="hidden"
+   615→                whileInView="visible"
+   616→                viewport={vp}
+   617→                custom={index * 0.08}
+   618→              >
+   619→                <div
+   620→                  className="relative overflow-hidden rounded-lg p-6 transition-all duration-300 border h-full"
+   621→                  style={{
+   622→                    background: "rgba(255,255,255,0.08)",
+   623→                    borderColor: "rgba(255,255,255,0.12)",
+   624→                    backdropFilter: "blur(8px)",
+   625→                  }}
+   626→                >
+   627→                  <div
+   628→                    className="flex h-12 w-12 items-center justify-center rounded-lg mb-4"
+   629→                    style={{ background: "rgba(255,255,255,0.15)" }}
+   630→                  >
+   631→                    <item.icon className="w-6 h-6 text-white" />
+   632→                  </div>
+   633→                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+   634→                  <p className="text-white/75 text-[13px] leading-relaxed">
+   635→                    {item.text}
+   636→                  </p>
+   637→                </div>
+   638→              </motion.div>
+   639→            ))}
+   640→          </div>
+   641→        </div>
+   642→      </section>
+   643→
+   644→      {/* ═══════════════════════════════════════════════════
+   645→          CTA — White background
+   646→          ═══════════════════════════════════════════════════ */}
+   647→      <section className="py-20 lg:py-28 bg-white">
+   648→        <div className="container-kept">
+   649→          <motion.div
+   650→            initial={{ opacity: 0, y: 20 }}
+   651→            whileInView={{ opacity: 1, y: 0 }}
+   652→            viewport={vp}
+   653→            transition={{ duration: 0.6 }}
+   654→            className="text-center max-w-2xl mx-auto"
+   655→          >
+   656→            <h2 className="heading-section mb-4" style={{ color: C.textDark }}>
+   657→              Подберём оптимальное решение для вашего бизнеса
+   658→            </h2>
+   659→            <p className="text-[14px] mb-10" style={{ color: C.textMuted }}>
+   660→              Расскажите о задаче — подготовим предложение или договоримся о
+   661→              встрече.
+   662→            </p>
+   663→            <Link
+   664→              href="/contacts"
+   665→              className="inline-flex items-center gap-2 px-10 py-4 text-white font-medium text-lg transition-colors"
+   666→              style={{ background: C.orange }}
+   667→            >
+   668→              Обсудить проект
+   669→              <ArrowRight className="w-5 h-5" />
+   670→            </Link>
+   671→          </motion.div>
+   672→        </div>
+   673→      </section>
+   674→
+   675→      {/* ═══════════════════════════════════════════════════
+   676→          ПОЛЕЗНЫЕ ССЫЛКИ — Navigation cards + CTA panel
+   677→          ═══════════════════════════════════════════════════ */}
+   678→      <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   679→        <div className="container-kept">
+   680→          <motion.div
+   681→            className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   682→            variants={fadeUp}
+   683→            initial="hidden"
+   684→            whileInView="visible"
+   685→            viewport={vp}
+   686→          >
+   687→            <div>
+   688→              <SectionLabel>Навигация</SectionLabel>
+   689→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   690→                Полезные ссылки
+   691→              </h2>
+   692→            </div>
+   693→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   694→              Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании
+   695→            </p>
+   696→          </motion.div>
+   697→
+   698→          <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+   699→            {/* Left: 6 navigation cards */}
+   700→            <div className="flex-1 flex">
+   701→              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 w-full h-full auto-rows-fr">
+   702→                {sectionCards.map((card, index) => {
+   703→                  const isWhite = card.bg === C.white;
+   704→                  return (
+   705→                    <motion.div
+   706→                      key={card.title}
+   707→                      className="flex"
+   708→                      variants={scaleIn}
+   709→                      initial="hidden"
+   710→                      whileInView="visible"
+   711→                      viewport={vp}
+   712→                      custom={index * 0.08}
+   713→                    >
+   714→                      <Link href={card.href} className="group block h-full w-full">
+   715→                        <motion.div
+   716→                          className="relative flex flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300 h-full border"
+   717→                          style={{
+   718→                            background: card.bg,
+   719→                            color: card.textColor,
+   720→                            borderColor: isWhite ? C.border : "transparent",
+   721→                            minHeight: "130px",
+   722→                          }}
+   723→                          whileHover={{ y: -3, transition: { duration: 0.25 } }}
+   724→                        >
+   725→                          {card.bg === C.dark && (
+   726→                            <div
+   727→                              className="pointer-events-none absolute inset-0 opacity-[0.06]"
+   728→                              style={{
+   729→                                backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`,
+   730→                                backgroundSize: "20px 20px",
+   731→                              }}
+   732→                            />
+   733→                          )}
+   734→                          {isWhite && (
+   735→                            <div
+   736→                              className="pointer-events-none absolute inset-0 opacity-[0.1]"
+   737→                              style={{
+   738→                                backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`,
+   739→                                backgroundSize: "12px 12px",
+   740→                              }}
+   741→                            />
+   742→                          )}
+   743→
+   744→                          <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: isWhite ? C.dna : "rgba(255,255,255,0.4)" }} />
+   745→
+   746→                          <div className="relative z-10">
+   747→                            <div className="flex items-center gap-2">
+   748→                              {card.icon && <card.icon className="h-4 w-4 opacity-60" />}
+   749→                              <span className="block text-sm font-semibold md:text-base">{card.title}</span>
+   750→                            </div>
+   751→                            <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+   752→                          </div>
+   753→
+   754→                          <div className="relative z-10 flex justify-end">
+   755→                            <div
+   756→                              className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   757→                              style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}
+   758→                            >
+   759→                              <ArrowRight className="h-4 w-4" style={{ color: isWhite ? C.dna : "#ffffff" }} />
+   760→                            </div>
+   761→                          </div>
+   762→                        </motion.div>
+   763→                      </Link>
+   764→                    </motion.div>
+   765→                  );
+   766→                })}
+   767→              </div>
+   768→            </div>
+   769→
+   770→            {/* Right: CTA panel */}
+   771→            <motion.div
+   772→              className="lg:w-[340px] flex-shrink-0"
+   773→              variants={fadeUp}
+   774→              initial="hidden"
+   775→              whileInView="visible"
+   776→              viewport={vp}
+   777→              custom={0.3}
+   778→            >
+   779→              <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg p-6 md:p-8" style={{ background: C.dark }}>
+   780→                <div
+   781→                  className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   782→                  style={{
+   783→                    backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+   784→                  }}
+   785→                />
+   786→
+   787→                <div className="relative z-10">
+   788→                  <div className="h-px w-12 mb-5" style={{ background: C.mint }} />
+   789→                  <h3
+   790→                    className="text-xl font-bold leading-tight mb-2"
+   791→                    style={{ fontFamily: "var(--font-russo)", color: "#ffffff" }}
+   792→                  >
+   793→                    Начните сотрудничество
+   794→                  </h3>
+   795→                  <p className="text-[13px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+   796→                    Оставьте заявку — мы&nbsp;свяжемся с&nbsp;вами, обсудим задачу и&nbsp;подготовим индивидуальное предложение.
+   797→                  </p>
+   798→                </div>
+   799→
+   800→                <div className="relative z-10 flex flex-col gap-3">
+   801→                  <Link
+   802→                    href="/feedback?type=proposals"
+   803→                    className="inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300"
+   804→                    style={{ background: C.dna, borderRadius: "4px" }}
+   805→                  >
+   806→                    Запросить КП
+   807→                    <ArrowRight className="h-4 w-4" />
+   808→                  </Link>
+   809→                  <Link
+   810→                    href="/feedback?type=callback"
+   811→                    className="inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-medium uppercase tracking-wider border transition-all duration-300"
+   812→                    style={{
+   813→                      borderColor: "rgba(255,255,255,0.2)",
+   814→                      color: "rgba(255,255,255,0.7)",
+   815→                      borderRadius: "4px",
+   816→                    }}
+   817→                  >
+   818→                    Заказать звонок
+   819→                  </Link>
+   820→                </div>
+   821→              </div>
+   822→            </motion.div>
+   823→          </div>
+   824→        </div>
+   825→      </section>
+   826→    </main>
+   827→  );
+   828→}
+   829→

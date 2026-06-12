@@ -1,0 +1,1023 @@
+     1→"use client";
+     2→
+     3→import { useState } from "react";
+     4→import { motion, AnimatePresence } from "framer-motion";
+     5→import Link from "next/link";
+     6→import {
+     7→  MapPin,
+     8→  Mail,
+     9→  ArrowRight,
+    10→  ChevronRight,
+    11→  Clock,
+    12→  Phone,
+    13→  Building2,
+    14→  Users,
+    15→  Briefcase,
+    16→  Newspaper,
+    17→  Layers,
+    18→  Send,
+    19→  ExternalLink,
+    20→} from "lucide-react";
+    21→import { cn } from "@/lib/utils";
+    22→import { C } from "@/lib/colors";
+    23→
+    24→/* ─── Animation variants ─── */
+    25→const fadeUp = {
+    26→  hidden: { opacity: 0, y: 32 },
+    27→  visible: (i: number = 0) => ({
+    28→    opacity: 1,
+    29→    y: 0,
+    30→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    31→  }),
+    32→};
+    33→
+    34→const fadeIn = {
+    35→  hidden: { opacity: 0 },
+    36→  visible: (i: number = 0) => ({
+    37→    opacity: 1,
+    38→    transition: { duration: 0.8, delay: i * 0.12 },
+    39→  }),
+    40→};
+    41→
+    42→const scaleIn = {
+    43→  hidden: { opacity: 0, scale: 0.85 },
+    44→  visible: (i: number = 0) => ({
+    45→    opacity: 1,
+    46→    scale: 1,
+    47→    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+    48→  }),
+    49→};
+    50→
+    51→const vp = { once: true, amount: 0.2 as const };
+    52→
+    53→/* ─── Data ─── */
+    54→const office = {
+    55→  country: "Россия",
+    56→  city: "Санкт-Петербург",
+    57→  address: "Санкт-Петербург, Лиговский проспект, дом 56, литер «Г»",
+    58→  email: "info@arasaca.ru",
+    59→  phone: "+7 (812) 937-44-77",
+    60→  workingHours: "Пн-Пт: 9:00 – 18:00",
+    61→  mapEmbedUrl: "https://yandex.ru/map-widget/v1/-/CPuj5KKw",
+    62→  mapOpenUrl: "https://yandex.ru/maps/-/CPuj5KKw",
+    63→};
+    64→
+    65→const contactBlocks = [
+    66→  {
+    67→    id: "proposals",
+    68→    label: "Коммерческие предложения",
+    69→    name: "Николай Завьялов",
+    70→    title: "Руководитель Группы подготовки коммерческих предложений",
+    71→    phone: null,
+    72→    email: "request@arasaca.ru",
+    73→    description: "Подготовка индивидуальных коммерческих предложений для ваших проектов.",
+    74→    icon: Briefcase,
+    75→  },
+    76→  {
+    77→    id: "press",
+    78→    label: "Пресс-служба",
+    79→    name: null,
+    80→    title: "Руководитель пресс-службы",
+    81→    phone: null,
+    82→    email: "press@arasaca.ru",
+    83→    description: "Аккредитация СМИ, комментарии, пресс-релизы и информация для журналистов.",
+    84→    icon: Newspaper,
+    85→  },
+    86→  {
+    87→    id: "accounting",
+    88→    label: "Бухгалтерия",
+    89→    name: null,
+    90→    title: null,
+    91→    phone: null,
+    92→    email: "buh@arasaca.ru",
+    93→    description: "По вопросам закрывающих документов просьба обращаться по электронной почте.",
+    94→    icon: Layers,
+    95→  },
+    96→  {
+    97→    id: "partners",
+    98→    label: "Партнёрство",
+    99→    name: null,
+   100→    title: null,
+   101→    phone: null,
+   102→    email: "partners@arasaca.ru",
+   103→    description: "Если вы хотите предложить сотрудничество или свои идеи — обращайтесь по электронной почте.",
+   104→    icon: Users,
+   105→  },
+   106→  {
+   107→    id: "careers",
+   108→    label: "Карьера",
+   109→    name: null,
+   110→    title: "Руководитель отдела подбора персонала",
+   111→    phone: null,
+   112→    email: "info@arasaca.ru",
+   113→    description: "Вакансии, стажировки и возможность присоединиться к нашей команде.",
+   114→    icon: Building2,
+   115→  },
+   116→];
+   117→
+   118→const inquiryTypes = [
+   119→  { value: "proposals", label: "Запрос коммерческого предложения" },
+   120→  { value: "press", label: "Обращение в пресс-службу" },
+   121→  { value: "accounting", label: "Вопросы бухгалтерии" },
+   122→  { value: "partners", label: "Партнёрские предложения" },
+   123→  { value: "careers", label: "Поиск вакансий / Карьера" },
+   124→  { value: "other", label: "Другое" },
+   125→];
+   126→
+   127→const FORM_TO_EMAIL = "info@arasaca.ru";
+   128→
+   129→/* ─── Quick Links data ─── */
+   130→const quickLinks = [
+   131→  {
+   132→    title: "О компании",
+   133→    description: "Миссия, ценности, команда",
+   134→    bg: C.dark,
+   135→    textColor: C.white,
+   136→    href: "/about",
+   137→    icon: Building2,
+   138→  },
+   139→  {
+   140→    title: "Услуги",
+   141→    description: "9 направлений консалтинга",
+   142→    bg: C.orange,
+   143→    textColor: C.white,
+   144→    href: "/services",
+   145→    icon: Briefcase,
+   146→  },
+   147→  {
+   148→    title: "Решения",
+   149→    description: "Цифровые продукты и платформы",
+   150→    bg: "#ffffff",
+   151→    textColor: "#1a1a1a",
+   152→    href: "/solutions/master-planning",
+   153→    icon: Layers,
+   154→  },
+   155→  {
+   156→    title: "Пресс-центр",
+   157→    description: "Новости, пресс-релизы, СМИ",
+   158→    bg: C.dna,
+   159→    textColor: C.white,
+   160→    href: "/press-center",
+   161→    icon: Newspaper,
+   162→  },
+   163→  {
+   164→    title: "Карьера",
+   165→    description: "Присоединяйтесь к команде",
+   166→    bg: C.mintDark,
+   167→    textColor: C.white,
+   168→    href: "/career",
+   169→    icon: Users,
+   170→  },
+   171→  {
+   172→    title: "Контакты",
+   173→    description: "Свяжитесь с нами",
+   174→    bg: C.dark,
+   175→    textColor: C.white,
+   176→    href: "/contacts",
+   177→    icon: Mail,
+   178→  },
+   179→];
+   180→
+   181→export default function ContactsPage() {
+   182→  const [activeTab, setActiveTab] = useState("proposals");
+   183→  const [inquiryType, setInquiryType] = useState("proposals");
+   184→
+   185→  const activeContact = contactBlocks.find((c) => c.id === activeTab);
+   186→
+   187→  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+   188→    e.preventDefault();
+   189→    const form = e.currentTarget;
+   190→    const typeLabel =
+   191→      inquiryTypes.find((opt) => opt.value === inquiryType)?.label ?? inquiryType;
+   192→    const body = [
+   193→      `Тип обращения: ${typeLabel}`,
+   194→      `ФИО: ${(form.elements.namedItem("fio") as HTMLInputElement)?.value ?? ""}`,
+   195→      `Телефон: ${(form.elements.namedItem("phone") as HTMLInputElement)?.value ?? ""}`,
+   196→      `Почта: ${(form.elements.namedItem("email") as HTMLInputElement)?.value ?? ""}`,
+   197→      `Компания: ${(form.elements.namedItem("company") as HTMLInputElement)?.value ?? ""}`,
+   198→      `Роль в компании: ${(form.elements.namedItem("role") as HTMLInputElement)?.value ?? ""}`,
+   199→      "",
+   200→      "Сообщение:",
+   201→      (form.elements.namedItem("message") as HTMLTextAreaElement)?.value ?? "",
+   202→    ].join("\n");
+   203→    const subject = `Обращение с сайта: ${typeLabel}`;
+   204→    window.location.href = `mailto:${FORM_TO_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+   205→  };
+   206→
+   207→  return (
+   208→    <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
+   209→      {/* ═══════════════════════════════════════════════════
+   210→          HERO — Gray background, clean header
+   211→          ═══════════════════════════════════════════════════ */}
+   212→      <section className="relative overflow-hidden pt-16 lg:pt-[120px] pb-16 md:pb-20" style={{ background: C.muted }}>
+   213→        <div className="container-kept relative z-10 pt-6 md:pt-10 lg:pt-12">
+   214→          {/* Breadcrumbs */}
+   215→          <motion.nav
+   216→            className="flex items-center gap-2 mb-6"
+   217→            initial={{ opacity: 0 }}
+   218→            animate={{ opacity: 1 }}
+   219→            transition={{ duration: 0.5, delay: 0.1 }}
+   220→          >
+   221→            <Link href="/" className="text-[12px] transition-colors hover:text-[#008C95]" style={{ color: C.textMuted }}>
+   222→              Главная
+   223→            </Link>
+   224→            <ChevronRight className="w-3 h-3" style={{ color: C.border }} />
+   225→            <span className="text-[12px] font-medium" style={{ color: C.dna }}>Контакты</span>
+   226→          </motion.nav>
+   227→
+   228→          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+   229→            <div>
+   230→              <motion.span
+   231→                className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+   232→                style={{ color: C.dna }}
+   233→                initial={{ opacity: 0 }}
+   234→                animate={{ opacity: 1 }}
+   235→                transition={{ duration: 0.5, delay: 0.15 }}
+   236→              >
+   237→                Свяжитесь с нами
+   238→              </motion.span>
+   239→              <motion.h1
+   240→                className="mb-4"
+   241→                style={{
+   242→                  fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   243→                  fontWeight: 700,
+   244→                  lineHeight: 1.25,
+   245→                  letterSpacing: "-0.01em",
+   246→                  color: C.textDark,
+   247→                }}
+   248→                initial={{ opacity: 0, y: 16 }}
+   249→                animate={{ opacity: 1, y: 0 }}
+   250→                transition={{ duration: 0.6, delay: 0.2 }}
+   251→              >
+   252→                Контакты
+   253→              </motion.h1>
+   254→              <motion.p
+   255→                className="max-w-md text-[14px] font-normal leading-relaxed"
+   256→                style={{ color: C.textMuted }}
+   257→                initial={{ opacity: 0, y: 12 }}
+   258→                animate={{ opacity: 1, y: 0 }}
+   259→                transition={{ duration: 0.6, delay: 0.3 }}
+   260→              >
+   261→                Рады вашим обращениям и готовы ответить на любые вопросы. Выберите удобный способ связи.
+   262→              </motion.p>
+   263→            </div>
+   264→
+   265→            {/* Quick contact cards */}
+   266→            <motion.div
+   267→              className="flex flex-col sm:flex-row lg:flex-col gap-3 lg:w-[280px] lg:flex-shrink-0"
+   268→              initial={{ opacity: 0, x: 20 }}
+   269→              animate={{ opacity: 1, x: 0 }}
+   270→              transition={{ duration: 0.6, delay: 0.35 }}
+   271→            >
+   272→              {/* Email card */}
+   273→              <Link href="/feedback" className="group/kp flex-1">
+   274→                <div
+   275→                  className="relative overflow-hidden rounded-lg p-5 transition-all duration-300 group-hover/kp:shadow-lg h-full flex flex-col justify-center"
+   276→                  style={{ background: C.dark }}
+   277→                >
+   278→                  <div
+   279→                    className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   280→                    style={{ background: C.dna }}
+   281→                  />
+   282→                  <div
+   283→                    className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   284→                    style={{
+   285→                      backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.3) 30px, rgba(255,255,255,0.3) 31px)`,
+   286→                    }}
+   287→                  />
+   288→                  <div className="relative z-10">
+   289→                    <div className="flex items-center gap-2.5 mb-2">
+   290→                      <div
+   291→                        className="flex h-8 w-8 items-center justify-center rounded-md"
+   292→                        style={{ background: "rgba(0,140,149,0.15)" }}
+   293→                      >
+   294→                        <Mail className="h-4 w-4" style={{ color: C.dna }} />
+   295→                      </div>
+   296→                      <span className="text-[14px] font-bold" style={{ color: "#ffffff" }}>
+   297→                        Написать нам
+   298→                      </span>
+   299→                    </div>
+   300→                    <p className="text-[11px] leading-relaxed pl-[42px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+   301→                      {office.email}
+   302→                    </p>
+   303→                  </div>
+   304→                </div>
+   305→              </Link>
+   306→              <a href={`tel:${office.phone.replace(/[\s()-]/g, "")}`} className="group/cb flex-1">
+   307→                <div
+   308→                  className="relative overflow-hidden rounded-lg p-5 transition-all duration-300 group-hover/cb:shadow-lg h-full flex flex-col justify-center"
+   309→                  style={{ background: C.white }}
+   310→                >
+   311→                  <div
+   312→                    className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   313→                    style={{ background: C.orange }}
+   314→                  />
+   315→                  <div className="relative z-10">
+   316→                    <div className="flex items-center gap-2.5 mb-2">
+   317→                      <div
+   318→                        className="flex h-8 w-8 items-center justify-center rounded-md"
+   319→                        style={{ background: "rgba(224,78,57,0.1)" }}
+   320→                      >
+   321→                        <Phone className="h-4 w-4" style={{ color: C.orange }} />
+   322→                      </div>
+   323→                      <span className="text-[14px] font-bold" style={{ color: C.textDark }}>
+   324→                        Позвонить
+   325→                      </span>
+   326→                    </div>
+   327→                    <p className="text-[11px] leading-relaxed pl-[42px]" style={{ color: C.textMuted }}>
+   328→                      {office.phone}
+   329→                    </p>
+   330→                  </div>
+   331→                </div>
+   332→              </a>
+   333→            </motion.div>
+   334→          </div>
+   335→        </div>
+   336→      </section>
+   337→
+   338→      {/* ═══════════════════════════════════════════════════
+   339→          OFFICE + MAP — White background
+   340→          ═══════════════════════════════════════════════════ */}
+   341→      <section className="py-20 md:py-28 bg-white">
+   342→        <div className="container-kept">
+   343→          {/* Section header */}
+   344→          <motion.div
+   345→            className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   346→            variants={fadeUp}
+   347→            initial="hidden"
+   348→            whileInView="visible"
+   349→            viewport={vp}
+   350→          >
+   351→            <div>
+   352→              <motion.span
+   353→                className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+   354→                style={{ color: C.dna }}
+   355→                variants={fadeIn}
+   356→                initial="hidden"
+   357→                whileInView="visible"
+   358→                viewport={vp}
+   359→              >
+   360→                Наш офис
+   361→              </motion.span>
+   362→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   363→                Центральный офис
+   364→              </h2>
+   365→            </div>
+   366→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   367→              Ввиду системы пропусков, встречи<br />проводятся по предварительному согласованию
+   368→            </p>
+   369→          </motion.div>
+   370→
+   371→          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+   372→            {/* Office info card */}
+   373→            <motion.div
+   374→              variants={fadeUp}
+   375→              initial="hidden"
+   376→              whileInView="visible"
+   377→              viewport={vp}
+   378→            >
+   379→              <div
+   380→                className="relative overflow-hidden rounded-lg border p-6 md:p-8 h-full"
+   381→                style={{ background: C.white, borderColor: C.border }}
+   382→              >
+   383→                {/* Country / City badge */}
+   384→                <div className="flex items-center gap-3 mb-6">
+   385→                  <span
+   386→                    className="px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white rounded-sm"
+   387→                    style={{ background: C.dark }}
+   388→                  >
+   389→                    {office.country}
+   390→                  </span>
+   391→                  <span className="text-[14px] font-medium" style={{ color: C.textMid }}>
+   392→                    {office.city}
+   393→                  </span>
+   394→                </div>
+   395→
+   396→                <div className="space-y-5">
+   397→                  <div className="flex items-start gap-4">
+   398→                    <div
+   399→                      className="flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0"
+   400→                      style={{ background: "rgba(0,140,149,0.1)" }}
+   401→                    >
+   402→                      <MapPin className="h-5 w-5" style={{ color: C.dna }} />
+   403→                    </div>
+   404→                    <div>
+   405→                      <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: C.textMuted }}>
+   406→                        Адрес
+   407→                      </p>
+   408→                      <p className="text-[14px] leading-relaxed" style={{ color: C.textDark }}>
+   409→                        {office.address}
+   410→                      </p>
+   411→                    </div>
+   412→                  </div>
+   413→
+   414→                  <div className="flex items-start gap-4">
+   415→                    <div
+   416→                      className="flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0"
+   417→                      style={{ background: "rgba(0,140,149,0.1)" }}
+   418→                    >
+   419→                      <Mail className="h-5 w-5" style={{ color: C.dna }} />
+   420→                    </div>
+   421→                    <div>
+   422→                      <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: C.textMuted }}>
+   423→                        Электронная почта
+   424→                      </p>
+   425→                      <a
+   426→                        href={`mailto:${office.email}`}
+   427→                        className="text-[14px] hover:text-[#008C95] transition-colors"
+   428→                        style={{ color: C.dna }}
+   429→                      >
+   430→                        {office.email}
+   431→                      </a>
+   432→                    </div>
+   433→                  </div>
+   434→
+   435→                  <div className="flex items-start gap-4">
+   436→                    <div
+   437→                      className="flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0"
+   438→                      style={{ background: "rgba(0,140,149,0.1)" }}
+   439→                    >
+   440→                      <Phone className="h-5 w-5" style={{ color: C.dna }} />
+   441→                    </div>
+   442→                    <div>
+   443→                      <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: C.textMuted }}>
+   444→                        Телефон
+   445→                      </p>
+   446→                      <a
+   447→                        href={`tel:${office.phone.replace(/[\s()-]/g, "")}`}
+   448→                        className="text-[14px] hover:text-[#008C95] transition-colors"
+   449→                        style={{ color: C.textDark }}
+   450→                      >
+   451→                        {office.phone}
+   452→                      </a>
+   453→                    </div>
+   454→                  </div>
+   455→
+   456→                  <div className="flex items-start gap-4">
+   457→                    <div
+   458→                      className="flex h-10 w-10 items-center justify-center rounded-lg flex-shrink-0"
+   459→                      style={{ background: "rgba(0,140,149,0.1)" }}
+   460→                    >
+   461→                      <Clock className="h-5 w-5" style={{ color: C.dna }} />
+   462→                    </div>
+   463→                    <div>
+   464→                      <p className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: C.textMuted }}>
+   465→                        Режим работы
+   466→                      </p>
+   467→                      <p className="text-[14px]" style={{ color: C.textDark }}>
+   468→                        {office.workingHours}
+   469→                      </p>
+   470→                    </div>
+   471→                  </div>
+   472→                </div>
+   473→              </div>
+   474→            </motion.div>
+   475→
+   476→            {/* Map */}
+   477→            <motion.div
+   478→              variants={fadeUp}
+   479→              initial="hidden"
+   480→              whileInView="visible"
+   481→              viewport={vp}
+   482→              custom={0.15}
+   483→            >
+   484→              <div className="rounded-lg overflow-hidden border h-full" style={{ borderColor: C.border, minHeight: "400px" }}>
+   485→                <div className="relative h-full w-full" style={{ minHeight: "400px" }}>
+   486→                  <iframe
+   487→                    title="Офис Арасака на карте"
+   488→                    src={office.mapEmbedUrl}
+   489→                    className="absolute inset-0 w-full h-full"
+   490→                    allowFullScreen
+   491→                    loading="lazy"
+   492→                    referrerPolicy="no-referrer-when-downgrade"
+   493→                    style={{ border: 0 }}
+   494→                  />
+   495→                </div>
+   496→              </div>
+   497→              <a
+   498→                href={office.mapOpenUrl}
+   499→                target="_blank"
+   500→                rel="noopener noreferrer"
+   501→                className="inline-flex items-center gap-1.5 mt-3 text-[13px] font-medium hover:gap-2.5 transition-all"
+   502→                style={{ color: C.dna }}
+   503→              >
+   504→                Открыть в Яндекс.Картах
+   505→                <ExternalLink className="w-3.5 h-3.5" />
+   506→              </a>
+   507→            </motion.div>
+   508→          </div>
+   509→        </div>
+   510→      </section>
+   511→
+   512→      {/* ═══════════════════════════════════════════════════
+   513→          DEPARTMENTS — Dark background with tabs + cards
+   514→          ═══════════════════════════════════════════════════ */}
+   515→      <section className="py-20 md:py-28" style={{ background: C.dark }}>
+   516→        <div className="container-kept">
+   517→          {/* Section header */}
+   518→          <motion.div
+   519→            className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   520→            variants={fadeUp}
+   521→            initial="hidden"
+   522→            whileInView="visible"
+   523→            viewport={vp}
+   524→          >
+   525→            <div>
+   526→              <motion.span
+   527→                className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+   528→                style={{ color: C.mint }}
+   529→                variants={fadeIn}
+   530→                initial="hidden"
+   531→                whileInView="visible"
+   532→                viewport={vp}
+   533→              >
+   534→                Отделы
+   535→              </motion.span>
+   536→              <h2 className="heading-section" style={{ color: C.white }}>
+   537→                Контакты по направлениям
+   538→              </h2>
+   539→            </div>
+   540→            <p className="text-[14px] font-normal leading-relaxed max-w-sm lg:text-right" style={{ color: "rgba(255,255,255,0.5)" }}>
+   541→              Выберите направление — мы перенаправим<br />ваше обращение нужному специалисту
+   542→            </p>
+   543→          </motion.div>
+   544→
+   545→          {/* Tabs */}
+   546→          <div className="flex flex-wrap gap-2 mb-10">
+   547→            {contactBlocks.map((tab) => {
+   548→              const isActive = activeTab === tab.id;
+   549→              return (
+   550→                <button
+   551→                  key={tab.id}
+   552→                  type="button"
+   553→                  onClick={() => {
+   554→                    setActiveTab(tab.id);
+   555→                    setInquiryType(tab.id);
+   556→                  }}
+   557→                  className={cn(
+   558→                    "px-4 py-2.5 text-[13px] font-medium rounded-md transition-all duration-200",
+   559→                    isActive
+   560→                      ? "text-white"
+   561→                      : "hover:text-white"
+   562→                  )}
+   563→                  style={{
+   564→                    background: isActive ? C.dna : "rgba(255,255,255,0.05)",
+   565→                    color: isActive ? "#ffffff" : "rgba(255,255,255,0.5)",
+   566→                    border: isActive ? "none" : "1px solid rgba(255,255,255,0.1)",
+   567→                  }}
+   568→                >
+   569→                  {tab.label}
+   570→                </button>
+   571→              );
+   572→            })}
+   573→          </div>
+   574→
+   575→          {/* Active contact card */}
+   576→          <AnimatePresence mode="wait">
+   577→            {activeContact && (
+   578→              <motion.div
+   579→                key={activeContact.id}
+   580→                initial={{ opacity: 0, y: 12 }}
+   581→                animate={{ opacity: 1, y: 0 }}
+   582→                exit={{ opacity: 0, y: -12 }}
+   583→                transition={{ duration: 0.3 }}
+   584→                className="grid lg:grid-cols-2 gap-8"
+   585→              >
+   586→                {/* Contact info card */}
+   587→                <div
+   588→                  className="relative overflow-hidden rounded-lg p-6 md:p-8"
+   589→                  style={{ background: "rgba(255,255,255,0.05)" }}
+   590→                >
+   591→                  <div className="relative z-10">
+   592→                    {/* Icon + Name */}
+   593→                    <div className="flex items-center gap-3 mb-4">
+   594→                      <div
+   595→                        className="flex h-12 w-12 items-center justify-center rounded-lg"
+   596→                        style={{ background: "rgba(0,140,149,0.15)" }}
+   597→                      >
+   598→                        <activeContact.icon className="h-6 w-6" style={{ color: C.dna }} />
+   599→                      </div>
+   600→                      <div>
+   601→                        <h3 className="text-lg font-bold" style={{ color: C.white }}>
+   602→                          {activeContact.name || activeContact.title || activeContact.label}
+   603→                        </h3>
+   604→                        {activeContact.title && activeContact.name && (
+   605→                          <p className="text-[13px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+   606→                            {activeContact.title}
+   607→                          </p>
+   608→                        )}
+   609→                      </div>
+   610→                    </div>
+   611→
+   612→                    {/* Description */}
+   613→                    {activeContact.description && (
+   614→                      <p className="text-[14px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+   615→                        {activeContact.description}
+   616→                      </p>
+   617→                    )}
+   618→
+   619→                    {/* Contact details */}
+   620→                    <div className="grid sm:grid-cols-2 gap-6 mt-6 pt-6" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+   621→                      <div>
+   622→                        <p className="text-[11px] font-semibold uppercase tracking-wider mb-2" style={{ color: C.mint }}>
+   623→                          Телефон
+   624→                        </p>
+   625→                        <p className="text-[14px]" style={{ color: "rgba(255,255,255,0.7)" }}>
+   626→                          {activeContact.phone || "—"}
+   627→                        </p>
+   628→                      </div>
+   629→                      <div>
+   630→                        <p className="text-[11px] font-semibold uppercase tracking-wider mb-2" style={{ color: C.mint }}>
+   631→                          Email
+   632→                        </p>
+   633→                        <a
+   634→                          href={`mailto:${activeContact.email}`}
+   635→                          className="text-[14px] hover:text-white transition-colors"
+   636→                          style={{ color: C.dna }}
+   637→                        >
+   638→                          {activeContact.email}
+   639→                        </a>
+   640→                      </div>
+   641→                    </div>
+   642→
+   643→                    {/* Write button */}
+   644→                    <a
+   645→                      href={`/feedback`}
+   646→                      className="inline-flex items-center gap-2 mt-6 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider transition-all duration-300 text-white"
+   647→                      style={{ background: C.dna }}
+   648→                    >
+   649→                      <Mail className="h-4 w-4" />
+   650→                      Написать
+   651→                    </a>
+   652→                  </div>
+   653→                </div>
+   654→
+   655→                {/* Department quick access cards */}
+   656→                <div className="grid grid-cols-2 gap-3">
+   657→                  {contactBlocks.filter(t => t.id !== activeContact.id).slice(0, 4).map((tab, idx) => (
+   658→                    <motion.button
+   659→                      key={tab.id}
+   660→                      type="button"
+   661→                      onClick={() => {
+   662→                        setActiveTab(tab.id);
+   663→                        setInquiryType(tab.id);
+   664→                      }}
+   665→                      className="group text-left"
+   666→                      initial={{ opacity: 0, y: 10 }}
+   667→                      animate={{ opacity: 1, y: 0 }}
+   668→                      transition={{ duration: 0.3, delay: idx * 0.05 }}
+   669→                    >
+   670→                      <div
+   671→                        className="relative overflow-hidden rounded-lg p-4 h-full transition-all duration-300 group-hover:translate-y-[-2px]"
+   672→                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+   673→                      >
+   674→                        <tab.icon className="h-4 w-4 mb-2 opacity-50" style={{ color: C.mint }} />
+   675→                        <p className="text-[13px] font-semibold mb-1" style={{ color: C.white }}>
+   676→                          {tab.label}
+   677→                        </p>
+   678→                        <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.4)" }}>
+   679→                          {tab.email}
+   680→                        </p>
+   681→                      </div>
+   682→                    </motion.button>
+   683→                  ))}
+   684→                </div>
+   685→              </motion.div>
+   686→            )}
+   687→          </AnimatePresence>
+   688→        </div>
+   689→      </section>
+   690→
+   691→      {/* ═══════════════════════════════════════════════════
+   692→          CONTACT FORM — Light background
+   693→          ═══════════════════════════════════════════════════ */}
+   694→      <section className="py-20 md:py-28 bg-white">
+   695→        <div className="container-kept">
+   696→          <div className="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-16">
+   697→            {/* Left column - Sticky title */}
+   698→            <div className="lg:sticky lg:top-32 lg:self-start">
+   699→              <motion.span
+   700→                className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+   701→                style={{ color: C.dna }}
+   702→                initial={{ opacity: 0 }}
+   703→                whileInView={{ opacity: 1 }}
+   704→                viewport={{ once: true }}
+   705→                transition={{ duration: 0.5 }}
+   706→              >
+   707→                Обратная связь
+   708→              </motion.span>
+   709→              <h2 className="heading-section mb-4" style={{ color: C.textDark }}>
+   710→                Напишите нам
+   711→              </h2>
+   712→              <p className="text-[14px] font-normal leading-relaxed" style={{ color: C.textMuted }}>
+   713→                Заполните форму — мы свяжемся с вами в рабочее время и ответим на все вопросы.
+   714→              </p>
+   715→            </div>
+   716→
+   717→            {/* Right column - Form */}
+   718→            <motion.form
+   719→              className="space-y-5"
+   720→              onSubmit={handleFormSubmit}
+   721→              initial={{ opacity: 0, y: 20 }}
+   722→              whileInView={{ opacity: 1, y: 0 }}
+   723→              viewport={{ once: true }}
+   724→              transition={{ duration: 0.6 }}
+   725→            >
+   726→              {/* Row 1: Type | ФИО */}
+   727→              <div className="grid sm:grid-cols-2 gap-5">
+   728→                <div>
+   729→                  <label className="block text-[13px] font-medium mb-2" style={{ color: C.textMid }}>
+   730→                    Тип обращения *
+   731→                  </label>
+   732→                  <select
+   733→                    value={inquiryType}
+   734→                    onChange={(e) => setInquiryType(e.target.value)}
+   735→                    className="w-full px-4 py-3 bg-white border text-[14px] focus:outline-none focus:ring-1 transition-colors rounded-md"
+   736→                    style={{
+   737→                      borderColor: C.border,
+   738→                      color: C.textDark,
+   739→                    }}
+   740→                    required
+   741→                  >
+   742→                    {inquiryTypes.map((opt) => (
+   743→                      <option key={opt.value} value={opt.value}>
+   744→                        {opt.label}
+   745→                      </option>
+   746→                    ))}
+   747→                  </select>
+   748→                </div>
+   749→                <div>
+   750→                  <label className="block text-[13px] font-medium mb-2" style={{ color: C.textMid }}>
+   751→                    ФИО *
+   752→                  </label>
+   753→                  <input
+   754→                    name="fio"
+   755→                    type="text"
+   756→                    className="w-full px-4 py-3 bg-white border text-[14px] placeholder-gray-400 focus:outline-none focus:ring-1 transition-colors rounded-md"
+   757→                    style={{ borderColor: C.border, color: C.textDark }}
+   758→                    placeholder="Фамилия Имя Отчество"
+   759→                    required
+   760→                  />
+   761→                </div>
+   762→              </div>
+   763→
+   764→              {/* Row 2: Phone | Email */}
+   765→              <div className="grid sm:grid-cols-2 gap-5">
+   766→                <div>
+   767→                  <label className="block text-[13px] font-medium mb-2" style={{ color: C.textMid }}>
+   768→                    Телефон *
+   769→                  </label>
+   770→                  <input
+   771→                    name="phone"
+   772→                    type="tel"
+   773→                    className="w-full px-4 py-3 bg-white border text-[14px] placeholder-gray-400 focus:outline-none focus:ring-1 transition-colors rounded-md"
+   774→                    style={{ borderColor: C.border, color: C.textDark }}
+   775→                    placeholder="+7 (___) ___-__-__"
+   776→                    required
+   777→                  />
+   778→                </div>
+   779→                <div>
+   780→                  <label className="block text-[13px] font-medium mb-2" style={{ color: C.textMid }}>
+   781→                    Почта *
+   782→                  </label>
+   783→                  <input
+   784→                    name="email"
+   785→                    type="email"
+   786→                    className="w-full px-4 py-3 bg-white border text-[14px] placeholder-gray-400 focus:outline-none focus:ring-1 transition-colors rounded-md"
+   787→                    style={{ borderColor: C.border, color: C.textDark }}
+   788→                    placeholder="email@company.ru"
+   789→                    required
+   790→                  />
+   791→                </div>
+   792→              </div>
+   793→
+   794→              {/* Row 3: Company | Role */}
+   795→              <div className="grid sm:grid-cols-2 gap-5">
+   796→                <div>
+   797→                  <label className="block text-[13px] font-medium mb-2" style={{ color: C.textMid }}>
+   798→                    Компания
+   799→                  </label>
+   800→                  <input
+   801→                    name="company"
+   802→                    type="text"
+   803→                    className="w-full px-4 py-3 bg-white border text-[14px] placeholder-gray-400 focus:outline-none focus:ring-1 transition-colors rounded-md"
+   804→                    style={{ borderColor: C.border, color: C.textDark }}
+   805→                    placeholder="Название компании"
+   806→                  />
+   807→                </div>
+   808→                <div>
+   809→                  <label className="block text-[13px] font-medium mb-2" style={{ color: C.textMid }}>
+   810→                    Роль в компании
+   811→                  </label>
+   812→                  <input
+   813→                    name="role"
+   814→                    type="text"
+   815→                    className="w-full px-4 py-3 bg-white border text-[14px] placeholder-gray-400 focus:outline-none focus:ring-1 transition-colors rounded-md"
+   816→                    style={{ borderColor: C.border, color: C.textDark }}
+   817→                    placeholder="Например: директор, менеджер проекта"
+   818→                  />
+   819→                </div>
+   820→              </div>
+   821→
+   822→              {/* Message */}
+   823→              <div>
+   824→                <label className="block text-[13px] font-medium mb-2" style={{ color: C.textMid }}>
+   825→                  Сообщение *
+   826→                </label>
+   827→                <textarea
+   828→                  name="message"
+   829→                  rows={5}
+   830→                  className="w-full px-4 py-3 bg-white border text-[14px] placeholder-gray-400 focus:outline-none focus:ring-1 transition-colors resize-none rounded-md"
+   831→                  style={{ borderColor: C.border, color: C.textDark }}
+   832→                  placeholder="Опишите ваш запрос"
+   833→                  required
+   834→                />
+   835→              </div>
+   836→
+   837→              {/* Privacy */}
+   838→              <div className="flex items-start gap-3">
+   839→                <input
+   840→                  type="checkbox"
+   841→                  id="privacy"
+   842→                  className="mt-1 w-4 h-4 rounded"
+   843→                  style={{ accentColor: C.dna }}
+   844→                  required
+   845→                />
+   846→                <label htmlFor="privacy" className="text-[13px]" style={{ color: C.textMuted }}>
+   847→                  Я согласен на обработку персональных данных в соответствии с{" "}
+   848→                  <Link href="/privacy" className="hover:underline" style={{ color: C.dna }}>
+   849→                    Политикой конфиденциальности
+   850→                  </Link>
+   851→                </label>
+   852→              </div>
+   853→
+   854→              {/* Submit */}
+   855→              <button
+   856→                type="submit"
+   857→                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300 group rounded-md"
+   858→                style={{ background: C.orange }}
+   859→              >
+   860→                <Send className="h-4 w-4" />
+   861→                Отправить сообщение
+   862→                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+   863→              </button>
+   864→            </motion.form>
+   865→          </div>
+   866→        </div>
+   867→      </section>
+   868→
+   869→      {/* ═══════════════════════════════════════════════════
+   870→          QUICK LINKS — Navigation cards + CTA panel
+   871→          ═══════════════════════════════════════════════════ */}
+   872→      <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   873→        <div className="container-kept">
+   874→          {/* Section header */}
+   875→          <motion.div
+   876→            className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   877→            variants={fadeUp}
+   878→            initial="hidden"
+   879→            whileInView="visible"
+   880→            viewport={vp}
+   881→          >
+   882→            <div>
+   883→              <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>
+   884→                Навигация
+   885→              </span>
+   886→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   887→                Полезные ссылки
+   888→              </h2>
+   889→            </div>
+   890→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   891→              Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании
+   892→            </p>
+   893→          </motion.div>
+   894→
+   895→          {/* Cards + CTA row */}
+   896→          <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+   897→            {/* Left: 6 navigation cards */}
+   898→            <div className="flex-1 flex">
+   899→              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 w-full h-full auto-rows-fr">
+   900→                {quickLinks.map((card, index) => {
+   901→                  const isWhite = card.bg === C.white;
+   902→                  return (
+   903→                    <motion.div
+   904→                      key={card.title}
+   905→                      className="flex"
+   906→                      variants={scaleIn}
+   907→                      initial="hidden"
+   908→                      whileInView="visible"
+   909→                      viewport={vp}
+   910→                      custom={index * 0.08}
+   911→                    >
+   912→                      <Link href={card.href} className="group block h-full w-full">
+   913→                        <motion.div
+   914→                          className={cn(
+   915→                            "relative flex flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300 h-full",
+   916→                            isWhite && "border shadow-sm group-hover:shadow-md",
+   917→                          )}
+   918→                          style={{ background: card.bg, color: card.textColor, borderColor: isWhite ? C.border : undefined, minHeight: "130px" }}
+   919→                          whileHover={{ y: -3, transition: { duration: 0.25 } }}
+   920→                        >
+   921→                          {card.bg === C.dark && (
+   922→                            <div
+   923→                              className="pointer-events-none absolute inset-0 opacity-[0.06]"
+   924→                              style={{
+   925→                                backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`,
+   926→                                backgroundSize: "20px 20px",
+   927→                              }}
+   928→                            />
+   929→                          )}
+   930→                          {isWhite && (
+   931→                            <div
+   932→                              className="pointer-events-none absolute inset-0 opacity-[0.1]"
+   933→                              style={{
+   934→                                backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`,
+   935→                                backgroundSize: "12px 12px",
+   936→                              }}
+   937→                            />
+   938→                          )}
+   939→
+   940→                          {/* Colored accent bar on left */}
+   941→                          <div
+   942→                            className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   943→                            style={{ background: isWhite ? C.dna : "rgba(255,255,255,0.4)" }}
+   944→                          />
+   945→
+   946→                          <div className="relative z-10">
+   947→                            <div className="flex items-center gap-2">
+   948→                              {card.icon && (
+   949→                                <card.icon className="h-4 w-4 opacity-60" />
+   950→                              )}
+   951→                              <span className="block text-sm font-semibold md:text-base">{card.title}</span>
+   952→                            </div>
+   953→                            <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+   954→                          </div>
+   955→
+   956→                          <div className="relative z-10 flex justify-end">
+   957→                            <div
+   958→                              className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   959→                              style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}
+   960→                            >
+   961→                              <ArrowRight className="h-4 w-4" style={{ color: isWhite ? C.dna : "#ffffff" }} />
+   962→                            </div>
+   963→                          </div>
+   964→                        </motion.div>
+   965→                      </Link>
+   966→                    </motion.div>
+   967→                  );
+   968→                })}
+   969→              </div>
+   970→            </div>
+   971→
+   972→            {/* Right: CTA panel */}
+   973→            <motion.div
+   974→              className="lg:w-[340px] flex-shrink-0"
+   975→              variants={fadeUp}
+   976→              initial="hidden"
+   977→              whileInView="visible"
+   978→              viewport={vp}
+   979→              custom={0.3}
+   980→            >
+   981→              <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg p-6 md:p-8" style={{ background: C.dark }}>
+   982→                {/* Decorative pattern */}
+   983→                <div
+   984→                  className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   985→                  style={{
+   986→                    backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+   987→                  }}
+   988→                />
+   989→
+   990→                <div className="relative z-10">
+   991→                  {/* Decorative line */}
+   992→                  <div className="h-px w-12 mb-5" style={{ background: C.mint }} />
+   993→
+   994→                  <h3
+   995→                    className="text-xl font-bold leading-tight mb-2"
+   996→                    style={{ color: "#ffffff" }}
+   997→                  >
+   998→                    Начните сотрудничество
+   999→                  </h3>
+  1000→                  <p className="text-[13px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+  1001→                    Оставьте заявку — мы свяжемся с&nbsp;вами, обсудим задачу и&nbsp;подготовим индивидуальное предложение.
+  1002→                  </p>
+  1003→                </div>
+  1004→
+  1005→                <div className="relative z-10 flex flex-col gap-3">
+  1006→                  <Link href="/feedback?type=proposals" className="group/kp inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300 rounded-md" style={{ background: C.dna }}>
+  1007→                    <Mail className="h-4 w-4" />
+  1008→                    Запросить КП
+  1009→                  </Link>
+  1010→                  <Link href="/feedback?type=callback" className="group/cb inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider border transition-all duration-300 rounded-md" style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.8)" }}>
+  1011→                    <Phone className="h-4 w-4" />
+  1012→                    Обратный звонок
+  1013→                  </Link>
+  1014→                </div>
+  1015→              </div>
+  1016→            </motion.div>
+  1017→          </div>
+  1018→        </div>
+  1019→      </section>
+  1020→    </main>
+  1021→  );
+  1022→}
+  1023→

@@ -214,7 +214,7 @@ export function Header() {
   const activeNav = burgerActive ? navigation.find((n) => n.name === burgerActive) : null
 
   /* ─── Determine header theme based on the hero block background ─── */
-  const getHeaderTheme = (path: string): "dark" | "teal" | "mint" | "light" => {
+  const getHeaderTheme = (path: string): "dark" | "teal" | "light" => {
     // Dark (#00313C) hero pages
     if (path === "/services" || path.startsWith("/services/")) return "dark"
     if (path === "/industries" || path.startsWith("/industries/")) return "dark"
@@ -227,14 +227,19 @@ export function Header() {
     if (path === "/feedback") return "dark"
     if (path === "/privacy") return "dark"
     if (path === "/terms") return "dark"
+    if (path === "/about") return "dark"
+    if (path === "/cases") return "dark"
+    if (path === "/contacts") return "dark"
+    if (path === "/customers") return "dark"
+    if (path.startsWith("/press-center")) return "dark"
     // Teal (#008C95) hero pages
     if (/^\/cases\/[^/]+$/.test(path)) return "teal"
-    // Default: light gray (#f1f2f4) — press-center, about, cases listing, contacts, customers, homepage
+    // Default: light gray (#f1f2f4) — homepage only
     return "light"
   }
 
   const heroTheme = getHeaderTheme(pathname)
-  const isHeroLightBg = heroTheme === "light" || heroTheme === "mint"
+  const isHeroLightBg = heroTheme === "light"
   // When scrolled, header bg is always white → always use dark text/icons
   const useDarkText = isScrolled || isHeroLightBg
 
@@ -246,9 +251,7 @@ export function Header() {
     ? "bg-[#00313C]"
     : heroTheme === "teal"
       ? "bg-[#008C95]"
-      : heroTheme === "mint"
-        ? "bg-[#e8f5f3]"
-        : "bg-[#f1f2f4]"
+      : "bg-[#f1f2f4]"
 
   return (
     <>

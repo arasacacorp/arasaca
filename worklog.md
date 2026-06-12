@@ -141,3 +141,170 @@ Stage Summary:
 - All navigation links updated site-wide (25+ files)
 - /media directory deleted, duplicate data files cleaned up
 - All pages verified via Agent Browser
+
+---
+Task ID: 4
+Agent: main
+Task: Redesign /customers hero section to match /services dark hero pattern
+
+Work Log:
+- Read worklog.md and current /customers page (src/app/customers/page.tsx)
+- Read /services page hero section (lines 245-392) as reference pattern
+- Added missing icon imports: BarChart3, TrendingUp, Award
+- Replaced hero section (previously gray C.muted background with dark text and CTA cards) with dark hero pattern:
+  1. Section background changed from C.muted to C.dark (#00313C)
+  2. Added decorative diagonal lines overlay (opacity-[0.03], 45deg repeating gradient with rgba(119,226,195,0.3))
+  3. Added decorative glow orbs: orange (rgba(224,78,57,0.10), right-top) and teal (rgba(0,140,149,0.08), left-bottom)
+  4. Breadcrumb text colors updated: link = rgba(255,255,255,0.4), chevron = rgba(255,255,255,0.25), active = C.mint
+  5. Label color changed from C.dna to C.mint
+  6. H1 color changed to C.white with fontFamily "var(--font-russo)"
+  7. Subtitle text color changed to rgba(255,255,255,0.55)
+  8. Replaced right-side CTA cards with 2x2 glassmorphism stats grid:
+     - 50+ клиентов (Users, C.dna accent)
+     - 10 отраслей (BarChart3, C.mintDark accent)
+     - 95% возвращаются (TrendingUp, C.orange accent)
+     - 7+ лет партнёрства (Award, C.dna accent)
+  9. Two-column layout: flex-col lg:flex-row matching services pattern
+  10. CTA buttons: "Стать клиентом" (C.mintDark bg, links to /feedback?type=proposals) and "Заказать звонок" (border style, links to /feedback?type=callback)
+  11. Section padding: pt-16 lg:pt-[120px]
+- Lint passes (only pre-existing watchdog errors)
+- /customers returns 200 OK
+- No other sections of the page were modified
+
+Stage Summary:
+- /customers hero section fully redesigned to dark hero pattern matching /services
+- All 11 requirements from task specification implemented
+- Page compiles and renders correctly
+
+---
+Task ID: 5
+Agent: main
+Task: Redesign /press-center hero section to match /services dark hero pattern
+
+Work Log:
+- Read current /press-center/page.tsx hero section (lines 236-348) — gray background (C.muted), dark text, two CTA cards (Пресс-кит + Контакты для СМИ) on the right
+- Read /services/page.tsx hero (lines 245-392) as reference for dark hero pattern
+- Replaced entire hero section with dark hero matching services pattern:
+  1. Changed section background from `C.muted` to `C.dark` (#00313C)
+  2. Added decorative diagonal lines overlay (opacity-[0.03], 45deg repeating gradient with rgba(119,226,195,0.3))
+  3. Added two decorative glow orbs: orange top-right (rgba(224,78,57,0.10)) and teal bottom-left (rgba(0,140,149,0.08))
+  4. Changed breadcrumb colors: link → rgba(255,255,255,0.4), chevron → rgba(255,255,255,0.25), active → C.mint
+  5. Changed label color from C.dna to C.mint
+  6. Changed H1 color to C.white with fontFamily: var(--font-russo)
+  7. Changed subtitle text to rgba(255,255,255,0.55)
+  8. Replaced right-side CTA cards with 2x2 stats grid in glassmorphism style:
+     - 50+ публикаций (Newspaper, C.dna accent)
+     - 12+ новостей (Megaphone, C.mintDark accent)
+     - 20+ статей (BookOpen, C.orange accent)
+     - 15+ инсайтов (TrendingUp, C.dna accent)
+  9. Two-column layout matching services: flex-col lg:flex-row
+  10. Added CTA buttons: "Все публикации" (teal/mintDark bg) and "Подписаться" (border style)
+  11. Section padding: pt-16 lg:pt-[120px]
+- All required icons (Newspaper, Megaphone, BookOpen, TrendingUp) were already imported
+- Page returns HTTP 200, lint passes (only pre-existing watchdog errors)
+
+Stage Summary:
+- /press-center hero section fully redesigned from gray to dark pattern matching /services
+- Glassmorphism stat cards replace old CTA cards
+- Consistent dark hero design language across /services, /lab, /media, /press-center
+
+---
+Task ID: 1
+Agent: main
+Task: Redesign the hero section of /about page to match the /services page dark hero pattern
+
+Work Log:
+- Read current /about page hero section (gray C.muted background, dark text, CTA cards on right)
+- Read /services page hero pattern (lines 245-392) as reference for dark hero design
+- Replaced hero section entirely with dark hero pattern matching /services:
+  1. Section background changed from C.muted to C.dark
+  2. Added diagonal lines overlay (45deg repeating gradient with rgba(119,226,195,0.3))
+  3. Added decorative glow orbs (orange right-top, teal left-bottom)
+  4. Breadcrumb colors updated: link = rgba(255,255,255,0.4), chevron = rgba(255,255,255,0.25), active = C.mint
+  5. Label "О нас" color changed from C.dna to C.mint
+  6. H1 color changed from C.textDark to C.white, added fontFamily: "var(--font-russo)"
+  7. Subtitle text color changed from C.textMuted to rgba(255,255,255,0.55)
+  8. Replaced CTA cards (dark + white cards) with 2x2 stats grid in glassmorphism style:
+     - 2018 / год основания (Building2, accent C.dna)
+     - 50+ / проектов (Briefcase, accent C.mintDark)
+     - 30+ / экспертов (Users, accent C.orange)
+     - 2 / офиса (MapPin, accent C.dna)
+  9. Two-column layout updated to flex-col lg:flex-row with lg:items-center (matching services)
+  10. CTA buttons restyled: "Запросить КП" (C.dna bg, white text, ArrowRight icon) + "Заказать звонок" (border style)
+  11. Section padding updated to pt-16 lg:pt-[120px] with inner container padding py-6 md:py-10 lg:py-12
+- Added MapPin import to lucide-react imports
+- Verified /about returns 200
+- Lint passes (only pre-existing watchdog errors)
+
+Stage Summary:
+- /about hero section fully redesigned to match /services dark hero pattern
+- All 12 requirements from the task specification met
+- No changes to any other sections of the page
+- Page compiles and renders correctly
+
+---
+Task ID: 3
+Agent: main
+Task: Redesign /contacts hero section to match /services dark hero pattern
+
+Work Log:
+- Read current /contacts/page.tsx hero section (lines 209-336) — gray C.muted background, dark text, two CTA cards (Написать нам + Позвонить) on the right
+- Read /services/page.tsx hero (lines 245-392) as reference for dark hero pattern
+- Replaced entire hero section with dark hero matching services pattern:
+  1. Changed section background from `C.muted` to `C.dark` (#00313C)
+  2. Added decorative diagonal lines overlay (opacity-[0.03], 45deg repeating gradient with rgba(119,226,195,0.3))
+  3. Added two decorative glow orbs: orange top-right (rgba(224,78,57,0.10)) and teal bottom-left (rgba(0,140,149,0.08))
+  4. Changed breadcrumb colors: link → rgba(255,255,255,0.4), chevron → rgba(255,255,255,0.25), active → C.mint
+  5. Changed label "Свяжитесь с нами" color from C.dna to C.mint
+  6. Changed H1 color from C.textDark to C.white with fontFamily: var(--font-russo)
+  7. Changed subtitle text from C.textMuted to rgba(255,255,255,0.55)
+  8. Replaced right-side CTA cards (dark email card + white phone card) with 2x2 stats grid in glassmorphism style:
+     - 2 / офиса (Building2, accent C.dna)
+     - 24/7 / поддержка (Clock, accent C.mintDark)
+     - +7 / код страны (Phone, accent C.orange)
+     - 15+ / каналов связи (Mail, accent C.dna)
+  9. Two-column layout matching services: flex-col lg:flex-row with lg:items-center
+  10. Added CTA buttons: "Написать нам" (C.mintDark teal bg, Send icon, links to /feedback) and "Заказать звонок" (border style, links to /feedback?type=callback)
+  11. Section padding: pt-16 lg:pt-[120px] (removed pb-16 md:pb-20), inner container padding py-6 md:py-10 lg:py-12
+- All required icons (Building2, Clock, Phone, Mail, Send) were already imported
+- Page returns HTTP 200, lint passes (only pre-existing watchdog errors)
+- No other sections of the page were modified
+
+Stage Summary:
+- /contacts hero section fully redesigned from gray to dark pattern matching /services
+- Glassmorphism stat cards replace old CTA cards
+- Consistent dark hero design language across /services, /about, /customers, /press-center, /contacts
+
+---
+Task ID: 2
+Agent: main
+Task: Redesign /cases hero section to match /services dark hero pattern
+
+Work Log:
+- Read current /cases/page.tsx hero (lines 122-253): gray C.muted background, dark text, two vertical stat cards (Projects card with C.dark bg, Industries card with C.white bg)
+- Read /services/page.tsx hero reference (lines 245-392): dark C.dark background, diagonal lines overlay, decorative glow orbs, two-column layout with breadcrumb/label/h1/subtitle/CTA on left and 2x2 glassmorphism stat grid on right
+- Imports already included BarChart3, Calendar, CheckCircle2 (added previously)
+- Replaced entire hero section with dark hero pattern:
+  1. Section background: C.muted → C.dark (#00313C)
+  2. Added diagonal lines overlay (opacity-[0.03], 45deg repeating gradient with rgba(119,226,195,0.3))
+  3. Added decorative glow orbs: orange (-right-40 -top-20, 500px, blur 180px) and teal (-left-20 bottom-0, 300px, blur 120px)
+  4. Breadcrumb colors: link = rgba(255,255,255,0.4), chevron = rgba(255,255,255,0.25), active = C.mint
+  5. Label color: C.dna → C.mint
+  6. H1: color → C.white, added fontFamily: "var(--font-russo)", removed colored span for "чтобы делать бизнес лучше"
+  7. Subtitle: color → rgba(255,255,255,0.55), font-weight → font-light, added mb-6
+  8. Replaced right-side two vertical stat cards with 2x2 glassmorphism stats grid (rgba(255,255,255,0.06) bg, blur(8px), top accent line gradient):
+     - 7+ реализованных кейсов (Briefcase, C.dna accent)
+     - 6 отраслей (BarChart3, C.mintDark accent)
+     - 2017 первый проект (Calendar, C.orange accent)
+     - 100% довольных клиентов (CheckCircle2, C.dna accent)
+  9. Added CTA buttons: "Обсудить проект" (C.dna bg, links to /feedback?type=proposals) and "Заказать звонок" (border style, links to /feedback?type=callback)
+  10. Two-column layout: flex-col lg:flex-row with lg:items-center lg:justify-between
+  11. Section padding: pt-16 lg:pt-[120px]
+- Page returns HTTP 200, lint passes (only pre-existing watchdog errors)
+- No other sections of the page were modified (filters+cases grid, quick links sections unchanged)
+
+Stage Summary:
+- /cases hero section fully redesigned from gray to dark pattern matching /services
+- Glassmorphism 2x2 stat cards replace old two vertical stat cards
+- CTA buttons added (Обсудить проект + Заказать звонок)
+- Consistent dark hero design language across /services, /about, /customers, /press-center, /contacts, /cases

@@ -18,6 +18,9 @@ import {
   Trophy,
   Quote,
   Star,
+  BarChart3,
+  TrendingUp,
+  Award,
 } from "lucide-react";
 import { C } from "@/lib/colors";
 
@@ -202,32 +205,54 @@ export default function CustomersPage() {
   return (
     <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
       {/* ═══════════════════════════════════════════════════
-          HERO — Gray background (Pattern B)
+          HERO — Dark background (Pattern A)
           ═══════════════════════════════════════════════════ */}
-      <section
-        className="relative overflow-hidden pt-16 lg:pt-[120px] pb-16 md:pb-20"
-        style={{ background: C.muted }}
-      >
-        <div className="container-kept relative z-10 pt-6 md:pt-10 lg:pt-12">
-          {/* Breadcrumbs */}
-          <motion.nav
-            className="flex items-center gap-2 mb-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <Link href="/" className="text-[12px] transition-colors hover:text-[#008C95]" style={{ color: C.textMuted }}>
-              Главная
-            </Link>
-            <ChevronRight className="w-3 h-3" style={{ color: C.border }} />
-            <span className="text-[12px] font-medium" style={{ color: C.dna }}>Клиенты</span>
-          </motion.nav>
+      <section className="relative overflow-hidden pt-16 lg:pt-[120px]" style={{ background: C.dark }}>
+        {/* Decorative diagonal lines */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+          }}
+        />
+        {/* Decorative glow */}
+        <div
+          className="pointer-events-none absolute -right-40 -top-20 h-[500px] w-[500px] rounded-full blur-[180px]"
+          style={{ background: "rgba(224,78,57,0.10)" }}
+        />
+        <div
+          className="pointer-events-none absolute -left-20 bottom-0 h-[300px] w-[300px] rounded-full blur-[120px]"
+          style={{ background: "rgba(0,140,149,0.08)" }}
+        />
 
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <div>
+        <div className="container-kept relative z-10">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between py-6 md:py-10 lg:py-12">
+            {/* LEFT: Label + heading + text + buttons */}
+            <motion.div
+              className="flex-1"
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              custom={0.1}
+            >
+              {/* Breadcrumb */}
+              <motion.nav
+                className="flex items-center gap-2 mb-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                <Link href="/" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  Главная
+                </Link>
+                <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+                <span className="text-[12px] font-medium" style={{ color: C.mint }}>Клиенты</span>
+              </motion.nav>
+
+              {/* Label */}
               <motion.span
                 className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
-                style={{ color: C.dna }}
+                style={{ color: C.mint }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.15 }}
@@ -235,14 +260,16 @@ export default function CustomersPage() {
                 Партнёрство
               </motion.span>
 
+              {/* Main heading */}
               <motion.h1
-                className="mb-4"
+                className="mb-4 max-w-lg"
                 style={{
+                  fontFamily: "var(--font-russo)",
                   fontSize: "clamp(1.75rem, 4vw, 3rem)",
                   fontWeight: 700,
                   lineHeight: 1.25,
                   letterSpacing: "-0.01em",
-                  color: C.textDark,
+                  color: C.white,
                 }}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -251,68 +278,90 @@ export default function CustomersPage() {
                 {tagline}
               </motion.h1>
 
+              {/* Subtitle */}
               <motion.p
-                className="max-w-md text-[14px] font-normal leading-relaxed"
-                style={{ color: C.textMuted }}
+                className="mb-6 max-w-md text-[14px] font-light leading-relaxed"
+                style={{ color: "rgba(255,255,255,0.55)" }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 Крупнейшие российские и международные компании из промышленного, финансового и государственного секторов доверяют нам свои задачи.
               </motion.p>
-            </div>
 
-            {/* CTA cards */}
-            <motion.div
-              className="flex flex-col sm:flex-row lg:flex-col gap-3 lg:w-[280px] lg:flex-shrink-0"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.35 }}
-            >
-              <Link href="/feedback?type=proposals" className="group/kp flex-1">
-                <div
-                  className="relative overflow-hidden rounded-lg p-5 transition-all duration-300 group-hover/kp:shadow-lg h-full flex flex-col justify-center"
-                  style={{ background: C.dark }}
-                >
-                  <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: "rgba(255,255,255,0.5)" }} />
-                  <div
-                    className="pointer-events-none absolute inset-0 opacity-[0.03]"
-                    style={{
-                      backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.3) 30px, rgba(255,255,255,0.3) 31px)`,
+              {/* CTA buttons */}
+              <motion.div
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.45 }}
+              >
+                <Link href="/feedback?type=proposals" className="sm:auto">
+                  <motion.span
+                    className="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white w-full sm:w-auto"
+                    style={{ background: C.mintDark, borderRadius: "4px" }}
+                    whileHover={{ background: C.mint, transition: { duration: 0.3 } }}
+                  >
+                    Стать клиентом
+                    <ArrowRight className="h-4 w-4" />
+                  </motion.span>
+                </Link>
+                <Link href="/feedback?type=callback" className="sm:auto">
+                  <motion.span
+                    className="inline-flex items-center justify-center gap-2 border px-7 py-3 text-sm font-medium uppercase tracking-[0.05em] w-full sm:w-auto"
+                    style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)", borderRadius: "4px" }}
+                    whileHover={{
+                      borderColor: C.mint,
+                      color: C.mint,
+                      transition: { duration: 0.3 },
                     }}
-                  />
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-2.5 mb-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-md" style={{ background: "rgba(255,255,255,0.15)" }}>
-                        <Mail className="h-4 w-4" style={{ color: "#ffffff" }} />
-                      </div>
-                      <span className="text-[14px] font-bold" style={{ color: "#ffffff" }}>Запросить КП</span>
-                    </div>
-                    <p className="text-[11px] leading-relaxed pl-[42px]" style={{ color: "rgba(255,255,255,0.5)" }}>
-                      Индивидуальное предложение под вашу задачу
-                    </p>
-                  </div>
-                </div>
-              </Link>
-              <Link href="/feedback?type=callback" className="group/cb flex-1">
-                <div
-                  className="relative overflow-hidden rounded-lg p-5 transition-all duration-300 group-hover/cb:shadow-lg h-full flex flex-col justify-center"
-                  style={{ background: C.white }}
+                  >
+                    Заказать звонок
+                  </motion.span>
+                </Link>
+              </motion.div>
+            </motion.div>
+
+            {/* RIGHT: Stats — 4 cards in 2x2 grid */}
+            <motion.div
+              className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:w-[420px] lg:flex-shrink-0 lg:gap-4"
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              custom={0.3}
+            >
+              {[
+                { number: "50+", label: "клиентов", icon: Users, accent: C.dna },
+                { number: "10", label: "отраслей", icon: BarChart3, accent: C.mintDark },
+                { number: "95%", label: "возвращаются", icon: TrendingUp, accent: C.orange },
+                { number: "7+", label: "лет партнёрства", icon: Award, accent: C.dna },
+              ].map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  className="relative overflow-hidden rounded-lg p-5 md:p-6"
+                  style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }}
+                  variants={scaleIn}
+                  initial="hidden"
+                  animate="visible"
+                  custom={0.4 + index * 0.08}
                 >
-                  <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.orange }} />
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-2.5 mb-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-md" style={{ background: `${C.orange}15` }}>
-                        <Phone className="h-4 w-4" style={{ color: C.orange }} />
-                      </div>
-                      <span className="text-[14px] font-bold" style={{ color: C.textDark }}>Обратный звонок</span>
-                    </div>
-                    <p className="text-[11px] leading-relaxed pl-[42px]" style={{ color: C.textMuted }}>
-                      Перезвоним в удобное для вас время
-                    </p>
+                  {/* Top accent */}
+                  <div
+                    className="absolute left-0 top-0 h-0.5 w-full"
+                    style={{ background: `linear-gradient(90deg, ${stat.accent}, ${stat.accent}50)` }}
+                  />
+                  <stat.icon className="mb-3 h-5 w-5" style={{ color: stat.accent }} />
+                  <div
+                    className="text-2xl font-bold leading-none md:text-3xl"
+                    style={{ fontFamily: "var(--font-russo)", color: C.white }}
+                  >
+                    {stat.number}
                   </div>
-                </div>
-              </Link>
+                  <div className="mt-1.5 text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.45)" }}>
+                    {stat.label}
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
           </div>
         </div>

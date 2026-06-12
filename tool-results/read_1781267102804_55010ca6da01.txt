@@ -1,0 +1,885 @@
+     1→     1→"use client";
+     2→     2→
+     3→     3→import { motion } from "framer-motion";
+     4→     4→import Link from "next/link";
+     5→     5→import { cn } from "@/lib/utils";
+     6→     6→import {
+     7→     7→  ChevronRight,
+     8→     8→  ArrowRight,
+     9→     9→  Phone,
+    10→    10→  Mail,
+    11→    11→  Briefcase,
+    12→    12→  Layers,
+    13→    13→  Newspaper,
+    14→    14→  Users,
+    15→    15→  Building2,
+    16→    16→  Download,
+    17→    17→  FileText,
+    18→    18→  Image as ImageIcon,
+    19→    19→  Calendar,
+    20→    20→  TrendingUp,
+    21→    21→  Quote,
+    22→    22→  Award,
+    23→    23→  Rss,
+    24→    24→  ExternalLink,
+    25→    25→  Presentation,
+    26→    26→  BookOpen,
+    27→    27→  Megaphone,
+    28→    28→} from "lucide-react";
+    29→    29→import { C } from "@/lib/colors";
+    30→    30→import { getLatestPublications, typeHrefs } from "@/data/publications";
+    31→    31→
+    32→    32→/* ─── Animation variants ─── */
+    33→    33→const fadeUp = {
+    34→    34→  hidden: { opacity: 0, y: 32 },
+    35→    35→  visible: (i: number = 0) => ({
+    36→    36→    opacity: 1,
+    37→    37→    y: 0,
+    38→    38→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    39→    39→  }),
+    40→    40→};
+    41→    41→
+    42→    42→const fadeIn = {
+    43→    43→  hidden: { opacity: 0 },
+    44→    44→  visible: (i: number = 0) => ({
+    45→    45→    opacity: 1,
+    46→    46→    transition: { duration: 0.8, delay: i * 0.12 },
+    47→    47→  }),
+    48→    48→};
+    49→    49→
+    50→    50→const scaleIn = {
+    51→    51→  hidden: { opacity: 0, scale: 0.85 },
+    52→    52→  visible: (i: number = 0) => ({
+    53→    53→    opacity: 1,
+    54→    54→    scale: 1,
+    55→    55→    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+    56→    56→  }),
+    57→    57→};
+    58→    58→
+    59→    59→const vp = { once: true, amount: 0.2 as const };
+    60→    60→
+    61→    61→/* ─── Section label component ─── */
+    62→    62→function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+    63→    63→  return (
+    64→    64→    <motion.span
+    65→    65→      className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+    66→    66→      style={{ color: light ? C.mint : C.dna }}
+    67→    67→      variants={fadeIn}
+    68→    68→      initial="hidden"
+    69→    69→      whileInView="visible"
+    70→    70→      viewport={vp}
+    71→    71→    >
+    72→    72→      {children}
+    73→    73→    </motion.span>
+    74→    74→  );
+    75→    75→}
+    76→    76→
+    77→    77→/* ═══════════════════════════════════════════════════════
+    78→    78→   DATA
+    79→    79→   ═══════════════════════════════════════════════════════ */
+    80→    80→const tagline = "Актуальное о компании и отрасли.";
+    81→    81→
+    82→    82→const channels = [
+    83→    83→  {
+    84→    84→    title: "Новости компании",
+    85→    85→    description: "Официальные пресс-релизы, события, достижения и инициативы Арасака",
+    86→    86→    href: "/press-center/news",
+    87→    87→    icon: Megaphone,
+    88→    88→    accent: C.dna,
+    89→    89→    count: "12+",
+    90→    90→  },
+    91→    91→  {
+    92→    92→    title: "Статьи и экспертиза",
+    93→    93→    description: "Экспертные публикации наших консультантов в деловых изданиях",
+    94→    94→    href: "/press-center/articles",
+    95→    95→    icon: BookOpen,
+    96→    96→    accent: C.orange,
+    97→    97→    count: "20+",
+    98→    98→  },
+    99→    99→  {
+   100→   100→    title: "Инсайты и аналитика",
+   101→   101→    description: "Исследования рынков, отраслевые обзоры и аналитические материалы",
+   102→   102→    href: "/press-center/insights",
+   103→   103→    icon: TrendingUp,
+   104→   104→    accent: C.mintDark,
+   105→   105→    count: "15+",
+   106→   106→  },
+   107→   107→  {
+   108→   108→    title: "Все публикации",
+   109→   109→    description: "Пресс-центр — единая лента новостей, статей и аналитики",
+   110→   110→    href: "/press-center",
+   111→   111→    icon: Newspaper,
+   112→   112→    accent: C.dark,
+   113→   113→    count: "50+",
+   114→   114→  },
+   115→   115→];
+   116→   116→
+   117→   117→const pressKit = [
+   118→   118→  {
+   119→   119→    title: "Логотипы и брендбук",
+   120→   120→    description: "Официальные логотипы, фирменный стиль и правила использования",
+   121→   121→    icon: ImageIcon,
+   122→   122→    format: "ZIP · 89 KB",
+   123→   123→    href: "/brand/arasaka-brand-assets.zip",
+   124→   124→    available: true,
+   125→   125→  },
+   126→   126→  {
+   127→   127→    title: "Профиль компании",
+   128→   128→    description: "Краткая справка о компании для СМИ: история, данные, факты",
+   129→   129→    icon: FileText,
+   130→   130→    format: "PDF · 340 KB",
+   131→   131→    href: null,
+   132→   132→    available: false,
+   133→   133→  },
+   134→   134→  {
+   135→   135→    title: "Фотографии",
+   136→   136→    description: "Офисы, команда, мероприятия — для использования в публикациях",
+   137→   137→    icon: ImageIcon,
+   138→   138→    format: "ZIP · 18 MB",
+   139→   139→    href: null,
+   140→   140→    available: false,
+   141→   141→  },
+   142→   142→  {
+   143→   143→    title: "Презентация Арасака",
+   144→   144→    description: "Корпоративная презентация: услуги, клиенты, кейсы, цифры",
+   145→   145→    icon: Presentation,
+   146→   146→    format: "PPTX · 5.1 MB",
+   147→   147→    href: null,
+   148→   148→    available: false,
+   149→   149→  },
+   150→   150→];
+   151→   151→
+   152→   152→const latestNews = getLatestPublications(6).map((p) => ({
+   153→   153→  title: p.title,
+   154→   154→  category: p.type === "news" ? "Новости" : p.type === "article" ? "Статьи" : "Инсайты",
+   155→   155→  date: p.date,
+   156→   156→  type: p.type,
+   157→   157→  slug: p.slug,
+   158→   158→}));
+   159→   159→
+   160→   160→const mediaContacts = [
+   161→   161→  {
+   162→   162→    role: "По вопросам сотрудничества со СМИ",
+   163→   163→    name: "Пресс-служба",
+   164→   164→    email: "press@arasaca.ru",
+   165→   165→    phone: "+7 (495) 937 4477",
+   166→   166→  },
+   167→   167→  {
+   168→   168→    role: "По вопросам партнёрства и спонсорства",
+   169→   169→    name: "Отдел коммуникаций",
+   170→   170→    email: "comms@arasaca.ru",
+   171→   171→    phone: "+7 (495) 937 4477",
+   172→   172→  },
+   173→   173→];
+   174→   174→
+   175→   175→/* ─── Quick Links cards ─── */
+   176→   176→const sectionCards = [
+   177→   177→  {
+   178→   178→    title: "О компании",
+   179→   179→    description: "Миссия, ценности, команда",
+   180→   180→    bg: C.dark,
+   181→   181→    textColor: C.white,
+   182→   182→    href: "/about",
+   183→   183→    icon: Building2,
+   184→   184→  },
+   185→   185→  {
+   186→   186→    title: "Услуги",
+   187→   187→    description: "9 направлений консалтинга",
+   188→   188→    bg: C.orange,
+   189→   189→    textColor: C.white,
+   190→   190→    href: "/services",
+   191→   191→    icon: Briefcase,
+   192→   192→  },
+   193→   193→  {
+   194→   194→    title: "Решения",
+   195→   195→    description: "Цифровые продукты и платформы",
+   196→   196→    bg: C.white,
+   197→   197→    textColor: C.textDark,
+   198→   198→    href: "/solutions",
+   199→   199→    icon: Layers,
+   200→   200→  },
+   201→   201→  {
+   202→   202→    title: "Карьера",
+   203→   203→    description: "Присоединяйтесь к команде",
+   204→   204→    bg: C.mintDark,
+   205→   205→    textColor: C.white,
+   206→   206→    href: "/career",
+   207→   207→    icon: Users,
+   208→   208→  },
+   209→   209→  {
+   210→   210→    title: "Клиенты",
+   211→   211→    description: "Компании-партнёры",
+   212→   212→    bg: C.dna,
+   213→   213→    textColor: C.white,
+   214→   214→    href: "/customers",
+   215→   215→    icon: Award,
+   216→   216→  },
+   217→   217→  {
+   218→   218→    title: "Контакты",
+   219→   219→    description: "Свяжитесь с нами",
+   220→   220→    bg: C.dark,
+   221→   221→    textColor: C.white,
+   222→   222→    href: "/contacts",
+   223→   223→    icon: Mail,
+   224→   224→  },
+   225→   225→];
+   226→   226→
+   227→   227→/* ═══════════════════════════════════════════════════════
+   228→   228→   PAGE
+   229→   229→   ═══════════════════════════════════════════════════════ */
+   230→   230→export default function PressCenterPage() {
+   231→   231→  return (
+   232→   232→    <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
+   233→   233→      {/* ═══════════════════════════════════════════════════
+   234→   234→          HERO — Gray background
+   235→   235→          ═══════════════════════════════════════════════════ */}
+   236→   236→      <section
+   237→   237→        className="relative overflow-hidden pt-16 lg:pt-[120px] pb-16 md:pb-20"
+   238→   238→        style={{ background: C.muted }}
+   239→   239→      >
+   240→   240→        <div className="container-kept relative z-10 pt-6 md:pt-10 lg:pt-12">
+   241→   241→          {/* Breadcrumbs */}
+   242→   242→          <motion.nav
+   243→   243→            className="flex items-center gap-2 mb-6"
+   244→   244→            initial={{ opacity: 0 }}
+   245→   245→            animate={{ opacity: 1 }}
+   246→   246→            transition={{ duration: 0.5, delay: 0.1 }}
+   247→   247→          >
+   248→   248→            <Link href="/" className="text-[12px] transition-colors hover:text-[#008C95]" style={{ color: C.textMuted }}>
+   249→   249→              Главная
+   250→   250→            </Link>
+   251→   251→            <ChevronRight className="w-3 h-3" style={{ color: C.border }} />
+   252→   252→            <span className="text-[12px] font-medium" style={{ color: C.dna }}>Пресс-центр</span>
+   253→   253→          </motion.nav>
+   254→   254→
+   255→   255→          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+   256→   256→            <div>
+   257→   257→              <motion.span
+   258→   258→                className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+   259→   259→                style={{ color: C.dna }}
+   260→   260→                initial={{ opacity: 0 }}
+   261→   261→                animate={{ opacity: 1 }}
+   262→   262→                transition={{ duration: 0.5, delay: 0.15 }}
+   263→   263→              >
+   264→   264→                Медиа
+   265→   265→              </motion.span>
+   266→   266→
+   267→   267→              <motion.h1
+   268→   268→                className="mb-4"
+   269→   269→                style={{
+   270→   270→                  fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   271→   271→                  fontWeight: 700,
+   272→   272→                  lineHeight: 1.25,
+   273→   273→                  letterSpacing: "-0.01em",
+   274→   274→                  color: C.textDark,
+   275→   275→                }}
+   276→   276→                initial={{ opacity: 0, y: 16 }}
+   277→   277→                animate={{ opacity: 1, y: 0 }}
+   278→   278→                transition={{ duration: 0.6, delay: 0.2 }}
+   279→   279→              >
+   280→   280→                {tagline}
+   281→   281→              </motion.h1>
+   282→   282→
+   283→   283→              <motion.p
+   284→   284→                className="max-w-md text-[14px] font-normal leading-relaxed"
+   285→   285→                style={{ color: C.textMuted }}
+   286→   286→                initial={{ opacity: 0, y: 12 }}
+   287→   287→                animate={{ opacity: 1, y: 0 }}
+   288→   288→                transition={{ duration: 0.6, delay: 0.3 }}
+   289→   289→              >
+   290→   290→                Новости компании, пресс-релизы, экспертные публикации и аналитические материалы — всё в одном месте.
+   291→   291→              </motion.p>
+   292→   292→            </div>
+   293→   293→
+   294→   294→            {/* CTA cards */}
+   295→   295→            <motion.div
+   296→   296→              className="flex flex-col sm:flex-row lg:flex-col gap-3 lg:w-[280px] lg:flex-shrink-0"
+   297→   297→              initial={{ opacity: 0, x: 20 }}
+   298→   298→              animate={{ opacity: 1, x: 0 }}
+   299→   299→              transition={{ duration: 0.6, delay: 0.35 }}
+   300→   300→            >
+   301→   301→              <Link href="#press-kit" className="group/kp flex-1">
+   302→   302→                <div
+   303→   303→                  className="relative overflow-hidden rounded-lg p-5 transition-all duration-300 group-hover/kp:shadow-lg h-full flex flex-col justify-center"
+   304→   304→                  style={{ background: C.dark }}
+   305→   305→                >
+   306→   306→                  <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: "rgba(255,255,255,0.5)" }} />
+   307→   307→                  <div
+   308→   308→                    className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   309→   309→                    style={{
+   310→   310→                      backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.3) 30px, rgba(255,255,255,0.3) 31px)`,
+   311→   311→                    }}
+   312→   312→                  />
+   313→   313→                  <div className="relative z-10">
+   314→   314→                    <div className="flex items-center gap-2.5 mb-2">
+   315→   315→                      <div className="flex h-8 w-8 items-center justify-center rounded-md" style={{ background: "rgba(255,255,255,0.15)" }}>
+   316→   316→                        <Download className="h-4 w-4" style={{ color: "#ffffff" }} />
+   317→   317→                      </div>
+   318→   318→                      <span className="text-[14px] font-bold" style={{ color: "#ffffff" }}>Пресс-кит</span>
+   319→   319→                    </div>
+   320→   320→                    <p className="text-[11px] leading-relaxed pl-[42px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+   321→   321→                      Логотипы, брендбук, фотографии
+   322→   322→                    </p>
+   323→   323→                  </div>
+   324→   324→                </div>
+   325→   325→              </Link>
+   326→   326→              <Link href="#contacts" className="group/cb flex-1">
+   327→   327→                <div
+   328→   328→                  className="relative overflow-hidden rounded-lg p-5 transition-all duration-300 group-hover/cb:shadow-lg h-full flex flex-col justify-center"
+   329→   329→                  style={{ background: C.white }}
+   330→   330→                >
+   331→   331→                  <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.orange }} />
+   332→   332→                  <div className="relative z-10">
+   333→   333→                    <div className="flex items-center gap-2.5 mb-2">
+   334→   334→                      <div className="flex h-8 w-8 items-center justify-center rounded-md" style={{ background: `${C.orange}15` }}>
+   335→   335→                        <Phone className="h-4 w-4" style={{ color: C.orange }} />
+   336→   336→                      </div>
+   337→   337→                      <span className="text-[14px] font-bold" style={{ color: C.textDark }}>Контакты для СМИ</span>
+   338→   338→                    </div>
+   339→   339→                    <p className="text-[11px] leading-relaxed pl-[42px]" style={{ color: C.textMuted }}>
+   340→   340→                      Связаться с пресс-службой
+   341→   341→                    </p>
+   342→   342→                  </div>
+   343→   343→                </div>
+   344→   344→              </Link>
+   345→   345→            </motion.div>
+   346→   346→          </div>
+   347→   347→        </div>
+   348→   348→      </section>
+   349→   349→
+   350→   350→      {/* ═══════════════════════════════════════════════════
+   351→   351→          РАЗДЕЛЫ — White background
+   352→   352→          ═══════════════════════════════════════════════════ */}
+   353→   353→      <section className="py-16 lg:py-24 bg-white">
+   354→   354→        <div className="container-kept">
+   355→   355→          <motion.div
+   356→   356→            initial={{ opacity: 0, y: 20 }}
+   357→   357→            whileInView={{ opacity: 1, y: 0 }}
+   358→   358→            viewport={vp}
+   359→   359→            transition={{ duration: 0.6 }}
+   360→   360→            className="max-w-3xl mb-12"
+   361→   361→          >
+   362→   362→            <SectionLabel>Каналы</SectionLabel>
+   363→   363→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   364→   364→              Разделы пресс-центра
+   365→   365→            </h2>
+   366→   366→          </motion.div>
+   367→   367→
+   368→   368→          <div className="grid md:grid-cols-2 gap-5">
+   369→   369→            {channels.map((channel, index) => (
+   370→   370→              <motion.div
+   371→   371→                key={channel.title}
+   372→   372→                variants={fadeUp}
+   373→   373→                initial="hidden"
+   374→   374→                whileInView="visible"
+   375→   375→                viewport={vp}
+   376→   376→                custom={index * 0.1}
+   377→   377→              >
+   378→   378→                <Link href={channel.href} className="group block h-full">
+   379→   379→                  <div
+   380→   380→                    className="relative flex flex-col justify-between overflow-hidden rounded-lg p-6 lg:p-8 transition-all duration-300 border h-full"
+   381→   381→                    style={{
+   382→   382→                      background: C.white,
+   383→   383→                      borderColor: C.border,
+   384→   384→                    }}
+   385→   385→                  >
+   386→   386→                    <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: channel.accent }} />
+   387→   387→
+   388→   388→                    <div>
+   389→   389→                      <div className="flex items-start justify-between mb-4">
+   390→   390→                        <div
+   391→   391→                          className="flex h-12 w-12 items-center justify-center rounded-lg"
+   392→   392→                          style={{ background: `${channel.accent}12` }}
+   393→   393→                        >
+   394→   394→                          <channel.icon className="w-6 h-6" style={{ color: channel.accent }} />
+   395→   395→                        </div>
+   396→   396→                        <span
+   397→   397→                          className="text-[11px] font-semibold px-3 py-1 rounded-full"
+   398→   398→                          style={{ background: `${channel.accent}10`, color: channel.accent }}
+   399→   399→                        >
+   400→   400→                          {channel.count}
+   401→   401→                        </span>
+   402→   402→                      </div>
+   403→   403→                      <h3
+   404→   404→                        className="text-[16px] font-semibold mb-2 transition-colors duration-200"
+   405→   405→                        style={{ color: C.textDark }}
+   406→   406→                      >
+   407→   407→                        {channel.title}
+   408→   408→                      </h3>
+   409→   409→                      <p className="text-[13px] leading-relaxed" style={{ color: C.textMuted }}>
+   410→   410→                        {channel.description}
+   411→   411→                      </p>
+   412→   412→                    </div>
+   413→   413→
+   414→   414→                    <div className="mt-6 flex items-center gap-2 text-[12px] font-medium" style={{ color: channel.accent }}>
+   415→   415→                      Перейти
+   416→   416→                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+   417→   417→                    </div>
+   418→   418→                  </div>
+   419→   419→                </Link>
+   420→   420→              </motion.div>
+   421→   421→            ))}
+   422→   422→          </div>
+   423→   423→        </div>
+   424→   424→      </section>
+   425→   425→
+   426→   426→      {/* ═══════════════════════════════════════════════════
+   427→   427→          ПОСЛЕДНИЕ НОВОСТИ — Muted background
+   428→   428→          ═══════════════════════════════════════════════════ */}
+   429→   429→      <section className="py-16 lg:py-24" style={{ background: C.muted }}>
+   430→   430→        <div className="container-kept">
+   431→   431→          <motion.div
+   432→   432→            initial={{ opacity: 0, y: 20 }}
+   433→   433→            whileInView={{ opacity: 1, y: 0 }}
+   434→   434→            viewport={vp}
+   435→   435→            transition={{ duration: 0.6 }}
+   436→   436→            className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12"
+   437→   437→          >
+   438→   438→            <div>
+   439→   439→              <SectionLabel>Лента</SectionLabel>
+   440→   440→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   441→   441→                Последние публикации
+   442→   442→              </h2>
+   443→   443→            </div>
+   444→   444→            <Link
+   445→   445→              href="/press-center"
+   446→   446→              className="inline-flex items-center gap-2 px-6 py-3 font-medium shrink-0 transition-colors text-[13px]"
+   447→   447→              style={{ border: `2px solid ${C.dna}`, color: C.dna }}
+   448→   448→            >
+   449→   449→              Все материалы
+   450→   450→              <ArrowRight className="w-4 h-4" />
+   451→   451→            </Link>
+   452→   452→          </motion.div>
+   453→   453→
+   454→   454→          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+   455→   455→            {latestNews.map((item, index) => {
+   456→   456→              const accent = item.type === "news" ? C.dna : item.type === "article" ? C.orange : C.mintDark;
+   457→   457→              return (
+   458→   458→                <motion.article
+   459→   459→                  key={item.title}
+   460→   460→                  variants={fadeUp}
+   461→   461→                  initial="hidden"
+   462→   462→                  whileInView="visible"
+   463→   463→                  viewport={vp}
+   464→   464→                  custom={index * 0.06}
+   465→   465→                >
+   466→   466→                  <Link href={`/press-center/${item.slug}`} className="group block h-full">
+   467→   467→                    <div
+   468→   468→                      className="relative overflow-hidden rounded-lg border h-full flex flex-col"
+   469→   469→                      style={{ background: C.white, borderColor: C.border }}
+   470→   470→                    >
+   471→   471→                      {/* Top accent */}
+   472→   472→                      <div className="pointer-events-none absolute left-0 top-0 h-1 w-full" style={{ background: `${accent}60` }} />
+   473→   473→
+   474→   474→                      <div className="p-6 flex flex-col flex-1">
+   475→   475→                        <div className="flex items-center gap-3 mb-3">
+   476→   476→                          <span
+   477→   477→                            className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded"
+   478→   478→                            style={{ background: `${accent}12`, color: accent }}
+   479→   479→                          >
+   480→   480→                            {item.category}
+   481→   481→                          </span>
+   482→   482→                          <span className="text-[11px]" style={{ color: C.textMuted }}>
+   483→   483→                            {item.date}
+   484→   484→                          </span>
+   485→   485→                        </div>
+   486→   486→                        <h3
+   487→   487→                          className="text-[14px] font-semibold leading-snug flex-1 transition-colors duration-200 line-clamp-3"
+   488→   488→                          style={{ color: C.textDark }}
+   489→   489→                        >
+   490→   490→                          {item.title}
+   491→   491→                        </h3>
+   492→   492→                        <div className="mt-4 flex items-center gap-1.5 text-[11px] font-medium" style={{ color: accent }}>
+   493→   493→                          Читать
+   494→   494→                          <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
+   495→   495→                        </div>
+   496→   496→                      </div>
+   497→   497→                    </div>
+   498→   498→                  </Link>
+   499→   499→                </motion.article>
+   500→   500→              );
+   501→   501→            })}
+   502→   502→          </div>
+   503→   503→        </div>
+   504→   504→      </section>
+   505→   505→
+   506→   506→      {/* ═══════════════════════════════════════════════════
+   507→   507→          ПРЕСС-КИТ — Teal background
+   508→   508→          ═══════════════════════════════════════════════════ */}
+   509→   509→      <section id="press-kit" className="relative overflow-hidden py-16 lg:py-24" style={{ background: C.dna }}>
+   510→   510→        {/* Decorative glow */}
+   511→   511→        <div
+   512→   512→          className="pointer-events-none absolute -right-40 top-0 h-[500px] w-[500px] rounded-full blur-[180px]"
+   513→   513→          style={{ background: "rgba(119,226,195,0.12)" }}
+   514→   514→        />
+   515→   515→        {/* Diagonal lines pattern */}
+   516→   516→        <div
+   517→   517→          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   518→   518→          style={{
+   519→   519→            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.3) 40px, rgba(255,255,255,0.3) 41px)`,
+   520→   520→          }}
+   521→   521→        />
+   522→   522→
+   523→   523→        <div className="container-kept relative z-10">
+   524→   524→          <motion.div
+   525→   525→            initial={{ opacity: 0, y: 20 }}
+   526→   526→            whileInView={{ opacity: 1, y: 0 }}
+   527→   527→            viewport={vp}
+   528→   528→            transition={{ duration: 0.6 }}
+   529→   529→            className="max-w-3xl mb-12"
+   530→   530→          >
+   531→   531→            <SectionLabel light>Материалы</SectionLabel>
+   532→   532→            <h2 className="text-3xl font-bold leading-tight text-white md:text-4xl mb-4">
+   533→   533→              Пресс-кит
+   534→   534→            </h2>
+   535→   535→            <p className="text-white/70 leading-relaxed text-[14px]">
+   536→   536→              Бренд-ассеты, логотипы, фирменный стиль, корпоративные фотографии и&nbsp;презентации для использования в&nbsp;публикациях.
+   537→   537→            </p>
+   538→   538→          </motion.div>
+   539→   539→
+   540→   540→          <div className="grid md:grid-cols-2 gap-5">
+   541→   541→            {pressKit.map((item, index) => (
+   542→   542→              <motion.div
+   543→   543→                key={item.title}
+   544→   544→                variants={fadeUp}
+   545→   545→                initial="hidden"
+   546→   546→                whileInView="visible"
+   547→   547→                viewport={vp}
+   548→   548→                custom={index * 0.08}
+   549→   549→              >
+   550→   550→                <div
+   551→   551→                  className="group relative overflow-hidden rounded-lg p-6 border h-full transition-all duration-300 hover:border-white/30"
+   552→   552→                  style={{
+   553→   553→                    background: "rgba(255,255,255,0.06)",
+   554→   554→                    borderColor: "rgba(255,255,255,0.1)",
+   555→   555→                  }}
+   556→   556→                >
+   557→   557→                  <div className="flex items-start gap-4">
+   558→   558→                    <div className="flex h-12 w-12 items-center justify-center rounded-lg shrink-0" style={{ background: "rgba(255,255,255,0.12)" }}>
+   559→   559→                      <item.icon className="w-6 h-6 text-white" />
+   560→   560→                    </div>
+   561→   561→                    <div className="flex-1 min-w-0">
+   562→   562→                      <h3 className="text-[15px] font-semibold text-white mb-1">
+   563→   563→                        {item.title}
+   564→   564→                      </h3>
+   565→   565→                      <p className="text-[12px] text-white/60 leading-relaxed mb-3">
+   566→   566→                        {item.description}
+   567→   567→                      </p>
+   568→   568→                      <div className="flex items-center gap-3">
+   569→   569→                        {item.available && item.href ? (
+   570→   570→                          <a
+   571→   571→                            href={item.href}
+   572→   572→                            download
+   573→   573→                            className="inline-flex items-center gap-2 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-white transition-colors rounded hover:bg-white/25"
+   574→   574→                            style={{ background: "rgba(255,255,255,0.15)" }}
+   575→   575→                          >
+   576→   576→                            <Download className="w-3.5 h-3.5" />
+   577→   577→                            Скачать
+   578→   578→                          </a>
+   579→   579→                        ) : (
+   580→   580→                          <button
+   581→   581→                            className="inline-flex items-center gap-2 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-white/50 rounded cursor-not-allowed"
+   582→   582→                            style={{ background: "rgba(255,255,255,0.08)" }}
+   583→   583→                            disabled
+   584→   584→                          >
+   585→   585→                            <Download className="w-3.5 h-3.5" />
+   586→   586→                            Скоро
+   587→   587→                          </button>
+   588→   588→                        )}
+   589→   589→                        <span className="text-[11px] text-white/40">
+   590→   590→                          {item.format}
+   591→   591→                        </span>
+   592→   592→                      </div>
+   593→   593→                    </div>
+   594→   594→                  </div>
+   595→   595→                </div>
+   596→   596→              </motion.div>
+   597→   597→            ))}
+   598→   598→          </div>
+   599→   599→        </div>
+   600→   600→      </section>
+   601→   601→
+   602→   602→      {/* ═══════════════════════════════════════════════════
+   603→   603→          КОНТАКТЫ ДЛЯ СМИ — White background
+   604→   604→          ═══════════════════════════════════════════════════ */}
+   605→   605→      <section id="contacts" className="py-16 lg:py-24 bg-white">
+   606→   606→        <div className="container-kept">
+   607→   607→          <motion.div
+   608→   608→            initial={{ opacity: 0, y: 20 }}
+   609→   609→            whileInView={{ opacity: 1, y: 0 }}
+   610→   610→            viewport={vp}
+   611→   611→            transition={{ duration: 0.6 }}
+   612→   612→            className="max-w-3xl mb-12"
+   613→   613→          >
+   614→   614→            <SectionLabel>Связь</SectionLabel>
+   615→   615→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   616→   616→              Контакты для СМИ
+   617→   617→            </h2>
+   618→   618→            <p className="text-[14px] mt-3" style={{ color: C.textMuted }}>
+   619→   619→              По вопросам публикации материалов, интервью, участия экспертов в&nbsp;мероприятиях и&nbsp;пресс-конференциях.
+   620→   620→            </p>
+   621→   621→          </motion.div>
+   622→   622→
+   623→   623→          <div className="grid md:grid-cols-2 gap-5 max-w-4xl">
+   624→   624→            {mediaContacts.map((contact, index) => (
+   625→   625→              <motion.div
+   626→   626→                key={contact.role}
+   627→   627→                variants={fadeUp}
+   628→   628→                initial="hidden"
+   629→   629→                whileInView="visible"
+   630→   630→                viewport={vp}
+   631→   631→                custom={index * 0.1}
+   632→   632→              >
+   633→   633→                <div
+   634→   634→                  className="relative overflow-hidden rounded-lg p-6 lg:p-8 border h-full"
+   635→   635→                  style={{ background: C.muted, borderColor: C.border }}
+   636→   636→                >
+   637→   637→                  <div className="pointer-events-none absolute left-0 top-0 h-1 w-full" style={{ background: `${C.dna}40` }} />
+   638→   638→                  <div className="flex items-center gap-3 mb-4">
+   639→   639→                    <div
+   640→   640→                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+   641→   641→                      style={{ background: `${C.dna}15` }}
+   642→   642→                    >
+   643→   643→                      <Mail className="w-5 h-5" style={{ color: C.dna }} />
+   644→   644→                    </div>
+   645→   645→                    <div>
+   646→   646→                      <div className="text-[14px] font-semibold" style={{ color: C.textDark }}>{contact.name}</div>
+   647→   647→                      <div className="text-[11px]" style={{ color: C.textMuted }}>{contact.role}</div>
+   648→   648→                    </div>
+   649→   649→                  </div>
+   650→   650→                  <div className="space-y-2">
+   651→   651→                    <a
+   652→   652→                      href={`mailto:${contact.email}`}
+   653→   653→                      className="flex items-center gap-2 text-[13px] transition-colors hover:underline"
+   654→   654→                      style={{ color: C.dna }}
+   655→   655→                    >
+   656→   656→                      <Mail className="w-3.5 h-3.5" />
+   657→   657→                      {contact.email}
+   658→   658→                    </a>
+   659→   659→                    <a
+   660→   660→                      href={`tel:${contact.phone.replace(/\s/g, "")}`}
+   661→   661→                      className="flex items-center gap-2 text-[13px] transition-colors hover:underline"
+   662→   662→                      style={{ color: C.textMid }}
+   663→   663→                    >
+   664→   664→                      <Phone className="w-3.5 h-3.5" />
+   665→   665→                      {contact.phone}
+   666→   666→                    </a>
+   667→   667→                  </div>
+   668→   668→                </div>
+   669→   669→              </motion.div>
+   670→   670→            ))}
+   671→   671→          </div>
+   672→   672→        </div>
+   673→   673→      </section>
+   674→   674→
+   675→   675→      {/* ═══════════════════════════════════════════════════
+   676→   676→          ПОДПИСКА — Muted background
+   677→   677→          ═══════════════════════════════════════════════════ */}
+   678→   678→      <section className="py-16 lg:py-24" style={{ background: C.muted }}>
+   679→   679→        <div className="container-kept">
+   680→   680→          <motion.div
+   681→   681→            initial={{ opacity: 0, y: 20 }}
+   682→   682→            whileInView={{ opacity: 1, y: 0 }}
+   683→   683→            viewport={vp}
+   684→   684→            transition={{ duration: 0.6 }}
+   685→   685→            className="max-w-3xl mx-auto"
+   686→   686→          >
+   687→   687→            <div
+   688→   688→              className="relative overflow-hidden rounded-lg p-8 lg:p-12"
+   689→   689→              style={{ background: C.dark }}
+   690→   690→            >
+   691→   691→              <div
+   692→   692→                className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   693→   693→                style={{
+   694→   694→                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+   695→   695→                }}
+   696→   696→              />
+   697→   697→              <div className="pointer-events-none absolute left-0 top-0 h-full w-1.5" style={{ background: C.orange }} />
+   698→   698→
+   699→   699→              <div className="relative z-10">
+   700→   700→                <div className="flex items-center gap-3 mb-4">
+   701→   701→                  <div className="flex h-12 w-12 items-center justify-center rounded-lg" style={{ background: "rgba(255,255,255,0.1)" }}>
+   702→   702→                    <Rss className="w-6 h-6 text-white" />
+   703→   703→                  </div>
+   704→   704→                  <h2 className="text-2xl font-bold text-white">
+   705→   705→                    Подпишитесь на&nbsp;рассылку
+   706→   706→                  </h2>
+   707→   707→                </div>
+   708→   708→                <p className="text-white/60 text-[14px] leading-relaxed mb-8">
+   709→   709→                  Получайте свежие новости, экспертные статьи и аналитику Арасака на&nbsp;вашу электронную почту. Без спама, только полезные материалы.
+   710→   710→                </p>
+   711→   711→                <div className="flex flex-col sm:flex-row gap-3">
+   712→   712→                  <input
+   713→   713→                    type="email"
+   714→   714→                    placeholder="Ваш email"
+   715→   715→                    className="flex-1 px-5 py-3.5 text-[13px] bg-white/10 border text-white placeholder-white/40 focus:outline-none focus:border-white/40 transition-colors"
+   716→   716→                    style={{ borderColor: "rgba(255,255,255,0.15)", borderRadius: "4px" }}
+   717→   717→                  />
+   718→   718→                  <button
+   719→   719→                    className="px-6 py-3.5 text-[12px] font-semibold uppercase tracking-wider text-white transition-colors shrink-0"
+   720→   720→                    style={{ background: C.orange, borderRadius: "4px" }}
+   721→   721→                  >
+   722→   722→                    Подписаться
+   723→   723→                  </button>
+   724→   724→                </div>
+   725→   725→              </div>
+   726→   726→            </div>
+   727→   727→          </motion.div>
+   728→   728→        </div>
+   729→   729→      </section>
+   730→   730→
+   731→   731→      {/* ═══════════════════════════════════════════════════
+   732→   732→          ПОЛЕЗНЫЕ ССЫЛКИ — Navigation cards + CTA panel
+   733→   733→          ═══════════════════════════════════════════════════ */}
+   734→   734→      <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   735→   735→        <div className="container-kept">
+   736→   736→          <motion.div
+   737→   737→            className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   738→   738→            variants={fadeUp}
+   739→   739→            initial="hidden"
+   740→   740→            whileInView="visible"
+   741→   741→            viewport={vp}
+   742→   742→          >
+   743→   743→            <div>
+   744→   744→              <SectionLabel>Навигация</SectionLabel>
+   745→   745→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   746→   746→                Полезные ссылки
+   747→   747→              </h2>
+   748→   748→            </div>
+   749→   749→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   750→   750→              Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании
+   751→   751→            </p>
+   752→   752→          </motion.div>
+   753→   753→
+   754→   754→          <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+   755→   755→            {/* Left: 6 navigation cards */}
+   756→   756→            <div className="flex-1 flex">
+   757→   757→              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 w-full h-full auto-rows-fr">
+   758→   758→                {sectionCards.map((card, index) => {
+   759→   759→                  const isWhite = card.bg === C.white;
+   760→   760→                  return (
+   761→   761→                    <motion.div
+   762→   762→                      key={card.title}
+   763→   763→                      className="flex"
+   764→   764→                      variants={scaleIn}
+   765→   765→                      initial="hidden"
+   766→   766→                      whileInView="visible"
+   767→   767→                      viewport={vp}
+   768→   768→                      custom={index * 0.08}
+   769→   769→                    >
+   770→   770→                      <Link href={card.href} className="group block h-full w-full">
+   771→   771→                        <motion.div
+   772→   772→                          className="relative flex flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300 h-full border"
+   773→   773→                          style={{
+   774→   774→                            background: card.bg,
+   775→   775→                            color: card.textColor,
+   776→   776→                            borderColor: isWhite ? C.border : "transparent",
+   777→   777→                            minHeight: "130px",
+   778→   778→                          }}
+   779→   779→                          whileHover={{ y: -3, transition: { duration: 0.25 } }}
+   780→   780→                        >
+   781→   781→                          {card.bg === C.dark && (
+   782→   782→                            <div
+   783→   783→                              className="pointer-events-none absolute inset-0 opacity-[0.06]"
+   784→   784→                              style={{
+   785→   785→                                backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`,
+   786→   786→                                backgroundSize: "20px 20px",
+   787→   787→                              }}
+   788→   788→                            />
+   789→   789→                          )}
+   790→   790→                          {isWhite && (
+   791→   791→                            <div
+   792→   792→                              className="pointer-events-none absolute inset-0 opacity-[0.1]"
+   793→   793→                              style={{
+   794→   794→                                backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`,
+   795→   795→                                backgroundSize: "12px 12px",
+   796→   796→                              }}
+   797→   797→                            />
+   798→   798→                          )}
+   799→   799→
+   800→   800→                          <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: isWhite ? C.dna : "rgba(255,255,255,0.4)" }} />
+   801→   801→
+   802→   802→                          <div className="relative z-10">
+   803→   803→                            <div className="flex items-center gap-2">
+   804→   804→                              {card.icon && <card.icon className="h-4 w-4 opacity-60" />}
+   805→   805→                              <span className="block text-sm font-semibold md:text-base">{card.title}</span>
+   806→   806→                            </div>
+   807→   807→                            <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+   808→   808→                          </div>
+   809→   809→
+   810→   810→                          <div className="relative z-10 flex justify-end">
+   811→   811→                            <div
+   812→   812→                              className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   813→   813→                              style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}
+   814→   814→                            >
+   815→   815→                              <ArrowRight className="h-4 w-4" style={{ color: isWhite ? C.dna : "#ffffff" }} />
+   816→   816→                            </div>
+   817→   817→                          </div>
+   818→   818→                        </motion.div>
+   819→   819→                      </Link>
+   820→   820→                    </motion.div>
+   821→   821→                  );
+   822→   822→                })}
+   823→   823→              </div>
+   824→   824→            </div>
+   825→   825→
+   826→   826→            {/* Right: CTA panel */}
+   827→   827→            <motion.div
+   828→   828→              className="lg:w-[340px] flex-shrink-0"
+   829→   829→              variants={fadeUp}
+   830→   830→              initial="hidden"
+   831→   831→              whileInView="visible"
+   832→   832→              viewport={vp}
+   833→   833→              custom={0.3}
+   834→   834→            >
+   835→   835→              <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg p-6 md:p-8" style={{ background: C.dark }}>
+   836→   836→                <div
+   837→   837→                  className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   838→   838→                  style={{
+   839→   839→                    backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+   840→   840→                  }}
+   841→   841→                />
+   842→   842→
+   843→   843→                <div className="relative z-10">
+   844→   844→                  <div className="h-px w-12 mb-5" style={{ background: C.mint }} />
+   845→   845→                  <h3
+   846→   846→                    className="text-xl font-bold leading-tight mb-2"
+   847→   847→                    style={{ fontFamily: "var(--font-russo), sans-serif", color: "#ffffff" }}
+   848→   848→                  >
+   849→   849→                    Начните сотрудничество
+   850→   850→                  </h3>
+   851→   851→                  <p className="text-[13px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+   852→   852→                    Оставьте заявку — мы&nbsp;свяжемся с&nbsp;вами, обсудим задачу и&nbsp;подготовим индивидуальное предложение.
+   853→   853→                  </p>
+   854→   854→                </div>
+   855→   855→
+   856→   856→                <div className="relative z-10 flex flex-col gap-3">
+   857→   857→                  <Link
+   858→   858→                    href="/feedback?type=proposals"
+   859→   859→                    className="inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300"
+   860→   860→                    style={{ background: C.dna, borderRadius: "4px" }}
+   861→   861→                  >
+   862→   862→                    Запросить КП
+   863→   863→                    <ArrowRight className="h-4 w-4" />
+   864→   864→                  </Link>
+   865→   865→                  <Link
+   866→   866→                    href="/feedback?type=callback"
+   867→   867→                    className="inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-medium uppercase tracking-wider border transition-all duration-300"
+   868→   868→                    style={{
+   869→   869→                      borderColor: "rgba(255,255,255,0.2)",
+   870→   870→                      color: "rgba(255,255,255,0.7)",
+   871→   871→                      borderRadius: "4px",
+   872→   872→                    }}
+   873→   873→                  >
+   874→   874→                    Заказать звонок
+   875→   875→                  </Link>
+   876→   876→                </div>
+   877→   877→              </div>
+   878→   878→            </motion.div>
+   879→   879→          </div>
+   880→   880→        </div>
+   881→   881→      </section>
+   882→   882→    </main>
+   883→   883→  );
+   884→   884→}
+   885→   885→
