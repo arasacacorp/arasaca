@@ -27,6 +27,7 @@ import {
   Megaphone,
 } from "lucide-react";
 import { C } from "@/lib/colors";
+import { getLatestPublications, typeHrefs } from "@/data/publications";
 
 /* ─── Animation variants ─── */
 const fadeUp = {
@@ -82,7 +83,7 @@ const channels = [
   {
     title: "Новости компании",
     description: "Официальные пресс-релизы, события, достижения и инициативы Арасака",
-    href: "/media/news",
+    href: "/press-center/news",
     icon: Megaphone,
     accent: C.dna,
     count: "12+",
@@ -90,7 +91,7 @@ const channels = [
   {
     title: "Статьи и экспертиза",
     description: "Экспертные публикации наших консультантов в деловых изданиях",
-    href: "/media/articles",
+    href: "/press-center/articles",
     icon: BookOpen,
     accent: C.orange,
     count: "20+",
@@ -98,15 +99,15 @@ const channels = [
   {
     title: "Инсайты и аналитика",
     description: "Исследования рынков, отраслевые обзоры и аналитические материалы",
-    href: "/media/insights",
+    href: "/press-center/insights",
     icon: TrendingUp,
     accent: C.mintDark,
     count: "15+",
   },
   {
     title: "Все публикации",
-    description: "Медиацентр — единая лента новостей, статей и аналитики",
-    href: "/media",
+    description: "Пресс-центр — единая лента новостей, статей и аналитики",
+    href: "/press-center",
     icon: Newspaper,
     accent: C.dark,
     count: "50+",
@@ -148,44 +149,13 @@ const pressKit = [
   },
 ];
 
-const latestNews = [
-  {
-    title: "Арасака вошла в рейтинг ТОП-50 консалтинговых компаний России",
-    category: "Новости",
-    date: "20 января 2026",
-    type: "news",
-  },
-  {
-    title: "Как выбрать BI-систему для вашего бизнеса: сравнительный обзор",
-    category: "Статьи",
-    date: "18 января 2026",
-    type: "articles",
-  },
-  {
-    title: "Тренды цифровой трансформации 2026: ключевые направления",
-    category: "Инсайты",
-    date: "15 января 2026",
-    type: "insights",
-  },
-  {
-    title: "Арасака — партнёр конференции «Цифровая экономика 2026»",
-    category: "Новости",
-    date: "10 января 2026",
-    type: "news",
-  },
-  {
-    title: "Обзор рынка M&A в России: итоги 2025 года",
-    category: "Инсайты",
-    date: "8 января 2026",
-    type: "insights",
-  },
-  {
-    title: "ESG-трансформация: практическое руководство для бизнеса",
-    category: "Статьи",
-    date: "5 января 2026",
-    type: "articles",
-  },
-];
+const latestNews = getLatestPublications(6).map((p) => ({
+  title: p.title,
+  category: p.type === "news" ? "Новости" : p.type === "article" ? "Статьи" : "Инсайты",
+  date: p.date,
+  type: p.type,
+  slug: p.slug,
+}));
 
 const mediaContacts = [
   {
@@ -472,7 +442,7 @@ export default function PressCenterPage() {
               </h2>
             </div>
             <Link
-              href="/media"
+              href="/press-center"
               className="inline-flex items-center gap-2 px-6 py-3 font-medium shrink-0 transition-colors text-[13px]"
               style={{ border: `2px solid ${C.dna}`, color: C.dna }}
             >
@@ -483,7 +453,7 @@ export default function PressCenterPage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {latestNews.map((item, index) => {
-              const accent = item.type === "news" ? C.dna : item.type === "articles" ? C.orange : C.mintDark;
+              const accent = item.type === "news" ? C.dna : item.type === "article" ? C.orange : C.mintDark;
               return (
                 <motion.article
                   key={item.title}
@@ -493,7 +463,7 @@ export default function PressCenterPage() {
                   viewport={vp}
                   custom={index * 0.06}
                 >
-                  <Link href="/media" className="group block h-full">
+                  <Link href={`/press-center/${item.slug}`} className="group block h-full">
                     <div
                       className="relative overflow-hidden rounded-lg border h-full flex flex-col"
                       style={{ background: C.white, borderColor: C.border }}

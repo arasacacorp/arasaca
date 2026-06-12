@@ -108,7 +108,7 @@ export default function EventsSection() {
           className="mt-10 pt-10 border-t border-gray-300 flex justify-center"
         >
           <Link
-            href="/media"
+            href="/press-center"
             className="inline-flex items-center gap-2 px-8 py-4 border border-[#008C95] text-[#008C95] font-medium hover:bg-[#008C95] hover:text-white transition-colors"
           >
             Все мероприятия

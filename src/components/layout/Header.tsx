@@ -120,15 +120,15 @@ const navigation = [
     ],
   },
   {
-    name: "Медиа",
-    href: "/media",
+    name: "Пресс-центр",
+    href: "/press-center",
     inHeader: true,
     description: "Новости, статьи экспертов и аналитические материалы о рынке и наших проектах.",
     submenu: [
-      { name: "Новости компании", href: "/media/news" },
-      { name: "Статьи", href: "/media/articles" },
-      { name: "Инсайты и аналитика", href: "/media/insights" },
-      { name: "Все материалы", href: "/media" },
+      { name: "Новости компании", href: "/press-center/news" },
+      { name: "Статьи", href: "/press-center/articles" },
+      { name: "Инсайты и аналитика", href: "/press-center/insights" },
+      { name: "Все материалы", href: "/press-center" },
     ],
   },
   {
@@ -160,7 +160,7 @@ const navigation = [
       { name: "Pro bono", href: "/pro-bono" },
       { name: "Обратная связь", href: "/feedback" },
       { name: "Мероприятия", href: "#events" },
-      { name: "Публикации", href: "/media" },
+      { name: "Публикации", href: "/press-center" },
     ],
   },
   { name: "Карьера", href: "/career", inHeader: false, description: "Присоединяйтесь к команде. Мы ищем талантливых специалистов в консалтинг и аналитику." },
@@ -229,7 +229,7 @@ export function Header() {
     // Teal (#008C95) hero pages
     if (/^\/cases\/[^/]+$/.test(path)) return "teal"
     // Light mint (#e8f5f3) hero pages
-    if (path.startsWith("/media")) return "mint"
+    if (path.startsWith("/press-center")) return "mint"
     if (path === "/solutions/master-planning") return "mint"
     // Default: light gray (#f1f2f4)
     return "light"

@@ -1,0 +1,848 @@
+     1→"use client";
+     2→
+     3→import { useState } from "react";
+     4→import { motion } from "framer-motion";
+     5→import Link from "next/link";
+     6→import {
+     7→  ChevronRight,
+     8→  ArrowRight,
+     9→  Calendar,
+    10→  Tag,
+    11→  TrendingUp,
+    12→  Newspaper,
+    13→  Lightbulb,
+    14→  Filter,
+    15→  BookOpen,
+    16→  Users,
+    17→  Layers,
+    18→  Sparkles,
+    19→  Mail,
+    20→} from "lucide-react";
+    21→import { C } from "@/lib/colors";
+    22→
+    23→/* ─── Animation variants ─── */
+    24→const fadeUp = {
+    25→  hidden: { opacity: 0, y: 32 },
+    26→  visible: (i: number = 0) => ({
+    27→    opacity: 1,
+    28→    y: 0,
+    29→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    30→  }),
+    31→};
+    32→
+    33→const fadeIn = {
+    34→  hidden: { opacity: 0 },
+    35→  visible: (i: number = 0) => ({
+    36→    opacity: 1,
+    37→    transition: { duration: 0.8, delay: i * 0.12 },
+    38→  }),
+    39→};
+    40→
+    41→const scaleIn = {
+    42→  hidden: { opacity: 0, scale: 0.92 },
+    43→  visible: (i: number = 0) => ({
+    44→    opacity: 1,
+    45→    scale: 1,
+    46→    transition: { duration: 0.6, delay: i * 0.08, ease: [0.22, 0.61, 0.36, 1] },
+    47→  }),
+    48→};
+    49→
+    50→const vp = { once: true, amount: 0.15 as const };
+    51→
+    52→/* ─── Section label component ─── */
+    53→function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+    54→  return (
+    55→    <motion.span
+    56→      className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+    57→      style={{ color: light ? C.mint : C.dna }}
+    58→      variants={fadeIn}
+    59→      initial="hidden"
+    60→      whileInView="visible"
+    61→      viewport={vp}
+    62→    >
+    63→      {children}
+    64→    </motion.span>
+    65→  );
+    66→}
+    67→
+    68→/* ═══════════════════════════════════════════════════════
+    69→   DATA
+    70→   ═══════════════════════════════════════════════════════ */
+    71→
+    72→const featuredArticle = {
+    73→  title: "Тренды цифровой трансформации 2026",
+    74→  category: "Аналитика",
+    75→  date: "15 января 2026",
+    76→  description:
+    77→    "Ключевые направления цифровизации бизнеса в 2026 году: искусственный интеллект, автоматизация процессов и новые технологии управления данными.",
+    78→  image: null,
+    79→  type: "insights",
+    80→};
+    81→
+    82→const publications = [
+    83→  {
+    84→    title: "Арасака открывает новое направление консалтинга",
+    85→    category: "Новости",
+    86→    date: "20 января 2026",
+    87→    description:
+    88→      "Мы рады announce открытие нового направления, специализирующегося на цифровой трансформации и технологическом консалтинге.",
+    89→    type: "news",
+    90→  },
+    91→  {
+    92→    title: "Как выбрать BI-систему для вашего бизнеса",
+    93→    category: "Статьи",
+    94→    date: "18 января 2026",
+    95→    description:
+    96→      "Сравнительный анализ популярных BI-платформ и рекомендации по выбору оптимального решения.",
+    97→    type: "articles",
+    98→  },
+    99→  {
+   100→    title: "Обзор рынка M&A в России 2025",
+   101→    category: "Аналитика",
+   102→    date: "15 января 2026",
+   103→    description:
+   104→      "Ежегодный обзор рынка слияний и поглощений: ключевые сделки, тренды и прогнозы на 2026 год.",
+   105→    type: "insights",
+   106→  },
+   107→  {
+   108→    title: "Интервью: стратегии роста в условиях неопределённости",
+   109→    category: "Статьи",
+   110→    date: "12 января 2026",
+   111→    description:
+   112→      "Экспертное мнение о том, как компаниям адаптироваться к изменениям и находить новые возможности.",
+   113→    type: "articles",
+   114→  },
+   115→  {
+   116→    title: "Арасака — партнёр конференции «Цифровая экономика»",
+   117→    category: "Новости",
+   118→    date: "10 января 2026",
+   119→    description:
+   120→      "Компания стала официальным партнёром ежегодной конференции по цифровой трансформации бизнеса.",
+   121→    type: "news",
+   122→  },
+   123→  {
+   124→    title: "Прогноз развития рынка облачных технологий",
+   125→    category: "Аналитика",
+   126→    date: "8 января 2026",
+   127→    description:
+   128→      "Анализ текущего состояния и перспективы развития облачного рынка в России и мире.",
+   129→    type: "insights",
+   130→  },
+   131→  {
+   132→    title: "ESG-трансформация: практическое руководство",
+   133→    category: "Статьи",
+   134→    date: "5 января 2026",
+   135→    description:
+   136→      "Как интегрировать принципы устойчивого развития в бизнес-процессы компании.",
+   137→    type: "articles",
+   138→  },
+   139→  {
+   140→    title: "Итоги года: ключевые достижения Арасаки",
+   141→    category: "Новости",
+   142→    date: "28 декабря 2025",
+   143→    description:
+   144→      "Подводим итоги 2025 года: реализованные проекты, новые направления и достижения команды.",
+   145→    type: "news",
+   146→  },
+   147→  {
+   148→    title: "Инвестиции в IT: куда движется рынок",
+   149→    category: "Аналитика",
+   150→    date: "25 декабря 2025",
+   151→    description:
+   152→      "Обзор инвестиционной активности в технологическом секторе и прогнозы на ближайшие годы.",
+   153→    type: "insights",
+   154→  },
+   155→];
+   156→
+   157→const categories = [
+   158→  { id: "all", name: "Все материалы", icon: Filter },
+   159→  { id: "news", name: "Новости компании", icon: Newspaper },
+   160→  { id: "articles", name: "Статьи", icon: Tag },
+   161→  { id: "insights", name: "Инсайты и аналитика", icon: TrendingUp },
+   162→];
+   163→
+   164→const industries = [
+   165→  "Все отрасли",
+   166→  "Финансы",
+   167→  "Энергетика",
+   168→  "Промышленность",
+   169→  "Телеком",
+   170→  "Ритейл",
+   171→  "IT",
+   172→];
+   173→
+   174→const years = ["2026", "2025", "2024"];
+   175→
+   176→/* Category color map — using C tokens */
+   177→const categoryColorMap: Record<string, string> = {
+   178→  news: C.orange,
+   179→  articles: C.dna,
+   180→  insights: C.mintDark,
+   181→};
+   182→
+   183→/* Stats */
+   184→const mediaStats = [
+   185→  { number: "9", label: "публикаций", icon: BookOpen, accent: C.dna },
+   186→  { number: "3", label: "направления", icon: Layers, accent: C.orange },
+   187→  { number: "30+", label: "экспертов-авторов", icon: Users, accent: C.mintDark },
+   188→  { number: "2026", label: "год основания", icon: Sparkles, accent: C.dna },
+   189→];
+   190→
+   191→/* ═══════════════════════════════════════════════════════
+   192→   SECTION 1 — HERO
+   193→   ═══════════════════════════════════════════════════════ */
+   194→function HeroSection() {
+   195→  return (
+   196→    <section className="relative overflow-hidden pt-16 lg:pt-[120px]" style={{ background: C.dark }}>
+   197→      {/* Decorative diagonal lines */}
+   198→      <div
+   199→        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   200→        style={{
+   201→          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   202→        }}
+   203→      />
+   204→      {/* Decorative glow orbs */}
+   205→      <div
+   206→        className="pointer-events-none absolute -right-40 -top-20 h-[500px] w-[500px] rounded-full blur-[180px]"
+   207→        style={{ background: "rgba(0,140,149,0.15)" }}
+   208→      />
+   209→      <div
+   210→        className="pointer-events-none absolute -left-20 bottom-0 h-[300px] w-[300px] rounded-full blur-[120px]"
+   211→        style={{ background: "rgba(119,226,195,0.08)" }}
+   212→      />
+   213→
+   214→      <div className="container-kept relative z-10">
+   215→        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between py-6 md:py-10 lg:py-12">
+   216→          {/* LEFT: Breadcrumb + Label + Heading + Subtitle + CTA */}
+   217→          <motion.div
+   218→            className="flex-1"
+   219→            variants={fadeUp}
+   220→            initial="hidden"
+   221→            animate="visible"
+   222→            custom={0.1}
+   223→          >
+   224→            {/* Breadcrumb */}
+   225→            <motion.nav
+   226→              className="flex items-center gap-2 mb-6"
+   227→              initial={{ opacity: 0 }}
+   228→              animate={{ opacity: 1 }}
+   229→              transition={{ duration: 0.5, delay: 0.1 }}
+   230→            >
+   231→              <Link
+   232→                href="/"
+   233→                className="text-[12px] transition-colors hover:text-white"
+   234→                style={{ color: "rgba(255,255,255,0.4)" }}
+   235→              >
+   236→                Главная
+   237→              </Link>
+   238→              <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   239→              <span className="text-[12px] font-medium" style={{ color: C.mint }}>
+   240→                Медиацентр
+   241→              </span>
+   242→            </motion.nav>
+   243→
+   244→            {/* Label badge */}
+   245→            <span
+   246→              className="mb-4 inline-flex items-center gap-2 border px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.3em]"
+   247→              style={{ borderColor: "rgba(119,226,195,0.4)", color: C.mint }}
+   248→            >
+   249→              <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: C.mint }} />
+   250→              Медиа
+   251→            </span>
+   252→
+   253→            {/* Main heading */}
+   254→            <motion.h1
+   255→              className="mb-4 max-w-lg"
+   256→              style={{
+   257→                fontFamily: "var(--font-russo)",
+   258→                fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   259→                fontWeight: 700,
+   260→                lineHeight: 1.25,
+   261→                letterSpacing: "-0.01em",
+   262→                color: C.white,
+   263→              }}
+   264→              initial={{ opacity: 0, y: 16 }}
+   265→              animate={{ opacity: 1, y: 0 }}
+   266→              transition={{ duration: 0.6, delay: 0.15 }}
+   267→            >
+   268→              Медиацентр
+   269→            </motion.h1>
+   270→
+   271→            {/* Subtitle */}
+   272→            <motion.p
+   273→              className="mb-6 max-w-md text-[14px] font-light leading-relaxed"
+   274→              style={{ color: "rgba(255,255,255,0.55)" }}
+   275→              initial={{ opacity: 0, y: 12 }}
+   276→              animate={{ opacity: 1, y: 0 }}
+   277→              transition={{ duration: 0.6, delay: 0.3 }}
+   278→            >
+   279→              Единый доступ ко всем публикациям Арасака Консалтинг&nbsp;— статьи,
+   280→              аналитика, интервью, новости и&nbsp;исследования.
+   281→            </motion.p>
+   282→
+   283→            {/* CTA buttons */}
+   284→            <motion.div
+   285→              className="flex flex-wrap items-center gap-3"
+   286→              initial={{ opacity: 0, y: 12 }}
+   287→              animate={{ opacity: 1, y: 0 }}
+   288→              transition={{ duration: 0.6, delay: 0.45 }}
+   289→            >
+   290→              <a href="#publications">
+   291→                <motion.span
+   292→                  className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white"
+   293→                  style={{ background: C.dna, borderRadius: "4px" }}
+   294→                  whileHover={{ background: C.dnaHover, transition: { duration: 0.3 } }}
+   295→                >
+   296→                  Все публикации
+   297→                  <ArrowRight className="h-4 w-4" />
+   298→                </motion.span>
+   299→              </a>
+   300→              <a href="#newsletter">
+   301→                <motion.span
+   302→                  className="inline-flex items-center gap-2 border px-7 py-3 text-sm font-medium uppercase tracking-[0.05em]"
+   303→                  style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)", borderRadius: "4px" }}
+   304→                  whileHover={{
+   305→                    borderColor: C.mint,
+   306→                    color: C.mint,
+   307→                    transition: { duration: 0.3 },
+   308→                  }}
+   309→                >
+   310→                  Подписаться
+   311→                </motion.span>
+   312→              </a>
+   313→            </motion.div>
+   314→          </motion.div>
+   315→
+   316→          {/* RIGHT: Stats — 4 cards in 2x2 grid */}
+   317→          <motion.div
+   318→            className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:w-[420px] lg:flex-shrink-0 lg:gap-4"
+   319→            variants={fadeUp}
+   320→            initial="hidden"
+   321→            animate="visible"
+   322→            custom={0.3}
+   323→          >
+   324→            {mediaStats.map((stat, index) => (
+   325→              <motion.div
+   326→                key={stat.label}
+   327→                className="relative overflow-hidden rounded-lg p-5 md:p-6"
+   328→                style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }}
+   329→                variants={scaleIn}
+   330→                initial="hidden"
+   331→                animate="visible"
+   332→                custom={0.4 + index * 0.08}
+   333→              >
+   334→                {/* Top accent line */}
+   335→                <div
+   336→                  className="absolute left-0 top-0 h-0.5 w-full"
+   337→                  style={{ background: `linear-gradient(90deg, ${stat.accent}, ${stat.accent}50)` }}
+   338→                />
+   339→                <stat.icon className="mb-3 h-5 w-5" style={{ color: stat.accent }} />
+   340→                <div
+   341→                  className="text-2xl font-bold leading-none md:text-3xl"
+   342→                  style={{ fontFamily: "var(--font-russo)", color: C.white }}
+   343→                >
+   344→                  {stat.number}
+   345→                </div>
+   346→                <div
+   347→                  className="mt-1.5 text-[11px] font-medium leading-tight"
+   348→                  style={{ color: "rgba(255,255,255,0.45)" }}
+   349→                >
+   350→                  {stat.label}
+   351→                </div>
+   352→              </motion.div>
+   353→            ))}
+   354→          </motion.div>
+   355→        </div>
+   356→      </div>
+   357→    </section>
+   358→  );
+   359→}
+   360→
+   361→/* ═══════════════════════════════════════════════════════
+   362→   SECTION 2 — CATEGORY TABS
+   363→   ═══════════════════════════════════════════════════════ */
+   364→function CategoryTabsSection({
+   365→  activeCategory,
+   366→  setActiveCategory,
+   367→}: {
+   368→  activeCategory: string;
+   369→  setActiveCategory: (v: string) => void;
+   370→}) {
+   371→  return (
+   372→    <section className="py-6 border-b" style={{ borderColor: C.border, background: C.white }}>
+   373→      <div className="container-kept">
+   374→        <div className="flex flex-wrap gap-2">
+   375→          {categories.map((cat, index) => (
+   376→            <motion.button
+   377→              key={cat.id}
+   378→              onClick={() => setActiveCategory(cat.id)}
+   379→              className="flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all duration-300"
+   380→              style={{
+   381→                background: activeCategory === cat.id ? C.dna : `${C.dna}10`,
+   382→                color: activeCategory === cat.id ? C.white : C.dna,
+   383→                borderRadius: "4px",
+   384→              }}
+   385→              variants={fadeUp}
+   386→              initial="hidden"
+   387→              whileInView="visible"
+   388→              viewport={vp}
+   389→              custom={index * 0.06}
+   390→              whileHover={
+   391→                activeCategory !== cat.id
+   392→                  ? { background: `${C.dna}20`, transition: { duration: 0.2 } }
+   393→                  : undefined
+   394→              }
+   395→            >
+   396→              <cat.icon className="w-4 h-4" />
+   397→              {cat.name}
+   398→            </motion.button>
+   399→          ))}
+   400→        </div>
+   401→      </div>
+   402→    </section>
+   403→  );
+   404→}
+   405→
+   406→/* ═══════════════════════════════════════════════════════
+   407→   SECTION 3 — FEATURED ARTICLE
+   408→   ═══════════════════════════════════════════════════════ */
+   409→function FeaturedSection() {
+   410→  return (
+   411→    <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   412→      <div className="container-kept">
+   413→        <SectionLabel>Избранное</SectionLabel>
+   414→
+   415→        <motion.div
+   416→          variants={fadeUp}
+   417→          initial="hidden"
+   418→          whileInView="visible"
+   419→          viewport={vp}
+   420→          custom={0.1}
+   421→        >
+   422→          <Link href="/media/insights/trends-2026" className="block group">
+   423→            <div className="grid lg:grid-cols-2 gap-0 overflow-hidden rounded-lg border transition-all duration-300 hover:shadow-xl" style={{ borderColor: C.border }}>
+   424→              {/* Image placeholder */}
+   425→              <div
+   426→                className="relative aspect-video lg:aspect-auto lg:h-full flex items-center justify-center overflow-hidden"
+   427→                style={{ background: `linear-gradient(135deg, ${C.dna}, ${C.dark})` }}
+   428→              >
+   429→                {/* Decorative dot pattern */}
+   430→                <div
+   431→                  className="pointer-events-none absolute inset-0 opacity-[0.06]"
+   432→                  style={{
+   433→                    backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+   434→                    backgroundSize: "16px 16px",
+   435→                  }}
+   436→                />
+   437→                <TrendingUp className="w-24 h-24 relative z-10" style={{ color: "rgba(255,255,255,0.2)" }} />
+   438→                {/* Accent corner */}
+   439→                <div
+   440→                  className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   441→                  style={{ background: C.mint }}
+   442→                />
+   443→              </div>
+   444→
+   445→              {/* Content */}
+   446→              <div className="relative p-8 lg:p-12 flex flex-col justify-center bg-white">
+   447→                <div className="flex items-center gap-3 mb-4">
+   448→                  <span
+   449→                    className="px-3 py-1 text-xs font-medium text-white"
+   450→                    style={{ background: C.dna, borderRadius: "4px" }}
+   451→                  >
+   452→                    {featuredArticle.category}
+   453→                  </span>
+   454→                  <span
+   455→                    className="flex items-center gap-1 text-sm"
+   456→                    style={{ color: C.textMuted }}
+   457→                  >
+   458→                    <Calendar className="w-4 h-4" />
+   459→                    {featuredArticle.date}
+   460→                  </span>
+   461→                </div>
+   462→                <h2
+   463→                  className="heading-section mb-4 transition-colors duration-300 group-hover:translate-x-0.5"
+   464→                  style={{ color: C.textDark }}
+   465→                >
+   466→                  {featuredArticle.title}
+   467→                </h2>
+   468→                <p className="text-section-desc mb-6">
+   469→                  {featuredArticle.description}
+   470→                </p>
+   471→                <div
+   472→                  className="flex items-center gap-2 font-medium transition-all duration-300 group-hover:gap-3"
+   473→                  style={{ color: C.dna }}
+   474→                >
+   475→                  Читать
+   476→                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+   477→                </div>
+   478→              </div>
+   479→            </div>
+   480→          </Link>
+   481→        </motion.div>
+   482→      </div>
+   483→    </section>
+   484→  );
+   485→}
+   486→
+   487→/* ═══════════════════════════════════════════════════════
+   488→   SECTION 4 — FILTERS + PUBLICATIONS GRID
+   489→   ═══════════════════════════════════════════════════════ */
+   490→function PublicationsSection({
+   491→  activeCategory,
+   492→  activeIndustry,
+   493→  activeYear,
+   494→  showFilters,
+   495→  setShowFilters,
+   496→  setActiveIndustry,
+   497→  setActiveYear,
+   498→  filteredPublications,
+   499→}: {
+   500→  activeCategory: string;
+   501→  activeIndustry: string;
+   502→  activeYear: string;
+   503→  showFilters: boolean;
+   504→  setShowFilters: (v: boolean) => void;
+   505→  setActiveIndustry: (v: string) => void;
+   506→  setActiveYear: (v: string) => void;
+   507→  filteredPublications: typeof publications;
+   508→}) {
+   509→  return (
+   510→    <section id="publications" className="py-20 md:py-28" style={{ background: C.white }}>
+   511→      <div className="container-kept">
+   512→        {/* Section header */}
+   513→        <motion.div
+   514→          className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   515→          variants={fadeUp}
+   516→          initial="hidden"
+   517→          whileInView="visible"
+   518→          viewport={vp}
+   519→        >
+   520→          <div>
+   521→            <SectionLabel>Публикации</SectionLabel>
+   522→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   523→              Все материалы
+   524→            </h2>
+   525→          </div>
+   526→          <p className="text-section-desc max-w-xs lg:text-right">
+   527→            Фильтруйте по&nbsp;категории, отрасли<br />или&nbsp;году публикации
+   528→          </p>
+   529→        </motion.div>
+   530→
+   531→        {/* Filters */}
+   532→        <motion.div
+   533→          className="mb-8 flex flex-wrap items-center gap-4 rounded-lg p-4"
+   534→          style={{ background: C.muted, borderRadius: "8px" }}
+   535→          variants={fadeUp}
+   536→          initial="hidden"
+   537→          whileInView="visible"
+   538→          viewport={vp}
+   539→          custom={0.2}
+   540→        >
+   541→          <button
+   542→            onClick={() => setShowFilters(!showFilters)}
+   543→            className="flex items-center gap-2 px-4 py-2 border text-sm font-medium transition-all duration-300"
+   544→            style={{
+   545→              borderColor: showFilters ? C.dna : C.border,
+   546→              color: showFilters ? C.dna : C.textMid,
+   547→              borderRadius: "4px",
+   548→              background: showFilters ? `${C.dna}10` : C.white,
+   549→            }}
+   550→          >
+   551→            <Filter className="w-4 h-4" />
+   552→            Фильтры
+   553→          </button>
+   554→
+   555→          {showFilters && (
+   556→            <div className="flex flex-wrap gap-4 w-full lg:w-auto">
+   557→              {/* Industry Filter */}
+   558→              <select
+   559→                value={activeIndustry}
+   560→                onChange={(e) => setActiveIndustry(e.target.value)}
+   561→                className="px-4 py-2 border text-sm focus:outline-none transition-colors"
+   562→                style={{
+   563→                  borderColor: C.border,
+   564→                  color: C.textMid,
+   565→                  borderRadius: "4px",
+   566→                  background: C.white,
+   567→                }}
+   568→              >
+   569→                {industries.map((ind) => (
+   570→                  <option key={ind} value={ind}>
+   571→                    {ind}
+   572→                  </option>
+   573→                ))}
+   574→              </select>
+   575→
+   576→              {/* Year Filter */}
+   577→              <select
+   578→                value={activeYear}
+   579→                onChange={(e) => setActiveYear(e.target.value)}
+   580→                className="px-4 py-2 border text-sm focus:outline-none transition-colors"
+   581→                style={{
+   582→                  borderColor: C.border,
+   583→                  color: C.textMid,
+   584→                  borderRadius: "4px",
+   585→                  background: C.white,
+   586→                }}
+   587→              >
+   588→                {years.map((year) => (
+   589→                  <option key={year} value={year}>
+   590→                    {year}
+   591→                  </option>
+   592→                ))}
+   593→              </select>
+   594→            </div>
+   595→          )}
+   596→
+   597→          <div className="ml-auto text-sm font-medium" style={{ color: C.textMuted }}>
+   598→            {filteredPublications.length}{" "}
+   599→            {filteredPublications.length === 1
+   600→              ? "материал"
+   601→              : filteredPublications.length < 5
+   602→              ? "материала"
+   603→              : "материалов"}
+   604→          </div>
+   605→        </motion.div>
+   606→
+   607→        {/* Publications Grid */}
+   608→        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+   609→          {filteredPublications.map((publication, index) => {
+   610→            const catColor = categoryColorMap[publication.type] || C.dna;
+   611→            return (
+   612→              <motion.article
+   613→                key={index}
+   614→                className="group relative overflow-hidden rounded-lg bg-white p-5 md:p-6 transition-all duration-300 hover:shadow-lg"
+   615→                style={{ border: `1px solid ${C.borderLight}` }}
+   616→                variants={fadeUp}
+   617→                initial="hidden"
+   618→                whileInView="visible"
+   619→                viewport={vp}
+   620→                custom={index * 0.06}
+   621→              >
+   622→                {/* Left accent line */}
+   623→                <div
+   624→                  className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   625→                  style={{ background: catColor }}
+   626→                />
+   627→                {/* Subtle dot pattern */}
+   628→                <div
+   629→                  className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   630→                  style={{
+   631→                    backgroundImage: `radial-gradient(circle, ${catColor} 1px, transparent 1px)`,
+   632→                    backgroundSize: "16px 16px",
+   633→                  }}
+   634→                />
+   635→
+   636→                <Link
+   637→                  href={`/media/${publication.type}/${
+   638→                    publication.title.toLowerCase().split(" ").slice(0, 3).join("-") || "article"
+   639→                  }`}
+   640→                  className="relative z-10 block"
+   641→                >
+   642→                  {/* Icon placeholder */}
+   643→                  <div
+   644→                    className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg"
+   645→                    style={{ background: `${catColor}14` }}
+   646→                  >
+   647→                    {publication.type === "news" && <Newspaper className="h-5 w-5" style={{ color: catColor }} />}
+   648→                    {publication.type === "articles" && <Tag className="h-5 w-5" style={{ color: catColor }} />}
+   649→                    {publication.type === "insights" && <Lightbulb className="h-5 w-5" style={{ color: catColor }} />}
+   650→                  </div>
+   651→
+   652→                  {/* Category badge */}
+   653→                  <div className="flex items-center gap-3 mb-3">
+   654→                    <span
+   655→                      className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider"
+   656→                      style={{ background: `${catColor}14`, color: catColor, borderRadius: "4px" }}
+   657→                    >
+   658→                      {publication.category}
+   659→                    </span>
+   660→                  </div>
+   661→
+   662→                  {/* Date */}
+   663→                  <span
+   664→                    className="text-[12px] mb-2 block"
+   665→                    style={{ color: C.textMuted }}
+   666→                  >
+   667→                    {publication.date}
+   668→                  </span>
+   669→
+   670→                  {/* Title */}
+   671→                  <h3
+   672→                    className="heading-subsection mb-2 transition-colors duration-300"
+   673→                    style={{ color: C.textDark }}
+   674→                  >
+   675→                    <span className="group-hover:translate-x-0.5 inline-block transition-transform duration-300">
+   676→                      {publication.title}
+   677→                    </span>
+   678→                  </h3>
+   679→
+   680→                  {/* Description */}
+   681→                  <p className="text-section-desc line-clamp-2">
+   682→                    {publication.description}
+   683→                  </p>
+   684→
+   685→                  {/* Read link */}
+   686→                  <div
+   687→                    className="mt-4 flex items-center gap-1.5 text-sm font-medium transition-all duration-300 group-hover:gap-2.5"
+   688→                    style={{ color: C.dna }}
+   689→                  >
+   690→                    Читать
+   691→                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+   692→                  </div>
+   693→                </Link>
+   694→              </motion.article>
+   695→            );
+   696→          })}
+   697→        </div>
+   698→
+   699→        {/* Load More Button */}
+   700→        <motion.div
+   701→          className="mt-12 text-center"
+   702→          variants={fadeUp}
+   703→          initial="hidden"
+   704→          whileInView="visible"
+   705→          viewport={vp}
+   706→        >
+   707→          <motion.button
+   708→            className="inline-flex items-center gap-2 px-8 py-4 border text-sm font-semibold uppercase tracking-[0.05em] transition-all duration-300"
+   709→            style={{ borderColor: C.dna, color: C.dna, borderRadius: "4px" }}
+   710→            whileHover={{
+   711→              background: C.dna,
+   712→              color: C.white,
+   713→              transition: { duration: 0.3 },
+   714→            }}
+   715→          >
+   716→            Показать ещё
+   717→            <ArrowRight className="w-4 h-4" />
+   718→          </motion.button>
+   719→        </motion.div>
+   720→      </div>
+   721→    </section>
+   722→  );
+   723→}
+   724→
+   725→/* ═══════════════════════════════════════════════════════
+   726→   SECTION 5 — NEWSLETTER / CTA
+   727→   ═══════════════════════════════════════════════════════ */
+   728→function NewsletterSection() {
+   729→  return (
+   730→    <section id="newsletter" className="relative overflow-hidden py-20 md:py-28" style={{ background: C.dark }}>
+   731→      {/* Decorative diagonal lines */}
+   732→      <div
+   733→        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   734→        style={{
+   735→          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   736→        }}
+   737→      />
+   738→      {/* Glow orb */}
+   739→      <div
+   740→        className="pointer-events-none absolute -right-40 top-0 h-[500px] w-[500px] rounded-full blur-[180px]"
+   741→        style={{ background: "rgba(0,140,149,0.10)" }}
+   742→      />
+   743→
+   744→      <div className="container-kept relative z-10">
+   745→        <motion.div
+   746→          className="max-w-2xl mx-auto text-center"
+   747→          variants={fadeUp}
+   748→          initial="hidden"
+   749→          whileInView="visible"
+   750→          viewport={vp}
+   751→          custom={0.1}
+   752→        >
+   753→          {/* Label */}
+   754→          <SectionLabel light>Рассылка</SectionLabel>
+   755→
+   756→          {/* Heading */}
+   757→          <h2
+   758→            className="mb-4"
+   759→            style={{
+   760→              fontFamily: "var(--font-russo)",
+   761→              fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
+   762→              fontWeight: 700,
+   763→              lineHeight: 1.25,
+   764→              color: C.white,
+   765→            }}
+   766→          >
+   767→            Подпишитесь на&nbsp;рассылку
+   768→          </h2>
+   769→
+   770→          {/* Subtitle */}
+   771→          <p
+   772→            className="mb-8 text-[15px] font-light leading-relaxed"
+   773→            style={{ color: "rgba(255,255,255,0.5)" }}
+   774→          >
+   775→            Получайте свежие статьи, аналитику и&nbsp;новости компании прямо
+   776→            на&nbsp;вашу почту
+   777→          </p>
+   778→
+   779→          {/* Email form */}
+   780→          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+   781→            <input
+   782→              type="email"
+   783→              placeholder="Ваш email"
+   784→              className="flex-1 px-4 py-3 border text-sm focus:outline-none transition-colors"
+   785→              style={{
+   786→                background: "rgba(255,255,255,0.06)",
+   787→                borderColor: "rgba(255,255,255,0.15)",
+   788→                color: C.white,
+   789→                borderRadius: "4px",
+   790→              }}
+   791→            />
+   792→            <motion.button
+   793→              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white"
+   794→              style={{ background: C.orange, borderRadius: "4px" }}
+   795→              whileHover={{ background: C.orangeHover, transition: { duration: 0.3 } }}
+   796→            >
+   797→              <Mail className="w-4 h-4" />
+   798→              Подписаться
+   799→            </motion.button>
+   800→          </div>
+   801→
+   802→          {/* Disclaimer */}
+   803→          <p className="mt-4 text-[12px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+   804→            Нажимая «Подписаться», вы соглашаетесь с&nbsp;политикой обработки персональных данных
+   805→          </p>
+   806→        </motion.div>
+   807→      </div>
+   808→    </section>
+   809→  );
+   810→}
+   811→
+   812→/* ═══════════════════════════════════════════════════════
+   813→   PAGE
+   814→   ═══════════════════════════════════════════════════════ */
+   815→export default function MediaPage() {
+   816→  const [activeCategory, setActiveCategory] = useState("all");
+   817→  const [activeIndustry, setActiveIndustry] = useState("Все отрасли");
+   818→  const [activeYear, setActiveYear] = useState("2026");
+   819→  const [showFilters, setShowFilters] = useState(false);
+   820→
+   821→  const filteredPublications =
+   822→    activeCategory === "all"
+   823→      ? publications
+   824→      : publications.filter((p) => p.type === activeCategory);
+   825→
+   826→  return (
+   827→    <main className="min-h-screen flex flex-col" style={{ background: C.white }}>
+   828→      <HeroSection />
+   829→      <CategoryTabsSection
+   830→        activeCategory={activeCategory}
+   831→        setActiveCategory={setActiveCategory}
+   832→      />
+   833→      {activeCategory === "all" && <FeaturedSection />}
+   834→      <PublicationsSection
+   835→        activeCategory={activeCategory}
+   836→        activeIndustry={activeIndustry}
+   837→        activeYear={activeYear}
+   838→        showFilters={showFilters}
+   839→        setShowFilters={setShowFilters}
+   840→        setActiveIndustry={setActiveIndustry}
+   841→        setActiveYear={setActiveYear}
+   842→        filteredPublications={filteredPublications}
+   843→      />
+   844→      <NewsletterSection />
+   845→    </main>
+   846→  );
+   847→}
+   848→

@@ -174,7 +174,7 @@ const sectionCards = [
     description: "Новости, пресс-релизы, СМИ",
     bg: C.dna,
     textColor: C.white,
-    href: "/media",
+    href: "/press-center",
     icon: Newspaper,
   },
   {

@@ -46,7 +46,7 @@ export default function PublicationsSection() {
               Актуальные статьи, обзоры и исследования от наших экспертов.
             </p>
             <Link
-              href="/media"
+              href="/press-center"
               className="inline-flex items-center gap-2 text-white font-medium group"
             >
               Все публикации
@@ -114,7 +114,7 @@ export default function PublicationsSection() {
         {/* All publications link on mobile */}
         <div className="lg:hidden p-8 bg-gray-50">
           <Link
-            href="/media"
+            href="/press-center"
             className="inline-flex items-center gap-2 text-[#008C95] font-medium group"
           >
             Все публикации

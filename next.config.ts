@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   reactStrictMode: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
+  },
   allowedDevOrigins: [
     "preview-chat-793ed5ca-2672-49f1-8246-c5fc1e61a3d0.space-z.ai",
     "preview-chat-74280eb4-f32a-4645-af28-3038f6a8b2fd.space-z.ai",

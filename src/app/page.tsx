@@ -106,21 +106,21 @@ const newsItems = [
     title: "Арасака запускает платформу мастер-планирования для управления инвестиционными программами",
     category: "Технологии",
     categoryColor: C.dna,
-    href: "/media",
+    href: "/press-center",
   },
   {
     date: "29.04.2026",
     title: "Арасака и Агентство «ЦЕНТР» представили совместное решение для развития территорий",
     category: "Партнёрство",
     categoryColor: C.mintDark,
-    href: "/media",
+    href: "/press-center",
   },
   {
     date: "15.04.2026",
     title: "Новый офис Арасаки в Москве: расширение географии консалтинга",
     category: "Компания",
     categoryColor: C.orange,
-    href: "/media",
+    href: "/press-center",
   },
 ];
 
@@ -155,7 +155,7 @@ const sectionCards = [
     description: "Новости, пресс-релизы, СМИ",
     bg: C.dna,
     textColor: C.white,
-    href: "/media",
+    href: "/press-center",
     icon: Newspaper,
   },
   {
@@ -442,7 +442,7 @@ function HeroSection() {
 
                 <div className="mt-6">
                   <Link
-                    href="/media"
+                    href="/press-center"
                     className="group inline-flex items-center gap-2 text-sm font-semibold transition-colors"
                     style={{ color: C.dna }}
                   >
@@ -1507,7 +1507,7 @@ const publicationItems = [
     title: "Тренды цифровой трансформации 2026",
     description: "Ключевые направления цифровизации бизнеса: искусственный интеллект, автоматизация процессов и платформенные решения",
     date: "15.01.2026",
-    href: "/media",
+    href: "/press-center",
   },
   {
     category: "Инсайт",
@@ -1515,7 +1515,7 @@ const publicationItems = [
     title: "Российский рынок M&A: итоги года",
     description: "Ежегодный обзор рынка слияний и поглощений: ключевые сделки, драйверы роста и прогнозы на ближайшие годы",
     date: "10.01.2026",
-    href: "/media",
+    href: "/press-center",
   },
   {
     category: "Исследование",
@@ -1523,7 +1523,7 @@ const publicationItems = [
     title: "ESG-трансформация бизнеса",
     description: "Как интегрировать принципы устойчивого развития в бизнес-процессы и повысить инвестиционную привлекательность",
     date: "05.01.2026",
-    href: "/media",
+    href: "/press-center",
   },
   {
     category: "Статья",
@@ -1531,7 +1531,7 @@ const publicationItems = [
     title: "Мастер-планирование: новый подход к развитию территорий",
     description: "Опыт создания цифровых платформ для управления инвестиционными программами субъектов РФ",
     date: "28.12.2025",
-    href: "/media",
+    href: "/press-center",
   },
 ];
 
@@ -1614,7 +1614,7 @@ function PublicationsSection() {
         {/* CTA */}
         <div className="mt-10">
           <Link
-            href="/media"
+            href="/press-center"
             className="group inline-flex items-center gap-2 text-sm font-semibold transition-colors"
             style={{ color: C.dna }}
           >
@@ -1978,7 +1978,7 @@ function EventsSection() {
           className="mt-10 pt-10 border-t border-gray-300 flex justify-center"
         >
           <Link
-            href="/media"
+            href="/press-center"
             className="inline-flex items-center gap-2 px-8 py-4 border border-[#008C95] text-[#008C95] font-medium hover:bg-[#008C95] hover:text-white transition-colors"
           >
             Все мероприятия

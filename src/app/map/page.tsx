@@ -279,15 +279,15 @@ const categories: Cat[] = [
     accent: C.dna,
     links: [
       { name: "Пресс-центр", href: "/press-center" },
-      { name: "Все публикации", href: "/media" },
-      { name: "Новости", href: "/media/news" },
-      { name: "Статьи", href: "/media/articles" },
-      { name: "Инсайты", href: "/media/insights" },
+      { name: "Все публикации", href: "/press-center" },
+      { name: "Новости", href: "/press-center/news" },
+      { name: "Статьи", href: "/press-center/articles" },
+      { name: "Инсайты", href: "/press-center/insights" },
     ],
     subs: [
       {
         title: "Страницы новостей",
-        links: [{ name: "Ребрендинг", href: "/media/news/rebranding" }],
+        links: [{ name: "Ребрендинг", href: "/press-center/rebranding-2025" }]
       },
     ],
   },
