@@ -427,3 +427,24 @@ Stage Summary:
 - Шаблон публикации полностью переработан
 - Hero совпадает по стилю с сервисными страницами
 - Добавлен полезный сайдбар с контактами редакции и последними новостями
+---
+Task ID: 6
+Agent: main
+Task: Stage 6 — Рефакторинг homepage (2805 строк → 23 строки + 9 файлов)
+
+Work Log:
+- Проанализировал структуру page.tsx: 16 секций-функций, но только 8 используются в Home()
+- Удалил 8 мёртвых секций (ServicesSection, CasesSection, EventsSection, CareerSection, AchievementsSection, AboutSection, LabSection, ContactsSection) — -1019 строк
+- Создал src/data/homepage.ts — все инлайн-данные (newsItems, sectionCards, heroStats, businessCards, caseCards, labProducts, labStats, publicationItems, keyIndustrySlugs, keyIndustryColors, displayedIndustrySlugs + computed values). Иконки хранятся как строки.
+- Создал src/components/sections/HomeShared.tsx — SectionLabel, vp, iconMap, resolveIcon
+- Добавил slideInRight в src/lib/animations.ts
+- Создал 8 компонентных файлов: HomeHero, HomeBusinessDirections, HomeMission, HomeIndustries, HomeInnovation, HomeSolutions, HomePublications, HomeQuickLinks
+- Переписал page.tsx — 23 строки, серверный компонент, сборка из 8 секций
+- Lint чист, HTTP 200, Agent Browser — все 11 проверок пройдены
+
+Stage Summary:
+- page.tsx: 2806 → 23 строки (99.2% сокращение)
+- Данные вынесены в homepage.ts (325 строк)
+- 8 секций в отдельных файлах (87-312 строк каждая)
+- Анимации импортируются из @/lib/animations вместо инлайн
+- Визуально для пользователя — нулевые изменения

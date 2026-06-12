@@ -31,4 +31,13 @@ export const scaleIn = {
   }),
 };
 
+export const slideInRight = {
+  hidden: { opacity: 0, x: -20 },
+  visible: (i: number = 0) => ({
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+  }),
+};
+
 export const vp = { once: true, amount: 0.2 as const };
