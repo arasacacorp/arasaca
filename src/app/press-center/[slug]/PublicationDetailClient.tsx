@@ -69,7 +69,7 @@ function TypeBadge({ type }: { type: PublicationType }) {
       style={{ backgroundColor: bgColor, color: textColor }}
     >
       {typeIcons[type]}
-      {label.slice(0, -1)}
+      {label}
     </span>
   );
 }
@@ -327,12 +327,12 @@ export default function PublicationDetailClient({
                     </p>
                     <div className="space-y-3">
                       <Link
-                        href="mailto:press@arasaka.ru"
+                        href="mailto:press@arasaca.ru"
                         className="flex items-center gap-2 text-[13px] font-medium transition-colors hover:underline"
                         style={{ color: C.white }}
                       >
                         <Mail className="w-3.5 h-3.5" style={{ color: C.mint }} />
-                        press@arasaka.ru
+                        press@arasaca.ru
                       </Link>
                       <Link
                         href="tel:+74951234567"
