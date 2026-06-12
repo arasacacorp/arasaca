@@ -3,6 +3,7 @@ import { createMetadata } from "@/lib/seo";
 import { C } from "@/lib/colors";
 import { consultingSubDirections } from "@/data/consultingServices";
 import ServicePageTemplate from "@/components/templates/ServicePageTemplate";
+import { COMPANY_STATS_SERVICE } from "@/data/companyStats";
 
 export const metadata: Metadata = createMetadata({
   title: "Консалтинг",
@@ -32,9 +33,7 @@ export default function ConsultingPage() {
         subtitle: "Стратегический и управленческий консалтинг, финансовое моделирование, инвестиционное проектирование и управление проектами для комплексного развития бизнеса.",
         stats: [
           { number: "7", label: "практик", icon: "Briefcase", accent: C.dna },
-          { number: "80+", label: "услуг", icon: "ClipboardList", accent: C.mintDark },
-          { number: "50+", label: "экспертов", icon: "Users", accent: C.orange },
-          { number: "500+", label: "проектов", icon: "BarChart3", accent: C.dna },
+          ...COMPANY_STATS_SERVICE,
         ],
       }}
       directions={{

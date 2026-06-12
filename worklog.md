@@ -473,3 +473,35 @@ Stage Summary:
 - servicesData.ts: +4 опциональных поля в интерфейсах, +метаданные в данных, +buildHeaderServicesMenu() (55 строк)
 - Единый источник истины: servicesData.ts — при изменении структуры услуг обновляем 1 место
 - Визуально для пользователя — нулевые изменения
+
+---
+Task ID: 8
+Agent: main
+Task: Этап 8 — Разное: quickLinks, статистика, хардкод, якоря, китайский символ
+
+Work Log:
+1. learningServices.ts:107 — заменил китайский символ 捕获 на русское «сбор»
+2. Footer.tsx:30 — заменил href: "#publications" → href: "/press-center"
+3. PublicationDetailClient.tsx — проверен, #f1f2f4 уже исправлен (C.muted), хардкод отсутствует
+4. quickLinks — заменены 3 инлайн-копии на импорт из @/data/quickLinks:
+   - cases/page.tsx (удалено ~50 строк)
+   - cases/[slug]/page.tsx (удалено ~50 строк)
+   - contacts/page.tsx (удалено ~50 строк)
+   - Обновлён @/data/quickLinks.ts: href "/solutions" → "/solutions/master-planning" (как во всех инлайн-копиях)
+5. Статистика — создан @/data/companyStats.ts с двумя константами:
+   - COMPANY_STATS_SERVICE (string icons) — для 9 сервисных страниц + ServicePageTemplate
+   - COMPANY_STATS_LUCIDE (Lucide components) — для ServiceSlugPageTemplate
+   - Заменено в 9 сервисных страницах: 3 инлайн-строки → ...COMPANY_STATS_SERVICE
+   - Заменено в ServiceSlugPageTemplate: 3 инлайн-строки → ...COMPANY_STATS_LUCIDE
+   - Итого: 10 файлов × 3 строки = 30 строк → 1 spread каждая
+6. Исправлены ошибки с иконками: Briefcase в cases/page.tsx и contacts/page.tsx использовались вне quickLinks
+
+Stage Summary:
+- 5 исправлений из 5 (все пункты пользователя выполнены)
+- quickLinks: 3 инлайн-копии удалены, единый источник @/data/quickLinks
+- Статистика: 10 файлов используют константу, остальные имеют уникальные комбинации
+- Footer: якорь #publications → /press-center
+- Китайский символ: 捕获 → сбор
+- PublicationDetailClient: уже исправлен ранее
+- Lint чист, все 14 ключевых страниц — HTTP 200
+- Визуальная проверка пройдена: все страницы рендерятся корректно

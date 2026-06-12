@@ -37,7 +37,7 @@ export const quickLinks = [
     description: "Цифровые продукты и платформы",
     bg: "#ffffff",
     textColor: "#1a1a1a",
-    href: "/solutions",
+    href: "/solutions/master-planning",
     icon: Layers,
   },
   {

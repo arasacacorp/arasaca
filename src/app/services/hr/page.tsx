@@ -3,6 +3,7 @@ import { createMetadata } from "@/lib/seo";
 import { C } from "@/lib/colors";
 import { hrSubDirections } from "@/data/hrServices";
 import ServicePageTemplate from "@/components/templates/ServicePageTemplate";
+import { COMPANY_STATS_SERVICE } from "@/data/companyStats";
 
 export const metadata: Metadata = createMetadata({
   title: "HR и организационное развитие",
@@ -31,9 +32,7 @@ export default function HrPage() {
         subtitle: "Стратегический HR-консалтинг, организационное развитие и аналитика персонала для формирования эффективной команды и устойчивого роста организации.",
         stats: [
           { number: "3", label: "практик", icon: "Users", accent: C.dna },
-          { number: "30+", label: "отраслей", icon: "BarChart3", accent: C.mintDark },
-          { number: "50+", label: "экспертов", icon: "Users", accent: C.orange },
-          { number: "500+", label: "проектов", icon: "ClipboardList", accent: C.dna },
+          ...COMPANY_STATS_SERVICE,
         ],
       }}
       directions={{

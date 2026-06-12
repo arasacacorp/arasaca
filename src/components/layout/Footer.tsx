@@ -27,7 +27,7 @@ const navigationColumns = [
       { name: "Кейсы", href: "/cases" },
       { name: "Клиенты", href: "/customers" },
       { name: "Pro bono", href: "/pro-bono" },
-      { name: "Публикации", href: "#publications" },
+      { name: "Публикации", href: "/press-center" },
       { name: "Отрасли", href: "/industries" },
       { name: "Карьера", href: "/career" },
     ],

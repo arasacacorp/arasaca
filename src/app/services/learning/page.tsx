@@ -3,6 +3,7 @@ import { createMetadata } from "@/lib/seo";
 import { C } from "@/lib/colors";
 import { learningSubDirections } from "@/data/learningServices";
 import ServicePageTemplate from "@/components/templates/ServicePageTemplate";
+import { COMPANY_STATS_SERVICE } from "@/data/companyStats";
 
 export const metadata: Metadata = createMetadata({
   title: "Обучение и развитие",
@@ -30,9 +31,7 @@ export default function LearningPage() {
         subtitle: "Корпоративные программы развития, бережливое производство, управление знаниями и собственная Корпоративная академия Арасаки для непрерывного развития организации.",
         stats: [
           { number: "3", label: "практик", icon: "GraduationCap", accent: C.dna },
-          { number: "30+", label: "отраслей", icon: "BarChart3", accent: C.mintDark },
-          { number: "50+", label: "экспертов", icon: "Users", accent: C.orange },
-          { number: "500+", label: "проектов", icon: "ClipboardList", accent: C.dna },
+          ...COMPANY_STATS_SERVICE,
         ],
       }}
       directions={{

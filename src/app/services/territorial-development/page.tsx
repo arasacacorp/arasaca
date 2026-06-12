@@ -3,6 +3,7 @@ import { createMetadata } from "@/lib/seo";
 import { C } from "@/lib/colors";
 import { territorialDevelopmentSubDirections } from "@/data/territorialDevelopmentServices";
 import ServicePageTemplate from "@/components/templates/ServicePageTemplate";
+import { COMPANY_STATS_SERVICE } from "@/data/companyStats";
 
 export const metadata: Metadata = createMetadata({
   title: "Развитие территорий",
@@ -30,9 +31,7 @@ export default function TerritorialDevelopmentPage() {
         subtitle: "Комплексное развитие территорий: от мастер-планирования и стратегического проектирования до экономического обоснования и выбора механизмов реализации. Создаём устойчивую среду для жизни и бизнеса.",
         stats: [
           { number: "3", label: "практик", icon: "MapPin", accent: C.dna },
-          { number: "30+", label: "отраслей", icon: "BarChart3", accent: C.mintDark },
-          { number: "50+", label: "экспертов", icon: "Users", accent: C.orange },
-          { number: "500+", label: "проектов", icon: "ClipboardList", accent: C.dna },
+          ...COMPANY_STATS_SERVICE,
         ],
       }}
       directions={{

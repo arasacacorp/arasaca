@@ -3,6 +3,7 @@ import { createMetadata } from "@/lib/seo";
 import { C } from "@/lib/colors";
 import { startupsSubDirections } from "@/data/startupsServices";
 import ServicePageTemplate from "@/components/templates/ServicePageTemplate";
+import { COMPANY_STATS_SERVICE } from "@/data/companyStats";
 
 export const metadata: Metadata = createMetadata({
   title: "Стартапы и инновации",
@@ -31,9 +32,7 @@ export default function StartupsPage() {
         subtitle: "Сопровождение стартапов от идеи до масштабирования, поддержка НИОКР и корпоративных инноваций для технологического развития бизнеса.",
         stats: [
           { number: "3", label: "практик", icon: "Rocket", accent: C.dna },
-          { number: "30+", label: "отраслей", icon: "BarChart3", accent: C.mintDark },
-          { number: "50+", label: "экспертов", icon: "Users", accent: C.orange },
-          { number: "500+", label: "проектов", icon: "ClipboardList", accent: C.dna },
+          ...COMPANY_STATS_SERVICE,
         ],
       }}
       directions={{

@@ -13,14 +13,12 @@ import {
   Phone,
   Mail,
   ClipboardList,
-  BarChart3,
-  Users,
-  Briefcase,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { C } from "@/lib/colors";
 import { fadeUp, scaleIn, vp } from "@/lib/animations";
 import { quickLinks } from "@/data/quickLinks";
+import { COMPANY_STATS_LUCIDE } from "@/data/companyStats";
 import { Icon } from "@/lib/iconRegistry";
 import type { SubDirection } from "@/data/types";
 
@@ -209,11 +207,8 @@ export default function ServiceSlugPageTemplate(config: ServiceSlugPageConfig) {
             </motion.div>
 
             <motion.div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:w-[420px] lg:flex-shrink-0 lg:gap-4" variants={fadeUp} initial="hidden" animate="visible" custom={0.3}>
-              {[
-                { number: String(direction.services.length), label: "услуг", icon: ClipboardList, accent: C.dna },
-                { number: "30+", label: "отраслей", icon: BarChart3, accent: C.mintDark },
-                { number: "50+", label: "экспертов", icon: Users, accent: C.orange },
-                { number: "500+", label: "проектов", icon: Briefcase, accent: C.dna },
+              {[                { number: String(direction.services.length), label: "услуг", icon: ClipboardList, accent: C.dna },
+                ...COMPANY_STATS_LUCIDE,
               ].map((stat, index) => {
                 const StatIcon = stat.icon;
                 return (

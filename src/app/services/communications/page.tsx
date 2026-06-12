@@ -3,6 +3,7 @@ import { createMetadata } from "@/lib/seo";
 import { C } from "@/lib/colors";
 import { communicationsSubDirections } from "@/data/communicationsServices";
 import ServicePageTemplate from "@/components/templates/ServicePageTemplate";
+import { COMPANY_STATS_SERVICE } from "@/data/companyStats";
 
 export const metadata: Metadata = createMetadata({
   title: "Коммуникации и бренд",
@@ -31,9 +32,7 @@ export default function CommunicationsPage() {
         subtitle: "Разработка бренд-стратегий, коммуникационных кампаний, управление репутацией и корпоративной культурой для формирования сильного образа компании.",
         stats: [
           { number: "3", label: "практик", icon: "Megaphone", accent: C.dna },
-          { number: "30+", label: "отраслей", icon: "BarChart3", accent: C.mintDark },
-          { number: "50+", label: "экспертов", icon: "Users", accent: C.orange },
-          { number: "500+", label: "проектов", icon: "ClipboardList", accent: C.dna },
+          ...COMPANY_STATS_SERVICE,
         ],
       }}
       directions={{
