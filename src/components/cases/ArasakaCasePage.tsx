@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
+// Using <img> instead of Next.js Image for case study screenshots
+// (Next.js optimizer has issues with these screenshots)
 import {
   ChevronRight,
   ArrowRight,
@@ -229,7 +230,7 @@ export default function ArasakaCasePage() {
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
               <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)` }} />
-              <Image src="/cases/arasaka-website/hero-mockup.png" alt="Корпоративный сайт Арасака — главная страница" width={1440} height={900} className="w-full h-auto relative z-10" priority />
+              <img src="/cases/arasaka-website/hero-mockup.jpg" alt="Корпоративный сайт Арасака — главная страница" width={1440} height={900} className="w-full h-auto relative z-10" loading="eager" />
             </div>
           </motion.div>
         </div>
@@ -275,7 +276,7 @@ export default function ArasakaCasePage() {
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
-              <Image src="/cases/arasaka-website/before-after.png" alt="Сравнение дизайна до и после" width={1460} height={610} className="w-full h-auto" />
+              <img src="/cases/arasaka-website/before-after.jpg" alt="Сравнение дизайна до и после" width={1448} height={506} className="w-full h-auto" />
             </div>
           </motion.div>
           <motion.div className="grid md:grid-cols-2 gap-6 mt-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
@@ -355,7 +356,7 @@ export default function ArasakaCasePage() {
           </div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-              <Image src="/cases/arasaka-website/tech-stack.png" alt="Страница услуг — архитектура сервисов" width={1440} height={900} className="w-full h-auto" />
+              <img src="/cases/arasaka-website/tech-stack.jpg" alt="Страница услуг — архитектура сервисов" width={1440} height={900} className="w-full h-auto" />
             </div>
           </motion.div>
         </div>
@@ -409,7 +410,7 @@ export default function ArasakaCasePage() {
           </div>
           <motion.div className="mt-10" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
-              <Image src="/cases/arasaka-website/code-review.png" alt="Архитектура кода — шаблоны и дизайн-система" width={1440} height={900} className="w-full h-auto" />
+              <img src="/cases/arasaka-website/code-review.jpg" alt="Архитектура кода — шаблоны и дизайн-система" width={1440} height={900} className="w-full h-auto" />
             </div>
           </motion.div>
         </div>
@@ -424,7 +425,7 @@ export default function ArasakaCasePage() {
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
-              <Image src="/cases/arasaka-website/responsive-devices.png" alt="Адаптивная вёрстка — десктоп, планшет, мобильный" width={1230} height={1143} className="w-full h-auto" />
+              <img src="/cases/arasaka-website/responsive-devices.jpg" alt="Адаптивная вёрстка — десктоп, планшет, мобильный" width={1080} height={988} className="w-full h-auto" />
             </div>
           </motion.div>
           <motion.div className="grid sm:grid-cols-3 gap-5 mt-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
@@ -468,7 +469,7 @@ export default function ArasakaCasePage() {
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-              <Image src="/cases/arasaka-website/performance-metrics.png" alt="Страница «О компании» — метрики и результаты" width={1440} height={900} className="w-full h-auto" />
+              <img src="/cases/arasaka-website/performance-metrics.jpg" alt="Страница «О компании» — метрики и результаты" width={1440} height={900} className="w-full h-auto" />
             </div>
           </motion.div>
         </div>
