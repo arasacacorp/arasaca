@@ -19,9 +19,9 @@ const servicesMenu = {
       name: "Консалтинг",
       href: "/services/consulting",
       services: [
-        { name: "Стратегия и корпоративное управление", href: "/services/consulting/strategy" },
+        { name: "Стратегия и корпоративное управление", href: "/services/consulting/strategic-consulting" },
         { name: "Управление проектами и программами", href: "/services/consulting/project-management" },
-        { name: "Инвестиционный консалтинг", href: "/services/consulting/investment" },
+        { name: "Инвестиционный консалтинг", href: "/services/consulting/investment-design" },
         { name: "Господдержка и сопровождение", href: "/services/consulting/government-support" },
       ],
     },
