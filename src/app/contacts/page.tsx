@@ -845,7 +845,7 @@ export default function ContactsPage() {
                 />
                 <label htmlFor="privacy" className="text-[13px]" style={{ color: C.textMuted }}>
                   Я согласен на обработку персональных данных в соответствии с{" "}
-                  <Link href="#" className="hover:underline" style={{ color: C.dna }}>
+                  <Link href="/privacy" className="hover:underline" style={{ color: C.dna }}>
                     Политикой конфиденциальности
                   </Link>
                 </label>

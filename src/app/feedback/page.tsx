@@ -320,7 +320,7 @@ function FeedbackPage() {
               <input type="checkbox" id="privacy-mobile" className="mt-1 w-4 h-4 rounded" style={{ accentColor: C.dna }} required />
               <label htmlFor="privacy-mobile" className="text-[13px]" style={{ color: C.textMuted }}>
                 Я согласен на обработку персональных данных в соответствии с{" "}
-                <Link href="#" className="hover:underline" style={{ color: C.dna }}>
+                <Link href="/privacy" className="hover:underline" style={{ color: C.dna }}>
                   Политикой конфиденциальности
                 </Link>
               </label>
@@ -540,7 +540,7 @@ function FeedbackPage() {
                 <input type="checkbox" id="privacy" className="mt-1 w-4 h-4 rounded" style={{ accentColor: C.dna }} required />
                 <label htmlFor="privacy" className="text-[13px]" style={{ color: C.textMuted }}>
                   Я согласен на обработку персональных данных в соответствии с{" "}
-                  <Link href="#" className="hover:underline" style={{ color: C.dna }}>
+                  <Link href="/privacy" className="hover:underline" style={{ color: C.dna }}>
                     Политикой конфиденциальности
                   </Link>
                 </label>
