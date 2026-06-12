@@ -285,6 +285,25 @@ const cases: Case[] = [
       { name: "Аналитика и исследования", href: "/services/analytics" },
     ],
   },
+  {
+    slug: "arasaka-corporate-website",
+    title: "Корпоративный сайт консалтинговой компании «Арасака»: редизайн, ребрендинг и инженерия с нуля",
+    excerpt: "Полный цикл создания корпоративного сайта — от дизайн-системы и визуальной идентичности до архитектуры, разработки и оптимизации. Результат: 16 страниц, 99% сокращение бойлерплейта, загрузка < 1.5 с.",
+    client: "Корпорация Арасака",
+    year: "2025",
+    tags: [
+      { label: "Коммуникации и бренд", slug: "communications" },
+      { label: "Технологии", slug: "technologies" },
+      { label: "ИТ", slug: "it" },
+    ],
+    structure: "custom",
+    sections: [],
+    relatedServices: [
+      { name: "Коммуникации и бренд", href: "/services/communications" },
+      { name: "Технологии", href: "/services/technologies" },
+      { name: "Арасака Лаб", href: "/lab" },
+    ],
+  },
 ];
 
 export function getCases(): Case[] {

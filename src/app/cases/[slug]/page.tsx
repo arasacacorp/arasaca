@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { getCaseBySlug, getCases } from "@/data/cases";
 import { C } from "@/lib/colors";
 import { quickLinks } from "@/data/quickLinks";
+import ArasakaCasePage from "@/components/cases/ArasakaCasePage";
 
 /* ─── Animation variants ─── */
 const fadeUp = {
@@ -68,6 +69,11 @@ export default function CaseDetailPage() {
       ? caseData.result.split(".")[0].slice(0, 77) + "..."
       : caseData.result.split(".")[0]
     : "";
+
+  /* Special rendering for Arasaka case study */
+  if (slug === "arasaka-corporate-website") {
+    return <ArasakaCasePage />;
+  }
 
   return (
     <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
