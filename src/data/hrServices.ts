@@ -1,25 +1,11 @@
 /**
- * Структура направления HR и организационное развитие.
- * Поднаправления и их детальные услуги.
+ * Данные направления HR и организационное развитие.
+ * Типы импортируются из @/data/types.
  */
 
-export interface ServiceItem {
-  name: string;
-  description: string;
-  isTop?: boolean;
-}
+import type { SubDirection } from "@/data/types";
 
-export interface HRSubDirection {
-  id: string;
-  slug: string;
-  title: string;
-  shortTitle: string;
-  description: string;
-  icon: string;
-  services: ServiceItem[];
-}
-
-export const hrSubDirections: HRSubDirection[] = [
+export const hrSubDirections: SubDirection[] = [
   {
     id: "6.1",
     slug: "human-capital-management",
@@ -153,7 +139,3 @@ export const hrSubDirections: HRSubDirection[] = [
     ],
   },
 ];
-
-export function getHRSubDirectionBySlug(slug: string): HRSubDirection | undefined {
-  return hrSubDirections.find((direction) => direction.slug === slug);
-}

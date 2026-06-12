@@ -1,14 +1,13 @@
 "use client";
 
 import { RefreshCw, Shield, Code, Lightbulb, Cog, Cloud } from "lucide-react";
-import { technologiesSubDirections, getTechnologiesSubDirectionBySlug } from "@/data/technologiesServices";
+import { technologiesSubDirections } from "@/data/technologiesServices";
 import ServiceSlugPageTemplate from "@/components/templates/ServiceSlugPageTemplate";
 
 export default function TechnologiesSubDirectionPage() {
   return (
     <ServiceSlugPageTemplate
       subDirections={technologiesSubDirections}
-      getSubDirectionBySlug={getTechnologiesSubDirectionBySlug}
       iconMap={{ RefreshCw, Shield, Code, Lightbulb, Cog, Cloud }}
       fallbackIcon={Code}
       parent={{

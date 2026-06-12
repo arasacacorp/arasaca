@@ -1,25 +1,11 @@
 /**
- * Структура направления Инжиниринг.
- * Поднаправления и их детальные услуги.
+ * Данные направления Инжиниринг.
+ * Типы импортируются из @/data/types.
  */
 
-export interface ServiceItem {
-  name: string;
-  description: string;
-  isTop?: boolean;
-}
+import type { SubDirection } from "@/data/types";
 
-export interface EngineeringSubDirection {
-  id: string;
-  slug: string;
-  title: string;
-  shortTitle: string;
-  description: string;
-  icon: string;
-  services: ServiceItem[];
-}
-
-export const engineeringSubDirections: EngineeringSubDirection[] = [
+export const engineeringSubDirections: SubDirection[] = [
   {
     id: "4.1",
     slug: "pre-project",
@@ -136,7 +122,3 @@ export const engineeringSubDirections: EngineeringSubDirection[] = [
     ],
   },
 ];
-
-export function getEngineeringSubDirectionBySlug(slug: string): EngineeringSubDirection | undefined {
-  return engineeringSubDirections.find((direction) => direction.slug === slug);
-}

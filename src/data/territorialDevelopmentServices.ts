@@ -1,25 +1,11 @@
 /**
- * Структура направления Развитие территорий и урбанистика.
- * Поднаправления и их детальные услуги.
+ * Данные направления Развитие территорий и урбанистика.
+ * Типы импортируются из @/data/types.
  */
 
-export interface ServiceItem {
-  name: string;
-  description: string;
-  isTop?: boolean;
-}
+import type { SubDirection } from "@/data/types";
 
-export interface TerritorialDevelopmentSubDirection {
-  id: string;
-  slug: string;
-  title: string;
-  shortTitle: string;
-  description: string;
-  icon: string;
-  services: ServiceItem[];
-}
-
-export const territorialDevelopmentSubDirections: TerritorialDevelopmentSubDirection[] = [
+export const territorialDevelopmentSubDirections: SubDirection[] = [
   {
     id: "5.1",
     slug: "spatial-strategic-planning",
@@ -132,7 +118,3 @@ export const territorialDevelopmentSubDirections: TerritorialDevelopmentSubDirec
     ],
   },
 ];
-
-export function getTerritorialDevelopmentSubDirectionBySlug(slug: string): TerritorialDevelopmentSubDirection | undefined {
-  return territorialDevelopmentSubDirections.find((direction) => direction.slug === slug);
-}

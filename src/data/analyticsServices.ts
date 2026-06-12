@@ -1,25 +1,11 @@
 /**
- * Структура направления Аналитика и исследования.
- * Поднаправления и их детальные услуги.
+ * Данные направления Аналитика и исследования.
+ * Типы импортируются из @/data/types.
  */
 
-export interface ServiceItem {
-  name: string;
-  description: string;
-  isTop?: boolean;
-}
+import type { SubDirection } from "@/data/types";
 
-export interface AnalyticsSubDirection {
-  id: string;
-  slug: string;
-  title: string;
-  shortTitle: string;
-  description: string;
-  icon: string;
-  services: ServiceItem[];
-}
-
-export const analyticsSubDirections: AnalyticsSubDirection[] = [
+export const analyticsSubDirections: SubDirection[] = [
   {
     id: "2.1",
     slug: "market-analytics",
@@ -143,7 +129,3 @@ export const analyticsSubDirections: AnalyticsSubDirection[] = [
     ],
   },
 ];
-
-export function getAnalyticsSubDirectionBySlug(slug: string): AnalyticsSubDirection | undefined {
-  return analyticsSubDirections.find((direction) => direction.slug === slug);
-}

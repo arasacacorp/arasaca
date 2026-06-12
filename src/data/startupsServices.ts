@@ -1,25 +1,11 @@
 /**
- * Структура направления Стартапы и инновации.
- * Поднаправления и их детальные услуги.
+ * Данные направления Стартапы и инновации.
+ * Типы импортируются из @/data/types.
  */
 
-export interface ServiceItem {
-  name: string;
-  description: string;
-  isTop?: boolean;
-}
+import type { SubDirection } from "@/data/types";
 
-export interface StartupsSubDirection {
-  id: string;
-  slug: string;
-  title: string;
-  shortTitle: string;
-  description: string;
-  icon: string;
-  services: ServiceItem[];
-}
-
-export const startupsSubDirections: StartupsSubDirection[] = [
+export const startupsSubDirections: SubDirection[] = [
   {
     id: "9.1",
     slug: "startup-development",
@@ -153,7 +139,3 @@ export const startupsSubDirections: StartupsSubDirection[] = [
     ],
   },
 ];
-
-export function getStartupsSubDirectionBySlug(slug: string): StartupsSubDirection | undefined {
-  return startupsSubDirections.find((direction) => direction.slug === slug);
-}

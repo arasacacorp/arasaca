@@ -1,14 +1,13 @@
 "use client";
 
 import { Rocket, Lightbulb, Zap } from "lucide-react";
-import { startupsSubDirections, getStartupsSubDirectionBySlug } from "@/data/startupsServices";
+import { startupsSubDirections } from "@/data/startupsServices";
 import ServiceSlugPageTemplate from "@/components/templates/ServiceSlugPageTemplate";
 
 export default function StartupsSubDirectionPage() {
   return (
     <ServiceSlugPageTemplate
       subDirections={startupsSubDirections}
-      getSubDirectionBySlug={getStartupsSubDirectionBySlug}
       iconMap={{ Rocket, Lightbulb, Zap }}
       fallbackIcon={Rocket}
       parent={{

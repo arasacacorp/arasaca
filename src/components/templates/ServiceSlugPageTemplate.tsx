@@ -29,8 +29,6 @@ import type { LucideIcon } from "lucide-react";
 export interface ServiceSlugPageConfig {
   /** Массив всех поднаправлений данной категории */
   subDirections: SubDirection[];
-  /** Функция поиска по slug */
-  getSubDirectionBySlug: (slug: string) => SubDirection | undefined;
   /** Маппинг имя иконки → компонент */
   iconMap: Record<string, React.ComponentType<{ className?: string }>>;
   /** Fallback-иконка */
@@ -128,11 +126,11 @@ function ServiceAccordionItem({
 /* ─── Template component ─── */
 
 export default function ServiceSlugPageTemplate(config: ServiceSlugPageConfig) {
-  const { subDirections, getSubDirectionBySlug, iconMap, fallbackIcon, parent } = config;
+  const { subDirections, iconMap, fallbackIcon, parent } = config;
 
   const params = useParams();
   const slug = params.slug as string;
-  const direction = getSubDirectionBySlug(slug);
+  const direction = subDirections.find((d) => d.slug === slug);
   const [openAccordion, setOpenAccordion] = useState<number>(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 

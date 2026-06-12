@@ -1,25 +1,11 @@
 /**
- * Структура услуги Консалтинг.
- * Поднаправления и их детальные услуги.
+ * Данные направления Консалтинг.
+ * Типы импортируются из @/data/types.
  */
 
-export interface ServiceItem {
-  name: string;
-  description: string;
-  isTop?: boolean;
-}
+import type { SubDirection } from "@/data/types";
 
-export interface ConsultingSubDirection {
-  id: string;
-  slug: string;
-  title: string;
-  shortTitle: string;
-  description: string;
-  icon: string;
-  services: ServiceItem[];
-}
-
-export const consultingSubDirections: ConsultingSubDirection[] = [
+export const consultingSubDirections: SubDirection[] = [
   {
     id: "1.1",
     slug: "strategic-consulting",
@@ -447,7 +433,3 @@ export const consultingSubDirections: ConsultingSubDirection[] = [
     ],
   },
 ];
-
-export function getConsultingSubDirectionBySlug(slug: string): ConsultingSubDirection | undefined {
-  return consultingSubDirections.find((direction) => direction.slug === slug);
-}

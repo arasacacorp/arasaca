@@ -308,3 +308,25 @@ Stage Summary:
 - Glassmorphism 2x2 stat cards replace old two vertical stat cards
 - CTA buttons added (Обсудить проект + Заказать звонок)
 - Consistent dark hero design language across /services, /about, /customers, /press-center, /contacts, /cases
+
+---
+Task ID: 2
+Agent: main
+Task: Этап 2 рефакторинга — Общие типы + сервисный реестр в слое данных
+
+Work Log:
+- Прочитал все 9 data-файлов (analyticsServices, communicationsServices, consultingServices, engineeringServices, hrServices, learningServices, startupsServices, technologiesServices, territorialDevelopmentServices)
+- Выявил дублирование: 9x ServiceItem interface, 9x XxxSubDirection interface (структурно = SubDirection), 9x getXxxSubDirectionBySlug() функция
+- Очистил все 9 data-файлов: убрал дублирующие интерфейсы ServiceItem и XxxSubDirection, заменил на import type { SubDirection } from "@/data/types", убрал getXxxSubDirectionBySlug() функции
+- Обновил servicesData.ts: добавил импорты всех 9 subDirections массивов, создал serviceSubDirectionsMap (Record<string, SubDirection[]>), добавил универсальные хелперы getSubDirectionBySlug(categoryId, slug) и getSubDirectionsByCategory(categoryId)
+- Упростил ServiceSlugPageTemplate: убрал проп getSubDirectionBySlug из интерфейса ServiceSlugPageConfig, заменил на subDirections.find(d => d.slug === slug) внутри компонента
+- Обновил все 9 [slug]/page.tsx: убрал импорты getXxxSubDirectionBySlug, убрал проп getSubDirectionBySlug из ServiceSlugPageTemplate
+- Lint чист (только предсуществующие watchdog ошибки)
+- Все 12 проверенных URL возвращают HTTP 200
+- Agent Browser: проверил /services/consulting, /services/consulting/strategic-consulting, /services/analytics/market-analytics, /services/technologies/digital-transformation, /services/startups — все рендерятся корректно, аккордеон работает, навигация работает, 0 JS-ошибок
+
+Stage Summary:
+- Удалено: 9× ServiceItem interface, 9× XxxSubDirection interface, 9× getXxxSubDirectionBySlug() функций
+- Создано: сервисный реестр в servicesData.ts с serviceSubDirectionsMap, getSubDirectionBySlug(), getSubDirectionsByCategory()
+- Упрощён ServiceSlugPageTemplate — убран проп getSubDirectionBySlug (slug-lookup делается внутри шаблона)
+- Все сервисные страницы работают идентично — визуально ничего не изменилось для пользователя

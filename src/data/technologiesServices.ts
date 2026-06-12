@@ -1,25 +1,11 @@
 /**
- * Структура направления Технологии.
- * Поднаправления и их детальные услуги.
+ * Данные направления Технологии.
+ * Типы импортируются из @/data/types.
  */
 
-export interface ServiceItem {
-  name: string;
-  description: string;
-  isTop?: boolean;
-}
+import type { SubDirection } from "@/data/types";
 
-export interface TechnologiesSubDirection {
-  id: string;
-  slug: string;
-  title: string;
-  shortTitle: string;
-  description: string;
-  icon: string;
-  services: ServiceItem[];
-}
-
-export const technologiesSubDirections: TechnologiesSubDirection[] = [
+export const technologiesSubDirections: SubDirection[] = [
   {
     id: "3.1",
     slug: "digital-transformation",
@@ -263,7 +249,3 @@ export const technologiesSubDirections: TechnologiesSubDirection[] = [
     ],
   },
 ];
-
-export function getTechnologiesSubDirectionBySlug(slug: string): TechnologiesSubDirection | undefined {
-  return technologiesSubDirections.find((direction) => direction.slug === slug);
-}

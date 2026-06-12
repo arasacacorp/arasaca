@@ -1,25 +1,11 @@
 /**
- * Структура направления Коммуникации и бренд.
- * Поднаправления и их детальные услуги.
+ * Данные направления Коммуникации и бренд.
+ * Типы импортируются из @/data/types.
  */
 
-export interface ServiceItem {
-  name: string;
-  description: string;
-  isTop?: boolean;
-}
+import type { SubDirection } from "@/data/types";
 
-export interface CommunicationsSubDirection {
-  id: string;
-  slug: string;
-  title: string;
-  shortTitle: string;
-  description: string;
-  icon: string;
-  services: ServiceItem[];
-}
-
-export const communicationsSubDirections: CommunicationsSubDirection[] = [
+export const communicationsSubDirections: SubDirection[] = [
   {
     id: "8.1",
     slug: "brand-positioning",
@@ -169,7 +155,3 @@ export const communicationsSubDirections: CommunicationsSubDirection[] = [
     ],
   },
 ];
-
-export function getCommunicationsSubDirectionBySlug(slug: string): CommunicationsSubDirection | undefined {
-  return communicationsSubDirections.find((direction) => direction.slug === slug);
-}

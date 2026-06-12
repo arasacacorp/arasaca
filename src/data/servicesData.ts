@@ -1,7 +1,21 @@
 /**
  * Услуги Арасака Консалтинг.
  * Единый источник данных для меню, страниц услуг и отраслей.
+ *
+ * Содержит сервисный реестр — маппинг categoryId → SubDirection[].
+ * Позволяет получить поднаправления любой категории по её id.
  */
+
+import type { SubDirection } from "@/data/types";
+import { consultingSubDirections } from "./consultingServices";
+import { engineeringSubDirections } from "./engineeringServices";
+import { technologiesSubDirections } from "./technologiesServices";
+import { analyticsSubDirections } from "./analyticsServices";
+import { hrSubDirections } from "./hrServices";
+import { learningSubDirections } from "./learningServices";
+import { territorialDevelopmentSubDirections } from "./territorialDevelopmentServices";
+import { communicationsSubDirections } from "./communicationsServices";
+import { startupsSubDirections } from "./startupsServices";
 
 export interface SubService {
   name: string;
@@ -127,3 +141,40 @@ export const servicesData: ServiceCategory[] = [
     ],
   },
 ];
+
+/* ─── Сервисный реестр ─── */
+
+/**
+ * Маппинг categoryId → массив поднаправлений (SubDirection[]).
+ * Используется для универсального доступа к данным любого направления.
+ */
+export const serviceSubDirectionsMap: Record<string, SubDirection[]> = {
+  consulting: consultingSubDirections,
+  engineering: engineeringSubDirections,
+  technologies: technologiesSubDirections,
+  analytics: analyticsSubDirections,
+  hr: hrSubDirections,
+  learning: learningSubDirections,
+  "territorial-development": territorialDevelopmentSubDirections,
+  communications: communicationsSubDirections,
+  startups: startupsSubDirections,
+};
+
+/**
+ * Получить поднаправление по categoryId и slug.
+ * Универсальная замена 9 индивидуальных getXxxSubDirectionBySlug().
+ */
+export function getSubDirectionBySlug(
+  categoryId: string,
+  slug: string,
+): SubDirection | undefined {
+  const directions = serviceSubDirectionsMap[categoryId];
+  return directions?.find((d) => d.slug === slug);
+}
+
+/**
+ * Получить все поднаправления категории по её categoryId.
+ */
+export function getSubDirectionsByCategory(categoryId: string): SubDirection[] {
+  return serviceSubDirectionsMap[categoryId] ?? [];
+}

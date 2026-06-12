@@ -1,25 +1,11 @@
 /**
- * Структура направления Обучение и развитие.
- * Поднаправления и их детальные услуги.
+ * Данные направления Обучение и развитие.
+ * Типы импортируются из @/data/types.
  */
 
-export interface ServiceItem {
-  name: string;
-  description: string;
-  isTop?: boolean;
-}
+import type { SubDirection } from "@/data/types";
 
-export interface LearningSubDirection {
-  id: string;
-  slug: string;
-  title: string;
-  shortTitle: string;
-  description: string;
-  icon: string;
-  services: ServiceItem[];
-}
-
-export const learningSubDirections: LearningSubDirection[] = [
+export const learningSubDirections: SubDirection[] = [
   {
     id: "7.1",
     slug: "corporate-development",
@@ -169,7 +155,3 @@ export const learningSubDirections: LearningSubDirection[] = [
     ],
   },
 ];
-
-export function getLearningSubDirectionBySlug(slug: string): LearningSubDirection | undefined {
-  return learningSubDirections.find((direction) => direction.slug === slug);
-}
