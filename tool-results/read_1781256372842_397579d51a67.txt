@@ -1,0 +1,2002 @@
+     1→"use client";
+     2→
+     3→import { motion } from "framer-motion";
+     4→import Link from "next/link";
+     5→import { cn } from "@/lib/utils";
+     6→import { industries as allIndustries } from "@/data/industries";
+     7→import {
+     8→  ArrowRight,
+     9→  ArrowUpRight,
+    10→  Building2,
+    11→  Users,
+    12→  Layers,
+    13→  Briefcase,
+    14→  Atom,
+    15→  Map,
+    16→  Landmark,
+    17→  Laptop,
+    18→  Factory,
+    19→  Ship,
+    20→  Shield,
+    21→  Fuel,
+    22→  TrendingUp,
+    23→  Clock,
+    24→  Compass,
+    25→  Cpu,
+    26→  BarChart3,
+    27→  Award,
+    28→  Globe,
+    29→  Heart,
+    30→  Target,
+    31→  Wrench,
+    32→  Calendar,
+    33→  MapPin,
+    34→  Phone,
+    35→  Mail,
+    36→  GraduationCap,
+    37→  FlaskConical,
+    38→  Database,
+    39→  Workflow,
+    40→  Plug,
+    41→  PieChart,
+    42→  Newspaper,
+    43→} from "lucide-react";
+    44→
+    45→/* ═══════════════════════════════════════════════════════
+    46→   COLOUR PALETTE
+    47→   ═══════════════════════════════════════════════════════ */
+    48→const C = {
+    49→  dna: "#008C95",
+    50→  dnaHover: "#007a82",
+    51→  dark: "#00313C",
+    52→  darkLighter: "#004452",
+    53→  mint: "#77e2c3",
+    54→  mintDark: "#4dc9a5",
+    55→  orange: "#E04E39",
+    56→  orangeHover: "#c94330",
+    57→  light: "#e8f5f3",
+    58→  muted: "#f1f2f4",
+    59→  white: "#ffffff",
+    60→  textDark: "#1a1a1a",
+    61→  textMid: "#494a4a",
+    62→  textMuted: "#6b7280",
+    63→  border: "#e5e7eb",
+    64→  borderLight: "#f0f0f0",
+    65→};
+    66→
+    67→/* ─── Animation variants ─── */
+    68→const fadeUp = {
+    69→  hidden: { opacity: 0, y: 32 },
+    70→  visible: (i: number = 0) => ({
+    71→    opacity: 1,
+    72→    y: 0,
+    73→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    74→  }),
+    75→};
+    76→
+    77→const fadeIn = {
+    78→  hidden: { opacity: 0 },
+    79→  visible: (i: number = 0) => ({
+    80→    opacity: 1,
+    81→    transition: { duration: 0.8, delay: i * 0.12 },
+    82→  }),
+    83→};
+    84→
+    85→const scaleIn = {
+    86→  hidden: { opacity: 0, scale: 0.85 },
+    87→  visible: (i: number = 0) => ({
+    88→    opacity: 1,
+    89→    scale: 1,
+    90→    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+    91→  }),
+    92→};
+    93→
+    94→const slideInRight = {
+    95→  hidden: { opacity: 0, x: -20 },
+    96→  visible: (i: number = 0) => ({
+    97→    opacity: 1,
+    98→    x: 0,
+    99→    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+   100→  }),
+   101→};
+   102→
+   103→const vp = { once: true, amount: 0.2 as const };
+   104→
+   105→/* ─── Section label component ─── */
+   106→function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+   107→  return (
+   108→    <motion.span
+   109→      className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+   110→      style={{ color: light ? C.mint : C.dna }}
+   111→      variants={fadeIn}
+   112→      initial="hidden"
+   113→      whileInView="visible"
+   114→      viewport={vp}
+   115→    >
+   116→      {children}
+   117→    </motion.span>
+   118→  );
+   119→}
+   120→
+   121→/* ═══════════════════════════════════════════════════════
+   122→   NEWS DATA
+   123→   ═══════════════════════════════════════════════════════ */
+   124→const newsItems = [
+   125→  {
+   126→    date: "07.05.2026",
+   127→    title: "Арасака запускает платформу мастер-планирования для управления инвестиционными программами",
+   128→    category: "Технологии",
+   129→    categoryColor: C.dna,
+   130→    href: "/media",
+   131→  },
+   132→  {
+   133→    date: "29.04.2026",
+   134→    title: "Арасака и Агентство «ЦЕНТР» представили совместное решение для развития территорий",
+   135→    category: "Партнёрство",
+   136→    categoryColor: C.mintDark,
+   137→    href: "/media",
+   138→  },
+   139→  {
+   140→    date: "15.04.2026",
+   141→    title: "Новый офис Арасаки в Москве: расширение географии консалтинга",
+   142→    category: "Компания",
+   143→    categoryColor: C.orange,
+   144→    href: "/media",
+   145→  },
+   146→];
+   147→
+   148→/* ─── Section cards (5 colored cards) ─── */
+   149→const sectionCards = [
+   150→  {
+   151→    title: "О компании",
+   152→    description: "Миссия, ценности, команда",
+   153→    bg: C.dark,
+   154→    textColor: "#ffffff",
+   155→    href: "/about",
+   156→    icon: Building2,
+   157→  },
+   158→  {
+   159→    title: "Услуги",
+   160→    description: "9 направлений консалтинга",
+   161→    bg: C.orange,
+   162→    textColor: "#ffffff",
+   163→    href: "/services",
+   164→    icon: Briefcase,
+   165→  },
+   166→  {
+   167→    title: "Решения",
+   168→    description: "Цифровые продукты и платформы",
+   169→    bg: C.white,
+   170→    textColor: C.textDark,
+   171→    href: "/solutions/master-planning",
+   172→    icon: Layers,
+   173→  },
+   174→  {
+   175→    title: "Пресс-центр",
+   176→    description: "Новости, пресс-релизы, СМИ",
+   177→    bg: C.dna,
+   178→    textColor: "#ffffff",
+   179→    href: "/media",
+   180→    icon: Newspaper,
+   181→  },
+   182→  {
+   183→    title: "Карьера",
+   184→    description: "Присоединяйтесь к команде",
+   185→    bg: C.mintDark,
+   186→    textColor: "#ffffff",
+   187→    href: "/career",
+   188→    icon: Users,
+   189→  },
+   190→  {
+   191→    title: "Контакты",
+   192→    description: "Свяжитесь с нами",
+   193→    bg: C.dark,
+   194→    textColor: "#ffffff",
+   195→    href: "/contacts",
+   196→    icon: Mail,
+   197→  },
+   198→];
+   199→
+   200→/* ─── Stats data ─── */
+   201→const heroStats = [
+   202→  { number: "8", suffix: " лет", label: "работаем с бизнесом", icon: Clock, accent: C.dna },
+   203→  { number: "50+", suffix: "", label: "экспертов в команде", icon: Users, accent: C.orange },
+   204→  { number: "30+", suffix: "", label: "отраслей экспертизы", icon: Compass, accent: C.mintDark },
+   205→  { number: "9", suffix: "", label: "направлений консалтинга", icon: Layers, accent: C.dna },
+   206→];
+   207→
+   208→/* ═══════════════════════════════════════════════════════
+   209→   SECTION 1 — HERO (Banner + News + Stats + Cards)
+   210→   ═══════════════════════════════════════════════════════ */
+   211→function HeroSection() {
+   212→  return (
+   213→    <section className="relative pt-16 lg:pt-[120px]" style={{ background: C.muted }}>
+   214→      <div className="container-kept py-5">
+   215→        {/* Hero + Stats + News — two-column layout */}
+   216→        <div className="flex flex-col gap-5 lg:flex-row lg:gap-5">
+   217→          {/* LEFT COLUMN — Hero Banner + Stats */}
+   218→          <div className="flex-1 lg:max-w-[calc(75%-10px)]">
+   219→            {/* Hero Banner */}
+   220→            <motion.div
+   221→              className="relative overflow-hidden rounded-lg"
+   222→              style={{ minHeight: "480px" }}
+   223→              variants={fadeUp}
+   224→              initial="hidden"
+   225→              animate="visible"
+   226→              custom={0}
+   227→            >
+   228→              {/* AI-generated bubbles background image */}
+   229→              <div
+   230→                className="absolute inset-0 bg-cover bg-right bg-no-repeat"
+   231→                style={{ backgroundImage: "url('/hero-bubbles.png')" }}
+   232→              />
+   233→              {/* Dark overlay — left side darker for text readability */}
+   234→              <div
+   235→                className="absolute inset-0"
+   236→                style={{
+   237→                  background: `linear-gradient(105deg, rgba(0,31,44,0.88) 0%, rgba(0,49,60,0.6) 30%, rgba(0,31,44,0.2) 70%, rgba(0,49,60,0.1) 100%)`,
+   238→                }}
+   239→              />
+   240→
+   241→              {/* Diagonal accent line */}
+   242→              <div
+   243→                className="pointer-events-none absolute inset-0"
+   244→                style={{
+   245→                  background: `linear-gradient(165deg, transparent 0%, transparent 48%, rgba(119,226,195,0.08) 48.5%, rgba(119,226,195,0.04) 49%, transparent 49.5%, transparent 100%)`,
+   246→                }}
+   247→              />
+   248→
+   249→              {/* Corner brackets decoration */}
+   250→              <svg
+   251→                className="pointer-events-none absolute bottom-6 right-6 opacity-20"
+   252→                width="80" height="80"
+   253→                viewBox="0 0 80 80"
+   254→                fill="none"
+   255→              >
+   256→                <path d="M80 0v30h-4V4H50V0h30z" fill={C.mint} />
+   257→                <path d="M0 80V50h4v26h26v4H0z" fill={C.mint} />
+   258→              </svg>
+   259→
+   260→              {/* Hero Text Content */}
+   261→              <div className="relative z-10 flex min-h-[480px] flex-col justify-center px-8 py-14 md:px-12 lg:px-16">
+   262→                {/* Label */}
+   263→                <motion.div
+   264→                  className="mb-6"
+   265→                  variants={fadeUp}
+   266→                  initial="hidden"
+   267→                  animate="visible"
+   268→                  custom={0.1}
+   269→                >
+   270→                  <span
+   271→                    className="inline-flex items-center gap-2 border px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.3em]"
+   272→                    style={{ borderColor: "rgba(119,226,195,0.4)", color: C.mint }}
+   273→                  >
+   274→                    <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: C.mint }} />
+   275→                    Арасака
+   276→                  </span>
+   277→                </motion.div>
+   278→
+   279→                {/* Main tagline */}
+   280→                <motion.h1
+   281→                  className="mb-5 max-w-lg leading-[1.08] tracking-tight"
+   282→                  style={{
+   283→                    fontFamily: "var(--font-russo)",
+   284→                    fontSize: "clamp(2rem, 4.8vw, 3.4rem)",
+   285→                    color: C.white,
+   286→                  }}
+   287→                  variants={fadeUp}
+   288→                  initial="hidden"
+   289→                  animate="visible"
+   290→                  custom={0.2}
+   291→                >
+   292→                  Структурируем сложное,
+   293→                  <br />
+   294→                  <span style={{ color: C.mint }}>реализуем важное</span>
+   295→                </motion.h1>
+   296→
+   297→                {/* Subtitle */}
+   298→                <motion.p
+   299→                  className="mb-8 max-w-md text-[15px] font-light leading-relaxed"
+   300→                  style={{ color: "rgba(255,255,255,0.5)" }}
+   301→                  variants={fadeUp}
+   302→                  initial="hidden"
+   303→                  animate="visible"
+   304→                  custom={0.35}
+   305→                >
+   306→                  Повышение эффективности управления, цифровая трансформация и&nbsp;управление инвестиционными программами. Надёжный партнёр для&nbsp;тех, кто делает ставку на&nbsp;устойчивый рост.
+   307→                </motion.p>
+   308→
+   309→                {/* CTA */}
+   310→                <motion.div
+   311→                  className="flex flex-wrap items-center gap-3"
+   312→                  variants={fadeUp}
+   313→                  initial="hidden"
+   314→                  animate="visible"
+   315→                  custom={0.5}
+   316→                >
+   317→                  <Link href="/services">
+   318→                    <motion.span
+   319→                      className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white"
+   320→                      style={{ background: C.dna, borderRadius: "4px" }}
+   321→                      whileHover={{ background: C.dnaHover, transition: { duration: 0.3 } }}
+   322→                    >
+   323→                      Наши услуги
+   324→                      <ArrowRight className="h-4 w-4" />
+   325→                    </motion.span>
+   326→                  </Link>
+   327→                  <Link href="/about">
+   328→                    <motion.span
+   329→                      className="inline-flex items-center gap-2 border px-7 py-3 text-sm font-medium uppercase tracking-[0.05em]"
+   330→                      style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)", borderRadius: "4px" }}
+   331→                      whileHover={{
+   332→                        borderColor: C.mint,
+   333→                        color: C.mint,
+   334→                        transition: { duration: 0.3 },
+   335→                      }}
+   336→                    >
+   337→                      О компании
+   338→                    </motion.span>
+   339→                  </Link>
+   340→                </motion.div>
+   341→              </div>
+   342→            </motion.div>
+   343→
+   344→            {/* Stats cards — directly under hero banner */}
+   345→            <motion.div
+   346→              className="mt-4"
+   347→              variants={fadeUp}
+   348→              initial="hidden"
+   349→              animate="visible"
+   350→              custom={0.3}
+   351→            >
+   352→              <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+   353→                {heroStats.map((stat, index) => (
+   354→                  <motion.div
+   355→                    key={stat.label}
+   356→                    className="group relative overflow-hidden rounded-lg bg-white p-5 md:p-6 transition-all duration-300 hover:shadow-lg"
+   357→                    variants={scaleIn}
+   358→                    initial="hidden"
+   359→                    animate="visible"
+   360→                    custom={0.4 + index * 0.08}
+   361→                  >
+   362→                    {/* Accent top stripe */}
+   363→                    <div
+   364→                      className="absolute left-0 top-0 h-1 w-full"
+   365→                      style={{ background: `linear-gradient(90deg, ${stat.accent}, ${stat.accent}80)` }}
+   366→                    />
+   367→
+   368→                    {/* Icon */}
+   369→                    <div
+   370→                      className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-300"
+   371→                      style={{ background: `${stat.accent}12` }}
+   372→                    >
+   373→                      <stat.icon className="h-5 w-5" style={{ color: stat.accent }} />
+   374→                    </div>
+   375→
+   376→                    {/* Number */}
+   377→                    <div
+   378→                      className="text-3xl font-bold leading-none md:text-4xl"
+   379→                      style={{ fontFamily: "var(--font-russo)", color: C.dark }}
+   380→                    >
+   381→                      {stat.number}
+   382→                      <span className="text-lg font-normal" style={{ color: stat.accent }}>{stat.suffix}</span>
+   383→                    </div>
+   384→
+   385→                    {/* Label */}
+   386→                    <div
+   387→                      className="mt-2 text-[12px] font-medium leading-tight"
+   388→                      style={{ color: C.textMuted }}
+   389→                    >
+   390→                      {stat.label}
+   391→                    </div>
+   392→
+   393→                    {/* Subtle decorative element */}
+   394→                    <div
+   395→                      className="pointer-events-none absolute -bottom-4 -right-4 h-16 w-16 rounded-full opacity-[0.06] transition-opacity duration-300 group-hover:opacity-[0.1]"
+   396→                      style={{ background: stat.accent }}
+   397→                    />
+   398→                  </motion.div>
+   399→                ))}
+   400→              </div>
+   401→            </motion.div>
+   402→          </div>
+   403→
+   404→          {/* RIGHT COLUMN — News Sidebar (ends at same height as stats) */}
+   405→          <motion.div
+   406→            className="w-full lg:w-[330px] lg:flex-shrink-0"
+   407→            variants={fadeUp}
+   408→            initial="hidden"
+   409→            animate="visible"
+   410→            custom={0.35}
+   411→          >
+   412→            <div className="flex h-full flex-col overflow-hidden rounded-lg bg-white">
+   413→              {/* Header with accent */}
+   414→              <div className="px-5 pt-5 pb-4 md:px-6 md:pt-6 md:pb-5" style={{ borderBottom: `2px solid ${C.dna}` }}>
+   415→                <div className="flex items-center justify-between">
+   416→                  <h3 className="text-lg font-bold" style={{ color: C.textDark }}>Новости</h3>
+   417→                  <div className="flex h-7 w-7 items-center justify-center rounded" style={{ background: C.light }}>
+   418→                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke={C.dna} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+   419→                      <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2" />
+   420→                    </svg>
+   421→                  </div>
+   422→                </div>
+   423→              </div>
+   424→
+   425→              {/* News items */}
+   426→              <div className="flex flex-1 flex-col p-5 md:p-6">
+   427→                <div className="flex flex-1 flex-col gap-5">
+   428→                  {newsItems.map((news, index) => (
+   429→                    <motion.div
+   430→                      key={index}
+   431→                      variants={slideInRight}
+   432→                      initial="hidden"
+   433→                      animate="visible"
+   434→                      custom={0.5 + index * 0.12}
+   435→                    >
+   436→                      <Link href={news.href} className="group block">
+   437→                        <span
+   438→                          className="mb-2 inline-block px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider"
+   439→                          style={{ background: `${news.categoryColor}15`, color: news.categoryColor, borderRadius: "2px" }}
+   440→                        >
+   441→                          {news.category}
+   442→                        </span>
+   443→                        <h4
+   444→                          className="text-[13px] font-semibold leading-snug transition-colors group-hover:text-[#008C95]"
+   445→                          style={{ color: C.textDark }}
+   446→                        >
+   447→                          {news.title}
+   448→                        </h4>
+   449→                        <div className="mt-2 flex items-center justify-between">
+   450→                          <span className="text-[11px]" style={{ color: C.textMuted }}>{news.date}</span>
+   451→                          <ArrowUpRight
+   452→                            className="h-3.5 w-3.5 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   453→                            style={{ color: C.textMuted }}
+   454→                          />
+   455→                        </div>
+   456→                        {index < newsItems.length - 1 && (
+   457→                          <div className="mt-5 h-px" style={{ background: C.borderLight }} />
+   458→                        )}
+   459→                      </Link>
+   460→                    </motion.div>
+   461→                  ))}
+   462→                </div>
+   463→
+   464→                <div className="mt-6">
+   465→                  <Link
+   466→                    href="/media"
+   467→                    className="group inline-flex items-center gap-2 text-sm font-semibold transition-colors"
+   468→                    style={{ color: C.dna }}
+   469→                  >
+   470→                    Все новости
+   471→                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+   472→                  </Link>
+   473→                </div>
+   474→              </div>
+   475→            </div>
+   476→          </motion.div>
+   477→        </div>
+   478→
+   479→
+   480→      </div>
+   481→    </section>
+   482→  );
+   483→}
+   484→
+   485→/* ═══════════════════════════════════════════════════════
+   486→   SECTION 2 — BUSINESS DIRECTIONS (Bento grid)
+   487→   ═══════════════════════════════════════════════════════ */
+   488→const businessCards = [
+   489→  {
+   490→    title: "Консалтинг",
+   491→    description: "Разработка стратегий развития, совершенствование финансовых моделей, оптимизация процессов и сопровождение инвестиционных проектов",
+   492→    bg: C.dark,
+   493→    textColor: "#ffffff",
+   494→    href: "/services/consulting",
+   495→    icon: Briefcase,
+   496→    size: "large" as const, // 2 cols
+   497→  },
+   498→  {
+   499→    title: "Аналитика и исследования",
+   500→    description: "Глубокое понимание рынков, отраслей и данных, поддерживающее стратегические и операционные решения",
+   501→    bg: C.dna,
+   502→    textColor: "#ffffff",
+   503→    href: "/services/analytics",
+   504→    icon: BarChart3,
+   505→    size: "large" as const, // 2 cols — balanced bento layout
+   506→  },
+   507→  {
+   508→    title: "Технологии",
+   509→    description: "Создание стратегий цифровой трансформации, внедрение ИТ-решений, развитие корпоративных инноваций, автоматизация",
+   510→    bg: C.orange,
+   511→    textColor: "#ffffff",
+   512→    href: "/services/technologies",
+   513→    icon: Cpu,
+   514→    highlight: true,
+   515→    size: "small" as const,
+   516→  },
+   517→  {
+   518→    title: "Инжиниринг",
+   519→    description: "Предпроектный анализ, экспертиза капитальных затрат, управление строительством сложных проектов",
+   520→    bg: C.white,
+   521→    textColor: C.textDark,
+   522→    href: "/services/engineering",
+   523→    icon: Wrench,
+   524→    size: "small" as const,
+   525→  },
+   526→  {
+   527→    title: "Развитие территорий и урбанистика",
+   528→    description: "Мастер-планирование, экономическое моделирование и механизмы реализации территориальных проектов",
+   529→    bg: C.mintDark,
+   530→    textColor: "#ffffff",
+   531→    href: "/services/territorial-development",
+   532→    icon: MapPin,
+   533→    size: "small" as const,
+   534→  },
+   535→  {
+   536→    title: "HR и организационное развитие",
+   537→    description: "Управление человеческим капиталом, организационное проектирование и HR-аналитика",
+   538→    bg: C.white,
+   539→    textColor: C.textDark,
+   540→    href: "/services/hr",
+   541→    icon: Users,
+   542→    size: "small" as const,
+   543→  },
+   544→  {
+   545→    title: "Обучение и развитие",
+   546→    description: "Корпоративные программы развития, бережливое производство, управление знаниями",
+   547→    bg: C.white,
+   548→    textColor: C.textDark,
+   549→    href: "/services/learning",
+   550→    icon: GraduationCap,
+   551→    size: "small" as const,
+   552→  },
+   553→  {
+   554→    title: "Коммуникации и бренд",
+   555→    description: "Разработка бренд-стратегий, коммуникационных кампаний, управление репутацией",
+   556→    bg: C.white,
+   557→    textColor: C.textDark,
+   558→    href: "/services/communications",
+   559→    icon: Globe,
+   560→    size: "small" as const,
+   561→  },
+   562→  {
+   563→    title: "Стартапы и инновации",
+   564→    description: "Сопровождение стартапов от идеи до масштабирования, поддержка НИОКР и корпоративных инноваций",
+   565→    bg: C.dark,
+   566→    textColor: "#ffffff",
+   567→    href: "/services/startups",
+   568→    icon: FlaskConical,
+   569→    size: "large" as const, // 2 cols
+   570→  },
+   571→];
+   572→
+   573→function BusinessDirectionsSection() {
+   574→  return (
+   575→    <section className="relative bg-[#f1f2f4] py-20 md:py-28">
+   576→      <div className="container-kept">
+   577→        <motion.div
+   578→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   579→          variants={fadeUp}
+   580→          initial="hidden"
+   581→          whileInView="visible"
+   582→          viewport={vp}
+   583→        >
+   584→          <div>
+   585→            <SectionLabel>Направления бизнеса</SectionLabel>
+   586→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   587→              Услуги и практики
+   588→            </h2>
+   589→          </div>
+   590→          <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   591→            Комплексные решения для роста,<br />эффективности и трансформации бизнеса
+   592→          </p>
+   593→        </motion.div>
+   594→
+   595→        {/* Bento grid */}
+   596→        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 md:gap-4">
+   597→          {businessCards.map((card, index) => {
+   598→            const isLarge = card.size === "large"
+   599→            const isDark = card.bg === C.dark || card.bg === C.dna || card.bg === C.orange || card.bg === C.mintDark
+   600→
+   601→            return (
+   602→              <motion.div
+   603→                key={card.title}
+   604→                className={cn(
+   605→                  isLarge && "sm:col-span-2",
+   606→                )}
+   607→                variants={fadeUp}
+   608→                initial="hidden"
+   609→                whileInView="visible"
+   610→                viewport={vp}
+   611→                custom={index * 0.06}
+   612→              >
+   613→                <Link href={card.href} className="group block h-full">
+   614→                  <motion.div
+   615→                    className={cn(
+   616→                      "relative flex flex-col justify-between overflow-hidden rounded-lg p-5 md:p-6 transition-all duration-300 group-hover:shadow-lg",
+   617→                      isLarge ? "min-h-[220px]" : "min-h-[170px]",
+   618→                    )}
+   619→                    style={{ background: card.bg, color: card.textColor }}
+   620→                    whileHover={{ y: -4, transition: { duration: 0.25 } }}
+   621→                  >
+   622→                    {/* Decorative patterns */}
+   623→                    {card.bg === C.dark && (
+   624→                      <div
+   625→                        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+   626→                        style={{
+   627→                          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.3) 30px, rgba(255,255,255,0.3) 31px)`,
+   628→                        }}
+   629→                      />
+   630→                    )}
+   631→                    {card.bg === C.white && (
+   632→                      <div
+   633→                        className="pointer-events-none absolute inset-0 opacity-[0.07]"
+   634→                        style={{
+   635→                          backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`,
+   636→                          backgroundSize: "14px 14px",
+   637→                        }}
+   638→                      />
+   639→                    )}
+   640→
+   641→                    {/* Accent line on left */}
+   642→                    <div
+   643→                      className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   644→                      style={{ background: isDark ? "rgba(255,255,255,0.25)" : C.dna }}
+   645→                    />
+   646→
+   647→                    {/* Highlight dot for special cards */}
+   648→                    {"highlight" in card && card.highlight && (
+   649→                      <div className="absolute top-4 right-4">
+   650→                        <span className="inline-block h-2 w-2 rounded-full" style={{ background: C.mint }} />
+   651→                      </div>
+   652→                    )}
+   653→
+   654→                    {/* Top: Icon + Title */}
+   655→                    <div className="relative z-10">
+   656→                      <div className="flex items-center gap-2.5 mb-2">
+   657→                        <div
+   658→                          className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors duration-300"
+   659→                          style={{ background: isDark ? "rgba(255,255,255,0.1)" : `${C.dna}10` }}
+   660→                        >
+   661→                          <card.icon className="h-4.5 w-4.5" style={{ color: isDark ? "rgba(255,255,255,0.8)" : C.dna }} />
+   662→                        </div>
+   663→                        <span className={cn(
+   664→                          "font-semibold leading-tight",
+   665→                          isLarge ? "text-lg" : "text-[15px]",
+   666→                        )}>
+   667→                          {card.title}
+   668→                        </span>
+   669→                      </div>
+   670→                      <p className={cn(
+   671→                        "leading-relaxed opacity-70",
+   672→                        isLarge ? "text-[13px] max-w-md" : "text-[12px]",
+   673→                      )}>
+   674→                        {card.description}
+   675→                      </p>
+   676→                    </div>
+   677→
+   678→                    {/* Bottom: Arrow */}
+   679→                    <div className="relative z-10 flex justify-end mt-4">
+   680→                      <div
+   681→                        className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   682→                        style={{ background: isDark ? "rgba(255,255,255,0.15)" : `${C.dna}10` }}
+   683→                      >
+   684→                        <ArrowRight className="h-3.5 w-3.5" style={{ color: isDark ? "#ffffff" : C.dna }} />
+   685→                      </div>
+   686→                    </div>
+   687→                  </motion.div>
+   688→                </Link>
+   689→              </motion.div>
+   690→            )
+   691→          })}
+   692→        </div>
+   693→      </div>
+   694→    </section>
+   695→  );
+   696→}
+   697→
+   698→/* ═══════════════════════════════════════════════════════
+   699→   SECTION 3 — MISSION / CASES
+   700→   ═══════════════════════════════════════════════════════ */
+   701→const caseCards = [
+   702→  {
+   703→    category: "Консалтинг",
+   704→    title: "Цифровая трансформация промышленного холдинга",
+   705→    description: "Разработали ИТ-стратегию и дорожную карту цифровизации, внедрили систему управления производством",
+   706→    client: "Металлургический холдинг",
+   707→    result: "Сокращение операционных затрат на 15%",
+   708→    href: "/cases",
+   709→  },
+   710→  {
+   711→    category: "Развитие территорий",
+   712→    title: "Мастер-планирование территории",
+   713→    description: "Создали цифровую платформу для управления инвестиционными программами развития территорий",
+   714→    client: "Субъект РФ",
+   715→    result: "50+ инвестиционных проектов в системе",
+   716→    href: "/cases",
+   717→  },
+   718→  {
+   719→    category: "Стратегия",
+   720→    title: "Стратегия ESG-трансформации",
+   721→    description: "Разработали стратегию устойчивого развития и внедрили систему ESG-отчётности",
+   722→    client: "Нефтегазовая компания",
+   723→    result: "Рейтинг ESG повышен на 2 уровня",
+   724→    href: "/cases",
+   725→  },
+   726→];
+   727→
+   728→function MissionSection() {
+   729→  return (
+   730→    <section className="relative overflow-hidden py-20 md:py-28" style={{ background: C.dark }}>
+   731→      {/* Decorative glow */}
+   732→      <div
+   733→        className="pointer-events-none absolute -right-40 top-0 h-[500px] w-[500px] rounded-full blur-[180px]"
+   734→        style={{ background: "rgba(0,140,149,0.1)" }}
+   735→      />
+   736→      {/* Diagonal lines pattern */}
+   737→      <div
+   738→        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   739→        style={{
+   740→          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   741→        }}
+   742→      />
+   743→
+   744→      <div className="container-kept relative z-10">
+   745→        <motion.div
+   746→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   747→          variants={fadeUp}
+   748→          initial="hidden"
+   749→          whileInView="visible"
+   750→          viewport={vp}
+   751→        >
+   752→          <div>
+   753→            <SectionLabel light>Наша миссия</SectionLabel>
+   754→            <h2 className="text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl">
+   755→              Раскрываем потенциал,
+   756→              <br />
+   757→              <span style={{ color: C.mint }}>чтобы делать бизнес лучше</span>
+   758→            </h2>
+   759→          </div>
+   760→          <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: "rgba(255,255,255,0.55)" }}>
+   761→            Развиваем рынки и предлагаем<br />клиентам не только консалтинг,<br />но и комплексные решения
+   762→          </p>
+   763→        </motion.div>
+   764→
+   765→        <div className="grid gap-6 md:grid-cols-3">
+   766→          {caseCards.map((card, index) => (
+   767→            <motion.div
+   768→              key={index}
+   769→              variants={fadeUp}
+   770→              initial="hidden"
+   771→              whileInView="visible"
+   772→              viewport={vp}
+   773→              custom={index * 0.12}
+   774→            >
+   775→              <Link href={card.href} className="group block h-full">
+   776→                <div className="flex h-full flex-col overflow-hidden rounded-lg bg-white transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1">
+   777→                  <div
+   778→                    className="h-1"
+   779→                    style={{ background: index === 0 ? C.dna : index === 1 ? C.mint : C.orange }}
+   780→                  />
+   781→                  <div className="flex flex-1 flex-col p-6 md:p-7">
+   782→                    <span
+   783→                      className="mb-3 inline-block self-start px-3 py-1 text-[10px] font-bold uppercase tracking-wider"
+   784→                      style={{ background: C.light, color: C.dna, borderRadius: "3px" }}
+   785→                    >
+   786→                      {card.category}
+   787→                    </span>
+   788→                    <h3 className="heading-subsection mb-3 flex-1 transition-colors" style={{ color: C.textDark }}>
+   789→                      {card.title}
+   790→                    </h3>
+   791→                    <p className="text-[12px] leading-relaxed mb-4" style={{ color: C.textMuted }}>
+   792→                      {card.description}
+   793→                    </p>
+   794→                    <div className="pt-4 border-t" style={{ borderColor: C.borderLight }}>
+   795→                      <div className="flex items-center justify-between mb-1">
+   796→                        <span className="text-[10px] uppercase tracking-wider" style={{ color: C.textMuted }}>Клиент</span>
+   797→                        <span className="text-[10px] uppercase tracking-wider" style={{ color: C.textMuted }}>Результат</span>
+   798→                      </div>
+   799→                      <div className="flex items-center justify-between">
+   800→                        <span className="text-[12px] font-medium" style={{ color: C.textMid }}>{card.client}</span>
+   801→                        <span className="text-[12px] font-semibold" style={{ color: C.dna }}>{card.result}</span>
+   802→                      </div>
+   803→                    </div>
+   804→                  </div>
+   805→                </div>
+   806→              </Link>
+   807→            </motion.div>
+   808→          ))}
+   809→        </div>
+   810→
+   811→        {/* Link to all cases */}
+   812→        <div className="mt-10">
+   813→          <Link
+   814→            href="/cases"
+   815→            className="group inline-flex items-center gap-2 text-sm font-semibold transition-colors"
+   816→            style={{ color: C.mint }}
+   817→          >
+   818→            Все кейсы
+   819→            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+   820→          </Link>
+   821→        </div>
+   822→      </div>
+   823→    </section>
+   824→  );
+   825→}
+   826→
+   827→/* ═══════════════════════════════════════════════════════
+   828→   SECTION 4 — INDUSTRIES
+   829→   ═══════════════════════════════════════════════════════ */
+   830→const keyIndustrySlugs = new Set(["oil-gas", "nuclear", "defense", "it"]);
+   831→
+   832→/* Color map for key industries — each gets a unique accent from our palette */
+   833→const keyIndustryColors: Record<string, string> = {
+   834→  nuclear: C.dark,       // тёмно-бирюзовый — атомная энергия
+   835→  "oil-gas": C.dna,      // бирюзовый — нефтегаз
+   836→  it: C.mintDark,        // мятный — цифровые технологии
+   837→  defense: C.orange,     // оранжевый — ОПК
+   838→};
+   839→
+   840→/* Displayed industries: 9 core + 3 extra from "other" for a 12-card grid.
+   841→   Key industries are shuffled among regular ones for visual variety. */
+   842→const displayedIndustrySlugs = [
+   843→  "nuclear",           // ключ  — row 1 col 1
+   844→  "construction",      // обычн — row 1 col 2
+   845→  "oil-gas",           // ключ  — row 1 col 3
+   846→  "government",        // обычн — row 1 col 4
+   847→  "manufacturing",     // обычн — row 2 col 1
+   848→  "it",                // ключ  — row 2 col 2
+   849→  "shipbuilding",      // обычн — row 2 col 3
+   850→  "defense",           // ключ  — row 2 col 4
+   851→  "urbanistics",       // обычн — row 3 col 1
+   852→  "energy",            // допол — row 3 col 2
+   853→  "mining-metallurgy", // допол — row 3 col 3
+   854→  "agro",              // допол — row 3 col 4
+   855→];
+   856→
+   857→const displayedIndustries = displayedIndustrySlugs
+   858→  .map((slug) => allIndustries.find((i) => i.slug === slug)!)
+   859→  .filter(Boolean);
+   860→
+   861→const otherIndustriesLocal = allIndustries.filter(
+   862→  (i) => !displayedIndustrySlugs.includes(i.slug),
+   863→);
+   864→
+   865→function IndustriesSection() {
+   866→  return (
+   867→    <section className="relative bg-white py-20 md:py-28">
+   868→      <div className="container-kept">
+   869→        <motion.div
+   870→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   871→          variants={fadeUp}
+   872→          initial="hidden"
+   873→          whileInView="visible"
+   874→          viewport={vp}
+   875→        >
+   876→          <div>
+   877→            <SectionLabel>Отрасли</SectionLabel>
+   878→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   879→              Экспертиза в ключевых отраслях
+   880→            </h2>
+   881→          </div>
+   882→          <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   883→            Российская экономика многогранна — от<br />высокотехнологичной энергетики до<br />цифровых платформ
+   884→          </p>
+   885→        </motion.div>
+   886→
+   887→        {/* Industries grid — 12 cards, key ones highlighted */}
+   888→        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 md:gap-4 mb-10">
+   889→          {displayedIndustries.map((industry, index) => {
+   890→            const Icon = industry.icon;
+   891→            const isKey = keyIndustrySlugs.has(industry.slug);
+   892→            const keyBg = isKey ? keyIndustryColors[industry.slug] : undefined;
+   893→
+   894→            return (
+   895→              <motion.div
+   896→                key={industry.slug}
+   897→                variants={fadeUp}
+   898→                initial="hidden"
+   899→                whileInView="visible"
+   900→                viewport={vp}
+   901→                custom={index * 0.05}
+   902→              >
+   903→                <Link href={`/industries/${industry.slug}`} className="group block h-full">
+   904→                  <div
+   905→                    className={cn(
+   906→                      "relative flex flex-col h-full overflow-hidden rounded-lg p-5 md:p-6 transition-all duration-300 group-hover:shadow-lg border",
+   907→                      isKey
+   908→                        ? "border-transparent"
+   909→                        : "border-transparent group-hover:border-gray-100 bg-[#f8f9fa] group-hover:bg-white",
+   910→                    )}
+   911→                    style={isKey ? { background: keyBg, color: "#ffffff" } : undefined}
+   912→                  >
+   913→                    {/* Accent left line */}
+   914→                    <div
+   915→                      className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   916→                      style={{ background: isKey ? "rgba(255,255,255,0.3)" : C.dna }}
+   917→                    />
+   918→
+   919→                    {/* "Ключевая отрасль" badge — only for key industries */}
+   920→                    {isKey && (
+   921→                      <div className="mb-3">
+   922→                        <span
+   923→                          className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+   924→                          style={{
+   925→                            background: "rgba(255,255,255,0.2)",
+   926→                            color: "rgba(255,255,255,0.95)",
+   927→                            borderRadius: "2px",
+   928→                          }}
+   929→                        >
+   930→                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-white" />
+   931→                          Ключевая отрасль
+   932→                        </span>
+   933→                      </div>
+   934→                    )}
+   935→
+   936→                    {/* Icon + Title */}
+   937→                    <div className="flex items-center gap-3 mb-3">
+   938→                      <div
+   939→                        className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-300"
+   940→                        style={{ background: isKey ? "rgba(255,255,255,0.15)" : `${C.dna}10` }}
+   941→                      >
+   942→                        <Icon
+   943→                          className="h-5 w-5"
+   944→                          style={{ color: isKey ? "rgba(255,255,255,0.9)" : C.dna }}
+   945→                        />
+   946→                      </div>
+   947→                      <h3
+   948→                        className="text-[15px] font-semibold leading-tight transition-colors group-hover:text-[#008C95]"
+   949→                        style={{ color: isKey ? "#ffffff" : C.textDark }}
+   950→                      >
+   951→                        {industry.name}
+   952→                      </h3>
+   953→                    </div>
+   954→
+   955→                    {/* Description */}
+   956→                    <p
+   957→                      className="text-[12px] leading-relaxed flex-1"
+   958→                      style={{ color: isKey ? "rgba(255,255,255,0.7)" : C.textMuted }}
+   959→                    >
+   960→                      {industry.description}
+   961→                    </p>
+   962→
+   963→                    {/* Arrow */}
+   964→                    <div className="flex justify-end mt-4">
+   965→                      <div
+   966→                        className="flex h-7 w-7 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   967→                        style={{ background: isKey ? "rgba(255,255,255,0.2)" : `${C.dna}10` }}
+   968→                      >
+   969→                        <ArrowRight
+   970→                          className="h-3 w-3"
+   971→                          style={{ color: isKey ? "#ffffff" : C.dna }}
+   972→                        />
+   973→                      </div>
+   974→                    </div>
+   975→                  </div>
+   976→                </Link>
+   977→              </motion.div>
+   978→            )
+   979→          })}
+   980→        </div>
+   981→
+   982→        {/* Other industries — compact tags */}
+   983→        <motion.div
+   984→          variants={fadeUp}
+   985→          initial="hidden"
+   986→          whileInView="visible"
+   987→          viewport={vp}
+   988→          className="mb-10"
+   989→        >
+   990→          <div className="flex items-center gap-3 mb-4">
+   991→            <div className="h-px flex-1" style={{ background: C.border }} />
+   992→            <span className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: C.textMuted }}>
+   993→              Также работаем
+   994→            </span>
+   995→            <div className="h-px flex-1" style={{ background: C.border }} />
+   996→          </div>
+   997→          <div className="flex flex-wrap gap-2">
+   998→            {otherIndustriesLocal.map((industry) => {
+   999→              const Icon = industry.icon
+  1000→              return (
+  1001→                <Link
+  1002→                  key={industry.slug}
+  1003→                  href={`/industries/${industry.slug}`}
+  1004→                  className="group inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-medium transition-all duration-300 hover:border-[#008C95] hover:text-[#008C95] hover:bg-[#008C95]/5"
+  1005→                  style={{ borderColor: C.border, color: C.textMid }}
+  1006→                >
+  1007→                  <Icon className="h-3.5 w-3.5" />
+  1008→                  {industry.name}
+  1009→                </Link>
+  1010→              )
+  1011→            })}
+  1012→          </div>
+  1013→        </motion.div>
+  1014→
+  1015→        {/* Bottom: all industries link + CTA */}
+  1016→        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+  1017→          <div className="flex flex-col gap-3">
+  1018→            <Link
+  1019→              href="/industries"
+  1020→              className="group inline-flex items-center gap-2 text-sm font-semibold transition-colors"
+  1021→              style={{ color: C.dna }}
+  1022→            >
+  1023→              Вся отраслевая экспертиза
+  1024→              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+  1025→            </Link>
+  1026→            <div>
+  1027→              <p className="text-[15px] font-medium" style={{ color: C.textDark }}>
+  1028→                Не нашли свою отрасль?
+  1029→              </p>
+  1030→              <p className="text-[13px]" style={{ color: C.textMuted }}>
+  1031→                Свяжитесь с нами — мы работаем с широким спектром отраслей
+  1032→              </p>
+  1033→            </div>
+  1034→          </div>
+  1035→          <Link
+  1036→            href="/contacts"
+  1037→            className="group inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white transition-colors flex-shrink-0"
+  1038→            style={{ background: C.dna, borderRadius: "4px" }}
+  1039→          >
+  1040→            Связаться
+  1041→            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+  1042→          </Link>
+  1043→        </div>
+  1044→      </div>
+  1045→    </section>
+  1046→  );
+  1047→}
+  1048→
+  1049→/* ═══════════════════════════════════════════════════════
+  1050→   SECTION 5 — INNOVATION / АРАСАКА ЛАБ
+  1051→   ═══════════════════════════════════════════════════════ */
+  1052→const labProducts = [
+  1053→  {
+  1054→    title: "CRM-системы",
+  1055→    description: "Управление клиентами и продажами",
+  1056→    icon: Users,
+  1057→  },
+  1058→  {
+  1059→    title: "Автоматизация",
+  1060→    description: "Рутинные процессы без ручного труда",
+  1061→    icon: Workflow,
+  1062→  },
+  1063→  {
+  1064→    title: "Интеграции",
+  1065→    description: "Связываем системы между собой",
+  1066→    icon: Plug,
+  1067→  },
+  1068→  {
+  1069→    title: "LMS-платформы",
+  1070→    description: "Корпоративное обучение",
+  1071→    icon: GraduationCap,
+  1072→  },
+  1073→  {
+  1074→    title: "HR-системы",
+  1075→    description: "Учёт и мотивация персонала",
+  1076→    icon: Heart,
+  1077→  },
+  1078→  {
+  1079→    title: "Дашборды",
+  1080→    description: "Аналитика в реальном времени",
+  1081→    icon: BarChart3,
+  1082→  },
+  1083→];
+  1084→
+  1085→const labStats = [
+  1086→  { number: "20+", label: "решений разработано", accent: C.dna },
+  1087→  { number: "5+", label: "лет в разработке", accent: C.orange },
+  1088→  { number: "100%", label: "индивидуальный подход", accent: C.mintDark },
+  1089→];
+  1090→
+  1091→function InnovationSection() {
+  1092→  return (
+  1093→    <section className="relative overflow-hidden py-20 md:py-28" style={{ background: C.dark }}>
+  1094→      {/* Decorative glow */}
+  1095→      <div
+  1096→        className="pointer-events-none absolute -left-40 top-20 h-[400px] w-[400px] rounded-full blur-[160px]"
+  1097→        style={{ background: "rgba(0,140,149,0.08)" }}
+  1098→      />
+  1099→      {/* Diagonal lines pattern */}
+  1100→      <div
+  1101→        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+  1102→        style={{
+  1103→          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+  1104→        }}
+  1105→      />
+  1106→
+  1107→      <div className="container-kept relative z-10">
+  1108→        {/* Header */}
+  1109→        <motion.div
+  1110→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+  1111→          variants={fadeUp}
+  1112→          initial="hidden"
+  1113→          whileInView="visible"
+  1114→          viewport={vp}
+  1115→        >
+  1116→          <div>
+  1117→            <SectionLabel light>Лаборатория цифровых решений</SectionLabel>
+  1118→            <h2 className="text-3xl font-bold leading-tight text-white md:text-4xl lg:text-5xl">
+  1119→              Арасака Лаб
+  1120→            </h2>
+  1121→          </div>
+  1122→          <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: "rgba(255,255,255,0.55)" }}>
+  1123→            Разрабатываем IT-системы для внутренних<br />нужд и под запросы клиентов. Решения,<br />которые идеально подходят под ваши задачи
+  1124→          </p>
+  1125→        </motion.div>
+  1126→
+  1127→        {/* Product cards grid */}
+  1128→        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 md:gap-4 mb-10">
+  1129→          {labProducts.map((product, index) => {
+  1130→            const Icon = product.icon;
+  1131→            return (
+  1132→              <motion.div
+  1133→                key={product.title}
+  1134→                variants={fadeUp}
+  1135→                initial="hidden"
+  1136→                whileInView="visible"
+  1137→                viewport={vp}
+  1138→                custom={index * 0.05}
+  1139→              >
+  1140→                <div
+  1141→                  className="group relative flex items-start gap-4 overflow-hidden rounded-lg p-5 md:p-6 transition-all duration-300 border border-white/[0.06] hover:border-white/[0.15] hover:shadow-[0_4px_20px_rgba(0,140,149,0.12)]"
+  1142→                  style={{ background: "rgba(255,255,255,0.04)" }}
+  1143→                >
+  1144→                  {/* Accent left line */}
+  1145→                  <div
+  1146→                    className="pointer-events-none absolute left-0 top-0 h-full w-1 transition-all duration-300 group-hover:w-1.5"
+  1147→                    style={{ background: C.mint }}
+  1148→                  />
+  1149→                  <div
+  1150→                    className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-all duration-300 group-hover:scale-110"
+  1151→                    style={{ background: "rgba(119,226,195,0.12)" }}
+  1152→                  >
+  1153→                    <Icon className="h-5 w-5 transition-colors duration-300" style={{ color: C.mint }} />
+  1154→                  </div>
+  1155→                  <div>
+  1156→                    <h3 className="text-[15px] font-semibold leading-tight text-white mb-1 transition-colors duration-300 group-hover:text-[#77e2c3]">
+  1157→                      {product.title}
+  1158→                    </h3>
+  1159→                    <p className="text-[12px] leading-relaxed transition-colors duration-300 group-hover:text-white/70" style={{ color: "rgba(255,255,255,0.5)" }}>
+  1160→                      {product.description}
+  1161→                    </p>
+  1162→                  </div>
+  1163→                  {/* Hover glow */}
+  1164→                  <div
+  1165→                    className="pointer-events-none absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+  1166→                    style={{ background: "rgba(255,255,255,0.04)" }}
+  1167→                  />
+  1168→                </div>
+  1169→              </motion.div>
+  1170→            )
+  1171→          })}
+  1172→        </div>
+  1173→
+  1174→        {/* Stats + CTA row */}
+  1175→        <motion.div
+  1176→          className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
+  1177→          variants={fadeUp}
+  1178→          initial="hidden"
+  1179→          whileInView="visible"
+  1180→          viewport={vp}
+  1181→        >
+  1182→          {/* Stats — left-aligned */}
+  1183→          <div className="flex flex-wrap gap-6 lg:gap-10">
+  1184→            {labStats.map((stat, index) => (
+  1185→              <motion.div
+  1186→                key={stat.label}
+  1187→                className="text-left"
+  1188→                variants={fadeUp}
+  1189→                initial="hidden"
+  1190→                whileInView="visible"
+  1191→                viewport={vp}
+  1192→                custom={index * 0.08}
+  1193→              >
+  1194→                <div
+  1195→                  className="text-2xl font-bold md:text-3xl"
+  1196→                  style={{ fontFamily: "var(--font-russo)", color: stat.accent }}
+  1197→                >
+  1198→                  {stat.number}
+  1199→                </div>
+  1200→                <div className="mt-1 text-[11px] md:text-[12px] font-medium" style={{ color: "rgba(255,255,255,0.5)" }}>
+  1201→                  {stat.label}
+  1202→                </div>
+  1203→              </motion.div>
+  1204→            ))}
+  1205→          </div>
+  1206→
+  1207→          {/* Orange CTA button — right side */}
+  1208→          <Link href="/lab">
+  1209→            <motion.span
+  1210→              className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white"
+  1211→              style={{ background: C.orange, borderRadius: "4px" }}
+  1212→              whileHover={{ background: C.orangeHover, transition: { duration: 0.3 } }}
+  1213→            >
+  1214→              Подробнее о лаборатории
+  1215→              <ArrowRight className="h-4 w-4" />
+  1216→            </motion.span>
+  1217→          </Link>
+  1218→        </motion.div>
+  1219→      </div>
+  1220→    </section>
+  1221→  );
+  1222→}
+  1223→
+  1224→/* ═══════════════════════════════════════════════════════
+  1225→   SECTION 5 — SOLUTIONS / PRODUCTS
+  1226→   ═══════════════════════════════════════════════════════ */
+  1227→function SolutionsSection() {
+  1228→  return (
+  1229→    <section className="relative bg-white py-20 md:py-28">
+  1230→      <div className="container-kept">
+  1231→        {/* Section header */}
+  1232→        <motion.div
+  1233→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+  1234→          variants={fadeUp}
+  1235→          initial="hidden"
+  1236→          whileInView="visible"
+  1237→          viewport={vp}
+  1238→        >
+  1239→          <div>
+  1240→            <SectionLabel>Продукты</SectionLabel>
+  1241→            <h2 className="heading-section" style={{ color: C.textDark }}>
+  1242→              Наши решения и&nbsp;продукты
+  1243→            </h2>
+  1244→          </div>
+  1245→          <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+  1246→            Цифровые платформы, созданные<br />для решения задач бизнеса&nbsp;и&nbsp;государства
+  1247→          </p>
+  1248→        </motion.div>
+  1249→
+  1250→        {/* Top row: ЕОСДО + ЕСУИП — two columns */}
+  1251→        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 mb-5">
+  1252→          {/* ── ЕОСДО ── */}
+  1253→          <motion.div
+  1254→            variants={fadeUp}
+  1255→            initial="hidden"
+  1256→            whileInView="visible"
+  1257→            viewport={vp}
+  1258→            custom={0}
+  1259→          >
+  1260→            <Link href="/solutions/eosdo" className="group block h-full">
+  1261→              <div className="relative flex h-full flex-col overflow-hidden rounded-lg bg-white border transition-all duration-300 group-hover:shadow-lg group-hover:border-transparent" style={{ borderColor: C.border }}>
+  1262→                {/* Top accent strip */}
+  1263→                <div className="h-1.5 w-full" style={{ background: C.dna }} />
+  1264→
+  1265→                <div className="flex flex-1 flex-col p-6 md:p-8">
+  1266→                  {/* Tag */}
+  1267→                  <div className="mb-5">
+  1268→                    <span
+  1269→                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+  1270→                      style={{ background: `${C.dna}12`, color: C.dna, borderRadius: "3px" }}
+  1271→                    >
+  1272→                      <Database className="h-3 w-3" />
+  1273→                      Корпоративный документооборот
+  1274→                    </span>
+  1275→                  </div>
+  1276→
+  1277→                  {/* Title */}
+  1278→                  <h3
+  1279→                    className="text-2xl font-bold leading-tight mb-1"
+  1280→                    style={{ fontFamily: "var(--font-russo)", color: C.dark }}
+  1281→                  >
+  1282→                    ЕОСДО
+  1283→                  </h3>
+  1284→                  <p className="text-[13px] font-medium mb-4" style={{ color: C.dna }}>
+  1285→                    Единая отечественная система документооборота
+  1286→                  </p>
+  1287→
+  1288→                  {/* Description */}
+  1289→                  <p className="text-[13px] leading-relaxed mb-6 flex-1" style={{ color: C.textMuted }}>
+  1290→                    Корпоративная платформа для крупных предприятий и госкорпораций. Обеспечивает документооборот между организациями, филиалами и подразделениями — внутренняя переписка, поручения, согласования, приказы и регламенты.
+  1291→                  </p>
+  1292→
+  1293→                  {/* Feature list */}
+  1294→                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-6">
+  1295→                    {["Внутренний документооборот", "Маршрутизация и согласование", "Поручения и контроль исполнения", "Импортонезависимость"].map((f) => (
+  1296→                      <div key={f} className="flex items-start gap-2">
+  1297→                        <span className="mt-1.5 inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full" style={{ background: C.dna }} />
+  1298→                        <span className="text-[11px] leading-tight" style={{ color: C.textMid }}>{f}</span>
+  1299→                      </div>
+  1300→                    ))}
+  1301→                  </div>
+  1302→
+  1303→                  {/* CTA */}
+  1304→                  <div className="flex items-center gap-2 pt-4 border-t" style={{ borderColor: C.borderLight }}>
+  1305→                    <span className="text-[12px] font-semibold uppercase tracking-wider transition-colors duration-300 group-hover:text-[#008C95]" style={{ color: C.dark }}>
+  1306→                      Подробнее
+  1307→                    </span>
+  1308→                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" style={{ color: C.dna }} />
+  1309→                  </div>
+  1310→                </div>
+  1311→              </div>
+  1312→            </Link>
+  1313→          </motion.div>
+  1314→
+  1315→          {/* ── ЕСУИП ── */}
+  1316→          <motion.div
+  1317→            variants={fadeUp}
+  1318→            initial="hidden"
+  1319→            whileInView="visible"
+  1320→            viewport={vp}
+  1321→            custom={0.08}
+  1322→          >
+  1323→            <Link href="/solutions/esuip" className="group block h-full">
+  1324→              <div className="relative flex h-full flex-col overflow-hidden rounded-lg bg-white border transition-all duration-300 group-hover:shadow-lg group-hover:border-transparent" style={{ borderColor: C.border }}>
+  1325→                {/* Top accent strip */}
+  1326→                <div className="h-1.5 w-full" style={{ background: C.mintDark }} />
+  1327→
+  1328→                <div className="flex flex-1 flex-col p-6 md:p-8">
+  1329→                  {/* Tag */}
+  1330→                  <div className="mb-5">
+  1331→                    <span
+  1332→                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+  1333→                      style={{ background: `${C.mintDark}12`, color: C.mintDark, borderRadius: "3px" }}
+  1334→                    >
+  1335→                      <BarChart3 className="h-3 w-3" />
+  1336→                      Управление инвестициями
+  1337→                    </span>
+  1338→                  </div>
+  1339→
+  1340→                  {/* Title */}
+  1341→                  <h3
+  1342→                    className="text-2xl font-bold leading-tight mb-1"
+  1343→                    style={{ fontFamily: "var(--font-russo)", color: C.dark }}
+  1344→                  >
+  1345→                    ЕСУИП
+  1346→                  </h3>
+  1347→                  <p className="text-[13px] font-medium mb-4" style={{ color: C.mintDark }}>
+  1348→                    Единая система управления инвестиционным портфелем
+  1349→                  </p>
+  1350→
+  1351→                  {/* Description */}
+  1352→                  <p className="text-[13px] leading-relaxed mb-6 flex-1" style={{ color: C.textMuted }}>
+  1353→                    Информационная система для управления инвестиционной деятельностью — от планирования и оценки проектов до мониторинга реализации. Объединяет все инвестиционные проекты в единый портфель с аналитикой и контролем ключевых показателей.
+  1354→                  </p>
+  1355→
+  1356→                  {/* Feature list */}
+  1357→                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-6">
+  1358→                    {["Управление инвестиционным портфелем", "Оценка и отбор проектов", "Мониторинг реализации", "Аналитика и отчётность"].map((f) => (
+  1359→                      <div key={f} className="flex items-start gap-2">
+  1360→                        <span className="mt-1.5 inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full" style={{ background: C.mintDark }} />
+  1361→                        <span className="text-[11px] leading-tight" style={{ color: C.textMid }}>{f}</span>
+  1362→                      </div>
+  1363→                    ))}
+  1364→                  </div>
+  1365→
+  1366→                  {/* CTA */}
+  1367→                  <div className="flex items-center gap-2 pt-4 border-t" style={{ borderColor: C.borderLight }}>
+  1368→                    <span className="text-[12px] font-semibold uppercase tracking-wider transition-colors duration-300 group-hover:text-[#4dc9a5]" style={{ color: C.dark }}>
+  1369→                      Подробнее
+  1370→                    </span>
+  1371→                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" style={{ color: C.mintDark }} />
+  1372→                  </div>
+  1373→                </div>
+  1374→              </div>
+  1375→            </Link>
+  1376→          </motion.div>
+  1377→        </div>
+  1378→
+  1379→        {/* Bottom row: Мастер-план — full width dark card */}
+  1380→        <motion.div
+  1381→          variants={fadeUp}
+  1382→          initial="hidden"
+  1383→          whileInView="visible"
+  1384→          viewport={vp}
+  1385→          custom={0.16}
+  1386→        >
+  1387→          <div className="overflow-hidden rounded-lg transition-all duration-300 group-hover:shadow-xl">
+  1388→            <div className="flex flex-col md:flex-row md:items-stretch">
+  1389→              {/* Left content — product info (hoverable) */}
+  1390→              <Link href="/solutions/master-planning" className="group/mp flex-1 block">
+  1391→                <div
+  1392→                  className="relative flex flex-col h-full overflow-hidden transition-all duration-300 group-hover/mp:shadow-lg group-hover/mp:-translate-y-1"
+  1393→                  style={{ background: C.dark }}
+  1394→                >
+  1395→                  {/* Decorative diagonal pattern */}
+  1396→                  <div
+  1397→                    className="pointer-events-none absolute inset-0 opacity-[0.03]"
+  1398→                    style={{
+  1399→                      backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+  1400→                    }}
+  1401→                  />
+  1402→                  {/* Glow effect */}
+  1403→                  <div
+  1404→                    className="pointer-events-none absolute -right-20 -top-20 h-[300px] w-[300px] rounded-full blur-[120px] opacity-20 transition-opacity duration-300 group-hover/mp:opacity-35"
+  1405→                    style={{ background: C.mint }}
+  1406→                  />
+  1407→
+  1408→                  <div className="relative z-10 flex flex-1 flex-col p-6 md:p-8 lg:p-10">
+  1409→                    {/* Tag + Partnership badge */}
+  1410→                    <div className="flex flex-wrap items-center gap-3 mb-6">
+  1411→                      <span
+  1412→                        className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+  1413→                        style={{ background: `${C.orange}25`, color: C.orange, borderRadius: "3px" }}
+  1414→                      >
+  1415→                        <Map className="h-3 w-3" />
+  1416→                        Развитие территорий
+  1417→                      </span>
+  1418→                      <span
+  1419→                        className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+  1420→                        style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)", borderRadius: "3px" }}
+  1421→                      >
+  1422→                        <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: C.mint }} />
+  1423→                        Совместно с АСР «Центр»
+  1424→                      </span>
+  1425→                    </div>
+  1426→
+  1427→                    {/* Title block */}
+  1428→                    <div className="mb-4">
+  1429→                      <h3
+  1430→                        className="text-2xl md:text-3xl font-bold leading-tight mb-1"
+  1431→                        style={{ fontFamily: "var(--font-russo)", color: "#ffffff" }}
+  1432→                      >
+  1433→                        Цифровая платформа мастер-планирования
+  1434→                      </h3>
+  1435→                      <p className="text-[13px] font-medium" style={{ color: C.orange }}>
+  1436→                        Управление инвестиционными программами развития территорий
+  1437→                      </p>
+  1438→                    </div>
+  1439→
+  1440→                    {/* Description */}
+  1441→                    <p className="text-[13px] leading-relaxed mb-6 max-w-lg" style={{ color: "rgba(255,255,255,0.55)" }}>
+  1442→                      Платформа для управления инвестиционными программами развития территорий и&nbsp;инфраструктурных проектов. Совместная разработка с&nbsp;Агентством стратегического развития «Центр». Цифровая модель территории, сценарное моделирование и&nbsp;контроль реализации.
+  1443→                    </p>
+  1444→
+  1445→                    {/* Features */}
+  1446→                    <div className="flex flex-wrap gap-3 mb-6">
+  1447→                      {[
+  1448→                        { label: "Цифровая модель территории", icon: Map },
+  1449→                        { label: "Сценарное моделирование", icon: Cpu },
+  1450→                        { label: "Управление программами", icon: Layers },
+  1451→                        { label: "Контроль реализации", icon: Target },
+  1452→                      ].map((f) => (
+  1453→                        <span
+  1454→                          key={f.label}
+  1455→                          className="inline-flex items-center gap-2 px-3 py-1.5 text-[11px] font-medium"
+  1456→                          style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.8)", borderRadius: "4px" }}
+  1457→                        >
+  1458→                          <f.icon className="h-3.5 w-3.5" style={{ color: C.orange }} />
+  1459→                          {f.label}
+  1460→                        </span>
+  1461→                      ))}
+  1462→                    </div>
+  1463→
+  1464→                    {/* CTA */}
+  1465→                    <div className="flex items-center gap-2 pt-5 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+  1466→                      <span className="text-[12px] font-semibold uppercase tracking-wider" style={{ color: C.orange }}>
+  1467→                        Подробнее о платформе
+  1468→                      </span>
+  1469→                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/mp:translate-x-1" style={{ color: C.orange }} />
+  1470→                    </div>
+  1471→                  </div>
+  1472→                </div>
+  1473→              </Link>
+  1474→
+  1475→              {/* Right panel — Lab CTA (no hover on card, only button) */}
+  1476→              <div
+  1477→                className="flex flex-col justify-center p-6 md:p-8 lg:p-10 md:w-[300px] lg:w-[340px] flex-shrink-0 bg-white"
+  1478→              >
+  1479→                {/* Decorative top line */}
+  1480→                <div className="h-px w-12 mb-5" style={{ background: C.dna }} />
+  1481→
+  1482→                <div className="flex items-center gap-2.5 mb-3">
+  1483→                  <div
+  1484→                    className="flex h-8 w-8 items-center justify-center rounded-lg"
+  1485→                    style={{ background: "rgba(0,140,149,0.1)" }}
+  1486→                  >
+  1487→                    <FlaskConical className="h-4 w-4" style={{ color: C.dna }} />
+  1488→                  </div>
+  1489→                  <span
+  1490→                    className="text-[10px] font-bold uppercase tracking-wider"
+  1491→                    style={{ color: C.dna }}
+  1492→                  >
+  1493→                    Арасака Лаб
+  1494→                  </span>
+  1495→                </div>
+  1496→
+  1497→                <p className="text-[14px] font-semibold leading-snug mb-3" style={{ color: C.textDark }}>
+  1498→                  Нужно индивидуальное решение?
+  1499→                </p>
+  1500→                <p className="text-[12px] leading-relaxed mb-5" style={{ color: C.textMuted }}>
+  1501→                  Если вам требуется разработка под&nbsp;задачи вашего бизнеса, обратитесь в&nbsp;Лабораторию Арасаки — мы создаём цифровые продукты с&nbsp;нуля.
+  1502→                </p>
+  1503→
+  1504→                <Link href="/lab" className="group/cta inline-flex items-center gap-2 self-start">
+  1505→                  <span
+  1506→                    className="inline-flex items-center gap-2 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-white transition-all duration-300"
+  1507→                    style={{ background: C.dna, borderRadius: "4px" }}
+  1508→                  >
+  1509→                    Узнать больше
+  1510→                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/cta:translate-x-0.5" />
+  1511→                  </span>
+  1512→                </Link>
+  1513→              </div>
+  1514→            </div>
+  1515→          </div>
+  1516→        </motion.div>
+  1517→      </div>
+  1518→    </section>
+  1519→  );
+  1520→}
+  1521→
+  1522→/* ═══════════════════════════════════════════════════════
+  1523→   SECTION 6 — PUBLICATIONS
+  1524→   ═══════════════════════════════════════════════════════ */
+  1525→const publicationItems = [
+  1526→  {
+  1527→    category: "Статья",
+  1528→    categoryColor: C.dna,
+  1529→    title: "Тренды цифровой трансформации 2026",
+  1530→    description: "Ключевые направления цифровизации бизнеса: искусственный интеллект, автоматизация процессов и платформенные решения",
+  1531→    date: "15.01.2026",
+  1532→    href: "/media",
+  1533→  },
+  1534→  {
+  1535→    category: "Инсайт",
+  1536→    categoryColor: C.mintDark,
+  1537→    title: "Российский рынок M&A: итоги года",
+  1538→    description: "Ежегодный обзор рынка слияний и поглощений: ключевые сделки, драйверы роста и прогнозы на ближайшие годы",
+  1539→    date: "10.01.2026",
+  1540→    href: "/media",
+  1541→  },
+  1542→  {
+  1543→    category: "Исследование",
+  1544→    categoryColor: C.orange,
+  1545→    title: "ESG-трансформация бизнеса",
+  1546→    description: "Как интегрировать принципы устойчивого развития в бизнес-процессы и повысить инвестиционную привлекательность",
+  1547→    date: "05.01.2026",
+  1548→    href: "/media",
+  1549→  },
+  1550→  {
+  1551→    category: "Статья",
+  1552→    categoryColor: C.dna,
+  1553→    title: "Мастер-планирование: новый подход к развитию территорий",
+  1554→    description: "Опыт создания цифровых платформ для управления инвестиционными программами субъектов РФ",
+  1555→    date: "28.12.2025",
+  1556→    href: "/media",
+  1557→  },
+  1558→];
+  1559→
+  1560→function PublicationsSection() {
+  1561→  return (
+  1562→    <section className="relative bg-[#f1f2f4] py-20 md:py-28">
+  1563→      <div className="container-kept">
+  1564→        <motion.div
+  1565→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+  1566→          variants={fadeUp}
+  1567→          initial="hidden"
+  1568→          whileInView="visible"
+  1569→          viewport={vp}
+  1570→        >
+  1571→          <div>
+  1572→            <SectionLabel>Медиа</SectionLabel>
+  1573→            <h2 className="heading-section" style={{ color: C.textDark }}>
+  1574→              Публикации и&nbsp;инсайты
+  1575→            </h2>
+  1576→          </div>
+  1577→          <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+  1578→            Актуальные статьи, обзоры<br />и&nbsp;исследования от наших экспертов
+  1579→          </p>
+  1580→        </motion.div>
+  1581→
+  1582→        {/* Publications cards */}
+  1583→        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4">
+  1584→          {publicationItems.map((pub, index) => (
+  1585→            <motion.div
+  1586→              key={pub.title}
+  1587→              variants={fadeUp}
+  1588→              initial="hidden"
+  1589→              whileInView="visible"
+  1590→              viewport={vp}
+  1591→              custom={index * 0.06}
+  1592→            >
+  1593→              <Link href={pub.href} className="group block h-full">
+  1594→                <div className="relative flex h-full flex-col overflow-hidden rounded-lg bg-white p-5 md:p-6 transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-0.5 border border-transparent group-hover:border-gray-100">
+  1595→                  {/* Accent left line */}
+  1596→                  <div
+  1597→                    className="pointer-events-none absolute left-0 top-0 h-full w-1 transition-all duration-300"
+  1598→                    style={{ background: pub.categoryColor }}
+  1599→                  />
+  1600→                  {/* Top row: category + date */}
+  1601→                  <div className="mb-3 flex items-center gap-3">
+  1602→                    <span
+  1603→                      className="inline-block px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+  1604→                      style={{ background: `${pub.categoryColor}12`, color: pub.categoryColor, borderRadius: "2px" }}
+  1605→                    >
+  1606→                      {pub.category}
+  1607→                    </span>
+  1608→                    <span className="text-[11px] flex items-center gap-1" style={{ color: C.textMuted }}>
+  1609→                      <Calendar className="h-3 w-3" />
+  1610→                      {pub.date}
+  1611→                    </span>
+  1612→                  </div>
+  1613→                  {/* Title */}
+  1614→                  <h3 className="text-[15px] font-semibold leading-tight mb-2 transition-colors duration-300 group-hover:text-[#008C95]" style={{ color: C.textDark }}>
+  1615→                    {pub.title}
+  1616→                  </h3>
+  1617→                  {/* Description */}
+  1618→                  <p className="text-[12px] leading-relaxed flex-1" style={{ color: C.textMuted }}>
+  1619→                    {pub.description}
+  1620→                  </p>
+  1621→                  {/* Arrow */}
+  1622→                  <div className="flex justify-end mt-4">
+  1623→                    <div
+  1624→                      className="flex h-7 w-7 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+  1625→                      style={{ background: `${pub.categoryColor}10` }}
+  1626→                    >
+  1627→                      <ArrowRight className="h-3 w-3" style={{ color: pub.categoryColor }} />
+  1628→                    </div>
+  1629→                  </div>
+  1630→                </div>
+  1631→              </Link>
+  1632→            </motion.div>
+  1633→          ))}
+  1634→        </div>
+  1635→
+  1636→        {/* CTA */}
+  1637→        <div className="mt-10">
+  1638→          <Link
+  1639→            href="/media"
+  1640→            className="group inline-flex items-center gap-2 text-sm font-semibold transition-colors"
+  1641→            style={{ color: C.dna }}
+  1642→          >
+  1643→            Все публикации
+  1644→            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+  1645→          </Link>
+  1646→        </div>
+  1647→      </div>
+  1648→    </section>
+  1649→  );
+  1650→}
+  1651→
+  1652→/* ═══════════════════════════════════════════════════════
+  1653→   SECTION 6 — SERVICES
+  1654→   ═══════════════════════════════════════════════════════ */
+  1655→const services = [
+  1656→  {
+  1657→    title: "Консалтинг",
+  1658→    description:
+  1659→      "Разрабатываем стратегии развития, совершенствуем финансовые модели, оптимизируем процессы и сопровождаем инвестиционные проекты.",
+  1660→    href: "/services/consulting",
+  1661→    icon: Briefcase,
+  1662→  },
+  1663→  {
+  1664→    title: "Аналитика и исследования",
+  1665→    description:
+  1666→      "Глубокое понимание рынков, отраслей и данных, поддерживающее стратегические и операционные решения.",
+  1667→    href: "/services/analytics",
+  1668→    icon: BarChart3,
+  1669→  },
+  1670→  {
+  1671→    title: "Технологии",
+  1672→    description:
+  1673→      "Создание стратегий цифровой трансформации, внедрение ИТ-решений, развитие корпоративных инноваций.",
+  1674→    href: "/services/technologies",
+  1675→    icon: Cpu,
+  1676→    highlight: true,
+  1677→  },
+  1678→  {
+  1679→    title: "Инжиниринг",
+  1680→    description:
+  1681→      "Предпроектный анализ, экспертиза капитальных затрат, управление строительством сложных проектов.",
+  1682→    href: "/services/engineering",
+  1683→    icon: Wrench,
+  1684→  },
+  1685→];
+  1686→
+  1687→function ServicesSection() {
+  1688→  return (
+  1689→    <section id="services" className="relative flex bg-white">
+  1690→      {/* Left: Teal Sidebar */}
+  1691→      <div className="hidden lg:block w-[380px] bg-[#008C95] flex-shrink-0 relative">
+  1692→        <div className="sticky top-16 h-[calc(100vh-64px)] flex flex-col justify-center p-12">
+  1693→          <motion.div
+  1694→            initial={{ opacity: 0, y: 20 }}
+  1695→            whileInView={{ opacity: 1, y: 0 }}
+  1696→            viewport={{ once: true }}
+  1697→            transition={{ duration: 0.6 }}
+  1698→          >
+  1699→            <div className="text-white/30 text-sm font-medium mb-4">01</div>
+  1700→            <h2 className="text-5xl font-bold text-white mb-6">Услуги</h2>
+  1701→            <p className="text-white/70 leading-relaxed mb-8">
+  1702→              Мы специализируемся на повышении эффективности управления, цифровой
+  1703→              трансформации и управлении инвестиционными программами.
+  1704→            </p>
+  1705→            <Link
+  1706→              href="/services"
+  1707→              className="inline-flex items-center gap-2 text-white font-medium group"
+  1708→            >
+  1709→              Все услуги
+  1710→              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+  1711→            </Link>
+  1712→          </motion.div>
+  1713→        </div>
+  1714→      </div>
+  1715→
+  1716→      {/* Right: Services List */}
+  1717→      <div className="flex-1">
+  1718→        {/* Mobile header */}
+  1719→        <div className="lg:hidden bg-[#008C95] p-8">
+  1720→          <div className="text-white/30 text-sm font-medium mb-4">01</div>
+  1721→          <h2 className="text-4xl font-bold text-white">Услуги</h2>
+  1722→        </div>
+  1723→
+  1724→        {/* Services cards */}
+  1725→        <div>
+  1726→          {services.map((service, index) => (
+  1727→            <motion.div
+  1728→              key={index}
+  1729→              initial={{ opacity: 0, y: 20 }}
+  1730→              whileInView={{ opacity: 1, y: 0 }}
+  1731→              viewport={{ once: true }}
+  1732→              transition={{ duration: 0.5, delay: index * 0.1 }}
+  1733→              className={`border-b border-x border-gray-200 ${index === 0 ? 'border-t' : ''}`}
+  1734→            >
+  1735→              <Link
+  1736→                href={service.href}
+  1737→                className={`block p-8 lg:p-12 transition-colors duration-300 group ${
+  1738→                  service.highlight
+  1739→                    ? "bg-[#00313C]"
+  1740→                    : "bg-white hover:bg-gray-50"
+  1741→                }`}
+  1742→              >
+  1743→                <div className="flex items-start justify-between gap-8">
+  1744→                  <div className="flex-1">
+  1745→                    <div className="flex items-center gap-3 mb-3">
+  1746→                      {service.icon && (
+  1747→                        <service.icon
+  1748→                          className={`w-5 h-5 ${
+  1749→                            service.highlight
+  1750→                              ? "text-[#77e2c3]"
+  1751→                              : "text-[#008C95]"
+  1752→                          }`}
+  1753→                        />
+  1754→                      )}
+  1755→                      <h3
+  1756→                        className={`text-2xl font-semibold group-hover:text-[#008C95] transition-colors ${
+  1757→                          service.highlight
+  1758→                            ? "text-white group-hover:text-white"
+  1759→                            : "text-gray-900"
+  1760→                        }`}
+  1761→                      >
+  1762→                        {service.title}
+  1763→                      </h3>
+  1764→                    </div>
+  1765→                    <p
+  1766→                      className={`leading-relaxed ${
+  1767→                        service.highlight
+  1768→                          ? "text-white/70"
+  1769→                          : "text-gray-500"
+  1770→                      }`}
+  1771→                    >
+  1772→                      {service.description}
+  1773→                    </p>
+  1774→                  </div>
+  1775→                  <div
+  1776→                    className={`flex-shrink-0 p-3 transition-all duration-300 group-hover:translate-x-1 ${
+  1777→                      service.highlight
+  1778→                        ? "text-white/50 group-hover:text-[#77e2c3]"
+  1779→                        : "text-gray-300 group-hover:text-[#008C95]"
+  1780→                    }`}
+  1781→                  >
+  1782→                    <ArrowRight className="w-6 h-6" />
+  1783→                  </div>
+  1784→                </div>
+  1785→              </Link>
+  1786→            </motion.div>
+  1787→          ))}
+  1788→        </div>
+  1789→
+  1790→        {/* All services link on mobile */}
+  1791→        <div className="lg:hidden p-8 bg-gray-50">
+  1792→          <Link
+  1793→            href="/services"
+  1794→            className="inline-flex items-center gap-2 text-[#008C95] font-medium group"
+  1795→          >
+  1796→            Все услуги
+  1797→            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+  1798→          </Link>
+  1799→        </div>
+  1800→      </div>
+  1801→    </section>
+  1802→  );
+  1803→}
+  1804→
+  1805→/* ═══════════════════════════════════════════════════════
+  1806→   SECTION 6 — CASES
+  1807→   ═══════════════════════════════════════════════════════ */
+  1808→const cases = [
+  1809→  {
+  1810→    title: "Цифровая трансформация промышленного холдинга",
+  1811→    description: "Разработали ИТ-стратегию и дорожную карту цифровизации, внедрили систему управления производством.",
+  1812→    client: "Крупнейший металлургический холдинг",
+  1813→    result: "Сокращение операционных затрат на 15%",
+  1814→  },
+  1815→  {
+  1816→    title: "Мастер-планирование территории",
+  1817→    description: "Создали цифровую платформу для управления инвестиционными программами развития территорий.",
+  1818→    client: "Субъект РФ",
+  1819→    result: "Более 50 инвестиционных проектов в системе",
+  1820→  },
+  1821→  {
+  1822→    title: "Стратегия ESG-трансформации",
+  1823→    description: "Разработали стратегию устойчивого развития и внедрили систему ESG-отчётности.",
+  1824→    client: "Нефтегазовая компания",
+  1825→    result: "Повышение рейтинга ESG на 2 уровня",
+  1826→  },
+  1827→];
+  1828→
+  1829→function CasesSection() {
+  1830→  return (
+  1831→    <section className="py-16 lg:py-24 bg-white">
+  1832→      <div className="container-kept">
+  1833→        <motion.div
+  1834→          initial={{ opacity: 0, y: 20 }}
+  1835→          whileInView={{ opacity: 1, y: 0 }}
+  1836→          viewport={{ once: true }}
+  1837→          transition={{ duration: 0.6 }}
+  1838→        >
+  1839→          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
+  1840→            <div>
+  1841→              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+  1842→                Кейсы
+  1843→              </h2>
+  1844→              <p className="text-gray-500 text-lg max-w-2xl">
+  1845→                Примеры реализованных проектов и достигнутых результатов
+  1846→              </p>
+  1847→            </div>
+  1848→            <Link
+  1849→              href="/cases"
+  1850→              className="inline-flex items-center gap-2 text-[#008C95] font-medium group"
+  1851→            >
+  1852→              Все кейсы
+  1853→              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+  1854→            </Link>
+  1855→          </div>
+  1856→
+  1857→          {/* Cases grid */}
+  1858→          <div className="grid lg:grid-cols-3 gap-8">
+  1859→            {cases.map((item, index) => (
+  1860→              <motion.div
+  1861→                key={index}
+  1862→                initial={{ opacity: 0, y: 20 }}
+  1863→                whileInView={{ opacity: 1, y: 0 }}
+  1864→                viewport={{ once: true }}
+  1865→                transition={{ duration: 0.4, delay: index * 0.1 }}
+  1866→                className="group"
+  1867→              >
+  1868→                <Link href="/cases" className="block">
+  1869→                  <div className="bg-gray-50 p-8 h-full hover:bg-gray-100 transition-colors border-l-4 border-[#008C95]">
+  1870→                    {/* Number */}
+  1871→                    <div className="text-4xl font-bold text-[#008C95]/20 mb-4">
+  1872→                      [{String(index + 1).padStart(2, '0')}]
+  1873→                    </div>
+  1874→
+  1875→                    {/* Title */}
+  1876→                    <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-[#008C95] transition-colors">
+  1877→                      {item.title}
+  1878→                    </h3>
+  1879→
+  1880→                    {/* Description */}
+  1881→                    <p className="text-gray-600 mb-6 leading-relaxed">
+  1882→                      {item.description}
+  1883→                    </p>
+  1884→
+  1885→                    {/* Client */}
+  1886→                    <div className="mb-4">
+  1887→                      <span className="text-xs text-gray-400 uppercase tracking-wider">Клиент</span>
+  1888→                      <p className="text-sm text-gray-700">{item.client}</p>
+  1889→                    </div>
+  1890→
+  1891→                    {/* Result */}
+  1892→                    <div className="pt-4 border-t border-gray-200">
+  1893→                      <span className="text-xs text-gray-400 uppercase tracking-wider">Результат</span>
+  1894→                      <p className="text-sm font-medium text-[#008C95]">{item.result}</p>
+  1895→                    </div>
+  1896→                  </div>
+  1897→                </Link>
+  1898→              </motion.div>
+  1899→            ))}
+  1900→          </div>
+  1901→        </motion.div>
+  1902→      </div>
+  1903→    </section>
+  1904→  );
+  1905→}
+  1906→
+  1907→/* ═══════════════════════════════════════════════════════
+  1908→   SECTION 8 — EVENTS
+  1909→   ═══════════════════════════════════════════════════════ */
+  1910→const events = [
+  1911→  {
+  1912→    title: "Конференция «Цифровая экономика 2026»",
+  1913→    date: "15 февраля 2026",
+  1914→    location: "Москва, Центр событий",
+  1915→    type: "Конференция",
+  1916→  },
+  1917→  {
+  1918→    title: "Вебинар: Стратегии роста в неопределённости",
+  1919→    date: "20 января 2026",
+  1920→    location: "Онлайн",
+  1921→    type: "Вебинар",
+  1922→  },
+  1923→  {
+  1924→    title: "Круглый стол: ESG-трансформация",
+  1925→    date: "28 января 2026",
+  1926→    location: "Москва, Отель «Метрополь»",
+  1927→    type: "Круглый стол",
+  1928→  },
+  1929→];
+  1930→
+  1931→function EventsSection() {
+  1932→  return (
+  1933→    <section id="events" className="bg-[#f1f2f4] py-20">
+  1934→      <div className="container-kept">
+  1935→        <motion.div
+  1936→          initial={{ opacity: 0, y: 20 }}
+  1937→          whileInView={{ opacity: 1, y: 0 }}
+  1938→          viewport={{ once: true }}
+  1939→          transition={{ duration: 0.6 }}
+  1940→          className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12"
+  1941→        >
+  1942→          <div>
+  1943→            <div className="text-[#008C95] text-sm font-medium mb-4">04</div>
+  1944→            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
+  1945→              Мероприятия
+  1946→            </h2>
+  1947→          </div>
+  1948→          <p className="text-gray-500 max-w-md lg:text-right">
+  1949→            Конференции, вебинары и круглые столы с участием наших экспертов.
+  1950→          </p>
+  1951→        </motion.div>
+  1952→
+  1953→        {/* Events list */}
+  1954→        <div className="space-y-4">
+  1955→          {events.map((event, index) => (
+  1956→            <motion.div
+  1957→              key={index}
+  1958→              initial={{ opacity: 0, y: 20 }}
+  1959→              whileInView={{ opacity: 1, y: 0 }}
+  1960→              viewport={{ once: true }}
+  1961→              transition={{ duration: 0.4, delay: index * 0.1 }}
+  1962→            >
+  1963→              <Link
+  1964→                href="#"
+  1965→                className="flex flex-col lg:flex-row lg:items-center gap-6 p-6 bg-white border border-gray-200 hover:border-[#008C95] transition-colors group"
+  1966→              >
+  1967→                <div className="flex-shrink-0">
+  1968→                  <span className="px-3 py-1 bg-[#008C95] text-white text-xs font-medium">
+  1969→                    {event.type}
+  1970→                  </span>
+  1971→                </div>
+  1972→                <div className="flex-1">
+  1973→                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-[#008C95] transition-colors">
+  1974→                    {event.title}
+  1975→                  </h3>
+  1976→                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+  1977→                    <span className="flex items-center gap-1">
+  1978→                      <Calendar className="w-4 h-4" />
+  1979→                      {event.date}
+  1980→                    </span>
+  1981→                    <span className="flex items-center gap-1">
+  1982→                      <MapPin className="w-4 h-4" />
+  1983→                      {event.location}
+  1984→                    </span>
+  1985→                  </div>
+  1986→                </div>
+  1987→                <div className="flex-shrink-0">
+  1988→                  <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-[#008C95] group-hover:translate-x-1 transition-all" />
+  1989→                </div>
+  1990→              </Link>
+  1991→            </motion.div>
+  1992→          ))}
+  1993→        </div>
+  1994→
+  1995→        <motion.div
+  1996→          initial={{ opacity: 0, y: 20 }}
+  1997→          whileInView={{ opacity: 1, y: 0 }}
+  1998→          viewport={{ once: true }}
+  1999→          transition={{ duration: 0.5, delay: 0.3 }}
+  2000→          className="mt-10 pt-10 border-t border-gray-300 flex justify-center"
+
+[showing lines 1-2000 of 2828; use offset=2001 with limit to continue reading]

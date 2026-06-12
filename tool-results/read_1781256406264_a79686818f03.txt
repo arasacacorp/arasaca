@@ -1,0 +1,695 @@
+     1→"use client";
+     2→
+     3→import { motion } from "framer-motion";
+     4→import Link from "next/link";
+     5→import {
+     6→  ChevronRight,
+     7→  ArrowRight,
+     8→  Briefcase,
+     9→  Layers,
+    10→  Newspaper,
+    11→  Mail,
+    12→  Building2,
+    13→  Home,
+    14→  Users,
+    15→  Heart,
+    16→  FolderOpen,
+    17→  Factory,
+    18→  MapPin,
+    19→  Check,
+    20→  RotateCcw,
+    21→} from "lucide-react";
+    22→import { useState, useEffect } from "react";
+    23→
+    24→/* ═══════════════════════════════════════════════════════
+    25→   COLOUR PALETTE
+    26→   ═══════════════════════════════════════════════════════ */
+    27→const C = {
+    28→  dna: "#008C95",
+    29→  dark: "#00313C",
+    30→  mint: "#77e2c3",
+    31→  mintDark: "#4dc9a5",
+    32→  orange: "#E04E39",
+    33→  muted: "#f1f2f4",
+    34→  white: "#ffffff",
+    35→  textDark: "#1a1a1a",
+    36→  textMid: "#494a4a",
+    37→  textMuted: "#6b7280",
+    38→  border: "#e5e7eb",
+    39→  borderLight: "#f0f0f0",
+    40→};
+    41→
+    42→const vp = { once: true, amount: 0.1 as const };
+    43→
+    44→const fadeUp = {
+    45→  hidden: { opacity: 0, y: 20 },
+    46→  visible: (i: number = 0) => ({
+    47→    opacity: 1,
+    48→    y: 0,
+    49→    transition: { duration: 0.5, delay: i * 0.04, ease: [0.22, 0.61, 0.36, 1] },
+    50→  }),
+    51→};
+    52→
+    53→/* ═══════════════════════════════════════════════════════
+    54→   DATA
+    55→   ═══════════════════════════════════════════════════════ */
+    56→interface L { name: string; href: string }
+    57→interface Sub { title: string; links: L[] }
+    58→interface Cat {
+    59→  title: string;
+    60→  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+    61→  accent: string;
+    62→  links: L[];
+    63→  subs?: Sub[];
+    64→}
+    65→
+    66→const categories: Cat[] = [
+    67→  {
+    68→    title: "Главная",
+    69→    icon: Home,
+    70→    accent: C.dna,
+    71→    links: [{ name: "Главная страница", href: "/" }],
+    72→  },
+    73→  {
+    74→    title: "О компании",
+    75→    icon: Building2,
+    76→    accent: C.dna,
+    77→    links: [
+    78→      { name: "О компании", href: "/about" },
+    79→      { name: "Клиенты", href: "/customers" },
+    80→      { name: "Арасака.Лаб", href: "/lab" },
+    81→    ],
+    82→  },
+    83→  {
+    84→    title: "Кейсы",
+    85→    icon: FolderOpen,
+    86→    accent: C.orange,
+    87→    links: [{ name: "Все кейсы", href: "/cases" }],
+    88→    subs: [
+    89→      {
+    90→        title: "Проекты",
+    91→        links: [
+    92→          { name: "Инструмент ФЭ-моделирования мастер-плана", href: "/cases/instrument-feh-modelirovaniya-master-plan" },
+    93→          { name: "Бизнес-план GaN-on-Diamond", href: "/cases/biznes-plan-gan-almaz-vander-technologies" },
+    94→          { name: "Бизнес-модель БПЛА", href: "/cases/biznes-model-pokrov-vozduh-monitoring-etapov" },
+    95→          { name: "ФЭ-модели мастер-плана Шарыпова", href: "/cases/fe-modeli-master-plan-sharypovo" },
+    96→          { name: "ФЭ-модели мастер-плана Чеченской Республики", href: "/cases/fe-modeli-master-plan-chechenskaya-respublika" },
+    97→          { name: "Бизнес-план стендового комплекса СПГ", href: "/cases/biznes-plan-spg-stend-rosatom-novatek" },
+    98→          { name: "Бизнес-план линейки насосов ГЭН", href: "/cases/biznes-plan-nasosnoe-oborudovanie-gnx" },
+    99→        ],
+   100→      },
+   101→    ],
+   102→  },
+   103→  {
+   104→    title: "Отрасли",
+   105→    icon: Factory,
+   106→    accent: C.mintDark,
+   107→    links: [{ name: "Все отрасли", href: "/industries" }],
+   108→    subs: [
+   109→      {
+   110→        title: "Ключевые отрасли",
+   111→        links: [
+   112→          { name: "Атомная промышленность", href: "/industries/nuclear" },
+   113→          { name: "Строительство и девелопмент", href: "/industries/construction" },
+   114→          { name: "Урбанистика и градостроительство", href: "/industries/urbanistics" },
+   115→          { name: "IT и цифровые технологии", href: "/industries/it" },
+   116→          { name: "Государственный сектор", href: "/industries/government" },
+   117→          { name: "Машиностроение и производство", href: "/industries/manufacturing" },
+   118→          { name: "Судостроение и морская техника", href: "/industries/shipbuilding" },
+   119→          { name: "Оборонно-промышленный комплекс", href: "/industries/defense" },
+   120→          { name: "Нефть, газ и нефтехимия", href: "/industries/oil-gas" },
+   121→        ],
+   122→      },
+   123→      {
+   124→        title: "Дополнительные отрасли",
+   125→        links: [
+   126→          { name: "АПК и пищевая промышленность", href: "/industries/agro" },
+   127→          { name: "Авиационная промышленность", href: "/industries/aerospace" },
+   128→          { name: "Энергетика и ЖКХ", href: "/industries/energy" },
+   129→          { name: "Металлургия и горнодобыча", href: "/industries/mining-metallurgy" },
+   130→          { name: "Финансовый сектор и банки", href: "/industries/finance" },
+   131→          { name: "Медицина и фармацевтика", href: "/industries/healthcare" },
+   132→          { name: "Образование и наука", href: "/industries/education" },
+   133→          { name: "Ритейл и торговля", href: "/industries/retail" },
+   134→          { name: "Транспорт и логистика", href: "/industries/logistics" },
+   135→          { name: "Связь и телеком", href: "/industries/telecom" },
+   136→          { name: "Химическая промышленность", href: "/industries/chemicals" },
+   137→          { name: "Лесная и деревообработка", href: "/industries/forestry" },
+   138→        ],
+   139→      },
+   140→    ],
+   141→  },
+   142→  {
+   143→    title: "Карьера",
+   144→    icon: Users,
+   145→    accent: C.dna,
+   146→    links: [
+   147→      { name: "Карьера", href: "/career" },
+   148→      { name: "Вакансии", href: "/career/vacancies" },
+   149→    ],
+   150→  },
+   151→  {
+   152→    title: "Pro Bono",
+   153→    icon: Heart,
+   154→    accent: C.orange,
+   155→    links: [{ name: "Pro Bono", href: "/pro-bono" }],
+   156→  },
+   157→  {
+   158→    title: "Услуги",
+   159→    icon: Briefcase,
+   160→    accent: C.orange,
+   161→    links: [{ name: "Все услуги", href: "/services" }],
+   162→    subs: [
+   163→      {
+   164→        title: "Консалтинг",
+   165→        links: [
+   166→          { name: "Обзор направления", href: "/services/consulting" },
+   167→          { name: "Стратегический консалтинг", href: "/services/consulting/strategic-consulting" },
+   168→          { name: "Финансовый консалтинг и моделирование", href: "/services/consulting/financial-consulting" },
+   169→          { name: "Операционный консалтинг и оптимизация", href: "/services/consulting/operational-consulting" },
+   170→          { name: "Меры государственной поддержки", href: "/services/consulting/government-support" },
+   171→          { name: "Инвестиционное проектирование", href: "/services/consulting/investment-design" },
+   172→          { name: "Управление проектами", href: "/services/consulting/project-management" },
+   173→          { name: "Отчётность и раскрытие информации", href: "/services/consulting/reporting-disclosure" },
+   174→        ],
+   175→      },
+   176→      {
+   177→        title: "Аналитика и исследования",
+   178→        links: [
+   179→          { name: "Обзор направления", href: "/services/analytics" },
+   180→          { name: "Рыночная аналитика и конкурентные исследования", href: "/services/analytics/market-analytics" },
+   181→          { name: "Экономические и отраслевые исследования", href: "/services/analytics/economic-research" },
+   182→          { name: "Аналитика данных и моделирование", href: "/services/analytics/data-analytics" },
+   183→          { name: "Аналитика данных (статическая)", href: "/services/data-analytics" },
+   184→          { name: "Экономические исследования (статическая)", href: "/services/economic-research" },
+   185→          { name: "Исследования (статическая)", href: "/services/research" },
+   186→          { name: "Маркетинговые исследования (статическая)", href: "/services/market-research" },
+   187→        ],
+   188→      },
+   189→      {
+   190→        title: "Технологии",
+   191→        links: [
+   192→          { name: "Обзор направления", href: "/services/technologies" },
+   193→          { name: "Цифровая трансформация и стратегия", href: "/services/technologies/digital-transformation" },
+   194→          { name: "ИТ-аудит и Due Diligence", href: "/services/technologies/it-audit" },
+   195→          { name: "Разработка и внедрение ИТ-решений", href: "/services/technologies/development" },
+   196→          { name: "Корпоративные инновации и R&D", href: "/services/technologies/innovation" },
+   197→          { name: "Промышленная автоматизация и IIoT", href: "/services/technologies/industrial-automation" },
+   198→          { name: "Облачные решения и инфраструктура", href: "/services/technologies/cloud" },
+   199→        ],
+   200→      },
+   201→      {
+   202→        title: "Инжиниринг",
+   203→        links: [
+   204→          { name: "Обзор направления", href: "/services/engineering" },
+   205→          { name: "Предпроектная проработка", href: "/services/engineering/pre-project" },
+   206→          { name: "Экспертиза капитальных проектов", href: "/services/engineering/expertise" },
+   207→          { name: "Управление строительными проектами", href: "/services/engineering/construction-management" },
+   208→        ],
+   209→      },
+   210→      {
+   211→        title: "HR и организационное развитие",
+   212→        links: [
+   213→          { name: "Обзор направления", href: "/services/hr" },
+   214→          { name: "Управление человеческим капиталом", href: "/services/hr/human-capital-management" },
+   215→          { name: "Организационное развитие и трансформация", href: "/services/hr/organizational-development" },
+   216→          { name: "HR-аналитика и цифровизация", href: "/services/hr/hr-analytics" },
+   217→        ],
+   218→      },
+   219→      {
+   220→        title: "Обучение и развитие",
+   221→        links: [
+   222→          { name: "Обзор направления", href: "/services/learning" },
+   223→          { name: "Корпоративные программы развития", href: "/services/learning/corporate-development" },
+   224→          { name: "Lean & 5С и производственные практики", href: "/services/learning/lean-production" },
+   225→          { name: "Управление знаниями и образовательная стратегия", href: "/services/learning/knowledge-management" },
+   226→          { name: "Арасака. Корпоративная академия", href: "/services/learning/arasaca-academy" },
+   227→        ],
+   228→      },
+   229→      {
+   230→        title: "Коммуникации и бренд",
+   231→        links: [
+   232→          { name: "Обзор направления", href: "/services/communications" },
+   233→          { name: "Бренд и позиционирование", href: "/services/communications/brand-positioning" },
+   234→          { name: "Коммуникационные стратегии", href: "/services/communications/communication-strategy" },
+   235→          { name: "Медийное присутствие и репутация", href: "/services/communications/media-reputation" },
+   236→          { name: "Корпоративная идентичность и культура", href: "/services/communications/corporate-culture" },
+   237→        ],
+   238→      },
+   239→      {
+   240→        title: "Стартапы и инновации",
+   241→        links: [
+   242→          { name: "Обзор направления", href: "/services/startups" },
+   243→          { name: "Развитие стартапов", href: "/services/startups/startup-development" },
+   244→          { name: "Инновации и R&D сопровождение", href: "/services/startups/innovation-rd" },
+   245→          { name: "Корпоративные инновации", href: "/services/startups/corporate-innovation" },
+   246→        ],
+   247→      },
+   248→      {
+   249→        title: "Развитие территорий",
+   250→        links: [
+   251→          { name: "Обзор направления", href: "/services/territorial-development" },
+   252→          { name: "Пространственное и стратегическое планирование", href: "/services/territorial-development/spatial-strategic-planning" },
+   253→          { name: "Экономическое моделирование и сопровождение", href: "/services/territorial-development/economic-modeling" },
+   254→          { name: "Механизмы реализации и институциональные модели", href: "/services/territorial-development/implementation-mechanisms" },
+   255→        ],
+   256→      },
+   257→      {
+   258→        title: "Урбанистика",
+   259→        links: [
+   260→          { name: "Урбанистика — обзор", href: "/services/urban" },
+   261→          { name: "Мастер-планирование", href: "/services/urban/master-planning" },
+   262→          { name: "Экономика территорий", href: "/services/urban/territory-economics" },
+   263→          { name: "Инфраструктура", href: "/services/urban/infrastructure" },
+   264→        ],
+   265→      },
+   266→    ],
+   267→  },
+   268→  {
+   269→    title: "Решения и продукты",
+   270→    icon: Layers,
+   271→    accent: C.mintDark,
+   272→    links: [
+   273→      { name: "Все решения", href: "/solutions" },
+   274→      { name: "Мастер-планирование", href: "/solutions/master-planning" },
+   275→    ],
+   276→  },
+   277→  {
+   278→    title: "Медиа",
+   279→    icon: Newspaper,
+   280→    accent: C.dna,
+   281→    links: [
+   282→      { name: "Пресс-центр", href: "/press-center" },
+   283→      { name: "Все публикации", href: "/media" },
+   284→      { name: "Новости", href: "/media/news" },
+   285→      { name: "Статьи", href: "/media/articles" },
+   286→      { name: "Инсайты", href: "/media/insights" },
+   287→    ],
+   288→    subs: [
+   289→      {
+   290→        title: "Страницы новостей",
+   291→        links: [{ name: "Ребрендинг", href: "/media/news/rebranding" }],
+   292→      },
+   293→    ],
+   294→  },
+   295→  {
+   296→    title: "Контакты",
+   297→    icon: Mail,
+   298→    accent: C.orange,
+   299→    links: [{ name: "Страница контактов", href: "/contacts" }],
+   300→  },
+   301→];
+   302→
+   303→/* ═══════════════════════════════════════════════════════
+   304→   CHECKBOX LINK COMPONENTS
+   305→   ═══════════════════════════════════════════════════════ */
+   306→function CheckLink({
+   307→  link,
+   308→  accent,
+   309→  checked,
+   310→  onToggle,
+   311→}: {
+   312→  link: L;
+   313→  accent: string;
+   314→  checked: boolean;
+   315→  onToggle: (href: string) => void;
+   316→}) {
+   317→  return (
+   318→    <div className="group/l flex items-center gap-2.5 py-2.5 border-b transition-colors" style={{ borderColor: C.borderLight }}>
+   319→      <button
+   320→        onClick={() => onToggle(link.href)}
+   321→        className="shrink-0 flex h-[18px] w-[18px] items-center justify-center rounded border-2 transition-all duration-150 cursor-pointer"
+   322→        style={{
+   323→          borderColor: checked ? accent : C.border,
+   324→          background: checked ? accent : "transparent",
+   325→        }}
+   326→        aria-label={checked ? `Отменить: ${link.name}` : `Проверено: ${link.name}`}
+   327→      >
+   328→        {checked && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+   329→      </button>
+   330→      <Link
+   331→        href={link.href}
+   332→        target="_blank"
+   333→        rel="noopener noreferrer"
+   334→        className="flex-1 min-w-0"
+   335→        onClick={(e) => e.stopPropagation()}
+   336→      >
+   337→        <span
+   338→          className="text-[13.5px] font-medium transition-all duration-200"
+   339→          style={{
+   340→            color: checked ? C.textMuted : C.textDark,
+   341→            textDecoration: checked ? "line-through" : "none",
+   342→            textDecorationColor: checked ? accent : undefined,
+   343→            textDecorationThickness: checked ? "2px" : undefined,
+   344→          }}
+   345→        >
+   346→          {link.name}
+   347→        </span>
+   348→      </Link>
+   349→    </div>
+   350→  );
+   351→}
+   352→
+   353→function CheckSubLink({
+   354→  link,
+   355→  accent,
+   356→  checked,
+   357→  onToggle,
+   358→}: {
+   359→  link: L;
+   360→  accent: string;
+   361→  checked: boolean;
+   362→  onToggle: (href: string) => void;
+   363→}) {
+   364→  return (
+   365→    <div className="group/l flex items-center gap-2 py-2 border-b" style={{ borderColor: C.borderLight }}>
+   366→      <button
+   367→        onClick={() => onToggle(link.href)}
+   368→        className="shrink-0 flex h-[16px] w-[16px] items-center justify-center rounded border-2 transition-all duration-150 cursor-pointer"
+   369→        style={{
+   370→          borderColor: checked ? accent : C.border,
+   371→          background: checked ? accent : "transparent",
+   372→        }}
+   373→        aria-label={checked ? `Отменить: ${link.name}` : `Проверено: ${link.name}`}
+   374→      >
+   375→        {checked && <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />}
+   376→      </button>
+   377→      <Link
+   378→        href={link.href}
+   379→        target="_blank"
+   380→        rel="noopener noreferrer"
+   381→        className="flex-1 min-w-0"
+   382→        onClick={(e) => e.stopPropagation()}
+   383→      >
+   384→        <span
+   385→          className="text-[13px] transition-all duration-200 truncate"
+   386→          style={{
+   387→            color: checked ? C.textMuted : C.textMid,
+   388→            textDecoration: checked ? "line-through" : "none",
+   389→            textDecorationColor: checked ? accent : undefined,
+   390→            textDecorationThickness: checked ? "2px" : undefined,
+   391→          }}
+   392→        >
+   393→          {link.name}
+   394→        </span>
+   395→      </Link>
+   396→    </div>
+   397→  );
+   398→}
+   399→
+   400→/* ═══════════════════════════════════════════════════════
+   401→   PAGE
+   402→   ═══════════════════════════════════════════════════════ */
+   403→export default function Roadmap2Page() {
+   404→  const STORAGE_KEY = "roadmap2-checked";
+   405→
+   406→  const [checked, setChecked] = useState<Set<string>>(new Set());
+   407→  const [mounted, setMounted] = useState(false);
+   408→
+   409→  /* Load from localStorage */
+   410→  useEffect(() => {
+   411→    try {
+   412→      const saved = localStorage.getItem(STORAGE_KEY);
+   413→      if (saved) setChecked(new Set(JSON.parse(saved)));
+   414→    } catch {}
+   415→    setMounted(true);
+   416→  }, []);
+   417→
+   418→  /* Save to localStorage */
+   419→  useEffect(() => {
+   420→    if (!mounted) return;
+   421→    try {
+   422→      localStorage.setItem(STORAGE_KEY, JSON.stringify([...checked]));
+   423→    } catch {}
+   424→  }, [checked, mounted]);
+   425→
+   426→  const toggle = (href: string) => {
+   427→    setChecked((prev) => {
+   428→      const next = new Set(prev);
+   429→      if (next.has(href)) next.delete(href);
+   430→      else next.add(href);
+   431→      return next;
+   432→    });
+   433→  };
+   434→
+   435→  const resetAll = () => setChecked(new Set());
+   436→
+   437→  /* Totals */
+   438→  const allHrefs: string[] = [];
+   439→  categories.forEach((cat) => {
+   440→    cat.links.forEach((l) => allHrefs.push(l.href));
+   441→    cat.subs?.forEach((s) => s.links.forEach((l) => allHrefs.push(l.href)));
+   442→  });
+   443→  const totalLinks = allHrefs.length;
+   444→  const checkedCount = allHrefs.filter((h) => checked.has(h)).length;
+   445→  const progress = totalLinks > 0 ? Math.round((checkedCount / totalLinks) * 100) : 0;
+   446→
+   447→  return (
+   448→    <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
+   449→      {/* ══════════ HERO ══════════ */}
+   450→      <section className="relative overflow-hidden pt-16 lg:pt-[120px] pb-14 md:pb-16" style={{ background: C.dark }}>
+   451→        <div className="container-kept relative z-10 pt-6 md:pt-10 lg:pt-12">
+   452→          <motion.nav
+   453→            className="flex items-center gap-2 mb-6"
+   454→            initial={{ opacity: 0 }}
+   455→            animate={{ opacity: 1 }}
+   456→            transition={{ duration: 0.5, delay: 0.1 }}
+   457→          >
+   458→            <Link href="/" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.5)" }}>
+   459→              Главная
+   460→            </Link>
+   461→            <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   462→            <span className="text-[12px] font-medium" style={{ color: C.mint }}>Проверка страниц</span>
+   463→          </motion.nav>
+   464→
+   465→          <div className="flex items-end gap-6 md:gap-10 flex-wrap">
+   466→            <div>
+   467→              <motion.h1
+   468→                className="mb-3"
+   469→                style={{
+   470→                  fontSize: "clamp(2rem, 5vw, 3.25rem)",
+   471→                  fontWeight: 700,
+   472→                  lineHeight: 1.15,
+   473→                  letterSpacing: "-0.02em",
+   474→                  color: C.white,
+   475→                }}
+   476→                initial={{ opacity: 0, y: 16 }}
+   477→                animate={{ opacity: 1, y: 0 }}
+   478→                transition={{ duration: 0.6, delay: 0.2 }}
+   479→              >
+   480→                Roadmap проверки
+   481→              </motion.h1>
+   482→              <motion.p
+   483→                className="max-w-lg text-[14px] leading-relaxed"
+   484→                style={{ color: "rgba(255,255,255,0.6)" }}
+   485→                initial={{ opacity: 0, y: 12 }}
+   486→                animate={{ opacity: 1, y: 0 }}
+   487→                transition={{ duration: 0.6, delay: 0.3 }}
+   488→              >
+   489→                Отмечайте проверенные страницы — прогресс сохраняется в&nbsp;браузере
+   490→              </motion.p>
+   491→            </div>
+   492→
+   493→            {/* Counter */}
+   494→            <motion.div
+   495→              initial={{ opacity: 0, scale: 0.9 }}
+   496→              animate={{ opacity: 1, scale: 1 }}
+   497→              transition={{ duration: 0.5, delay: 0.4 }}
+   498→              className="flex items-center gap-4 px-5 py-3 rounded-xl"
+   499→              style={{ background: "rgba(255,255,255,0.08)" }}
+   500→            >
+   501→              <MapPin className="w-5 h-5" style={{ color: C.mint }} />
+   502→              <div>
+   503→                <div className="text-[22px] font-bold tabular-nums" style={{ color: C.white }}>
+   504→                  {checkedCount} <span className="text-[14px] font-normal" style={{ color: "rgba(255,255,255,0.4)" }}>/ {totalLinks}</span>
+   505→                </div>
+   506→                <div className="text-[11px]" style={{ color: "rgba(255,255,255,0.5)" }}>проверено</div>
+   507→              </div>
+   508→            </motion.div>
+   509→          </div>
+   510→
+   511→          {/* Progress bar */}
+   512→          <motion.div
+   513→            initial={{ opacity: 0 }}
+   514→            animate={{ opacity: 1 }}
+   515→            transition={{ duration: 0.5, delay: 0.5 }}
+   516→            className="mt-6"
+   517→          >
+   518→            <div className="flex items-center gap-3">
+   519→              <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
+   520→                <div
+   521→                  className="h-full rounded-full transition-all duration-500 ease-out"
+   522→                  style={{ width: `${progress}%`, background: progress === 100 ? C.mint : C.dna }}
+   523→                />
+   524→              </div>
+   525→              <span className="text-[13px] font-semibold tabular-nums" style={{ color: C.mint }}>{progress}%</span>
+   526→            </div>
+   527→          </motion.div>
+   528→        </div>
+   529→        <div className="absolute bottom-0 left-0 right-0 h-8" style={{ background: C.muted, borderRadius: "24px 24px 0 0" }} />
+   530→      </section>
+   531→
+   532→      {/* ══════════ TOOLBAR ══════════ */}
+   533→      <section className="pt-2 pb-6">
+   534→        <div className="container-kept flex items-center justify-between flex-wrap gap-3">
+   535→          <div className="text-[13px]" style={{ color: C.textMuted }}>
+   536→            {checkedCount === 0
+   537→              ? "Нажмите на галочку рядом со страницей после проверки"
+   538→              : progress === 100
+   539→              ? "Все страницы проверены!"
+   540→              : `Осталось проверить: ${totalLinks - checkedCount} страниц`}
+   541→          </div>
+   542→          {checkedCount > 0 && (
+   543→            <button
+   544→              onClick={resetAll}
+   545→              className="flex items-center gap-1.5 text-[12px] font-medium px-3 py-1.5 rounded-lg transition-colors hover:bg-gray-200"
+   546→              style={{ color: C.orange }}
+   547→            >
+   548→              <RotateCcw className="w-3 h-3" />
+   549→              Сбросить всё
+   550→            </button>
+   551→          )}
+   552→        </div>
+   553→      </section>
+   554→
+   555→      {/* ══════════ ALL CATEGORIES ══════════ */}
+   556→      <section className="pb-16 lg:pb-24">
+   557→        <div className="container-kept space-y-6">
+   558→          {categories.map((cat) => {
+   559→            const hasSubs = cat.subs && cat.subs.length > 0;
+   560→            const catHrefs: string[] = [];
+   561→            cat.links.forEach((l) => catHrefs.push(l.href));
+   562→            cat.subs?.forEach((s) => s.links.forEach((l) => catHrefs.push(l.href)));
+   563→            const catChecked = catHrefs.filter((h) => checked.has(h)).length;
+   564→            const catTotal = catHrefs.length;
+   565→            const catProgress = catTotal > 0 ? Math.round((catChecked / catTotal) * 100) : 0;
+   566→            const catDone = catChecked === catTotal && catTotal > 0;
+   567→
+   568→            return (
+   569→              <motion.div
+   570→                key={cat.title}
+   571→                variants={fadeUp}
+   572→                initial="hidden"
+   573→                whileInView="visible"
+   574→                viewport={vp}
+   575→                custom={0}
+   576→              >
+   577→                <div
+   578→                  className="rounded-2xl overflow-hidden bg-white transition-all duration-300"
+   579→                  style={{
+   580→                    boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)",
+   581→                    opacity: catDone ? 0.55 : 1,
+   582→                  }}
+   583→                >
+   584→                  {/* Bar */}
+   585→                  <div
+   586→                    className="h-1 transition-all duration-500"
+   587→                    style={{ background: catDone ? C.mintDark : cat.accent }}
+   588→                  />
+   589→
+   590→                  <div className="p-5 md:p-6">
+   591→                    {/* Header */}
+   592→                    <div className="flex items-center gap-3 mb-5">
+   593→                      <div
+   594→                        className="flex h-9 w-9 items-center justify-center rounded-lg"
+   595→                        style={{ background: `${cat.accent}12` }}
+   596→                      >
+   597→                        <cat.icon className="h-[18px] w-[18px]" style={{ color: cat.accent }} />
+   598→                      </div>
+   599→                      <h2 className="text-[17px] font-bold" style={{ color: C.textDark }}>
+   600→                        {cat.title}
+   601→                        {catDone && (
+   602→                          <span className="ml-2 text-[12px] font-medium" style={{ color: C.mintDark }}>
+   603→                            ✓ готово
+   604→                          </span>
+   605→                        )}
+   606→                      </h2>
+   607→                      <div className="flex-1 h-px" style={{ background: C.borderLight }} />
+   608→                      <div className="flex items-center gap-2">
+   609→                        <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ background: `${cat.accent}15` }}>
+   610→                          <div
+   611→                            className="h-full rounded-full transition-all duration-300"
+   612→                            style={{ width: `${catProgress}%`, background: catDone ? C.mintDark : cat.accent }}
+   613→                          />
+   614→                        </div>
+   615→                        <span className="text-[11px] font-medium tabular-nums" style={{ color: cat.accent }}>
+   616→                          {catChecked}/{catTotal}
+   617→                        </span>
+   618→                      </div>
+   619→                    </div>
+   620→
+   621→                    {/* Main links */}
+   622→                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-0">
+   623→                      {cat.links.map((link) => (
+   624→                        <CheckLink
+   625→                          key={link.href}
+   626→                          link={link}
+   627→                          accent={cat.accent}
+   628→                          checked={checked.has(link.href)}
+   629→                          onToggle={toggle}
+   630→                        />
+   631→                      ))}
+   632→                    </div>
+   633→
+   634→                    {/* Sub-directions */}
+   635→                    {hasSubs && (
+   636→                      <div className="mt-5 space-y-5">
+   637→                        {cat.subs!.map((sub) => (
+   638→                          <div key={sub.title}>
+   639→                            <div className="flex items-center gap-2 mb-2.5">
+   640→                              <div className="w-2 h-2 rounded-full" style={{ background: cat.accent }} />
+   641→                              <h3
+   642→                                className="text-[12px] font-semibold uppercase tracking-[0.12em]"
+   643→                                style={{ color: cat.accent }}
+   644→                              >
+   645→                                {sub.title}
+   646→                              </h3>
+   647→                              <div className="flex-1 h-px" style={{ background: `${cat.accent}20` }} />
+   648→                              <span className="text-[10px] font-medium tabular-nums" style={{ color: cat.accent, opacity: 0.7 }}>
+   649→                                {sub.links.filter((l) => checked.has(l.href)).length}/{sub.links.length}
+   650→                              </span>
+   651→                            </div>
+   652→                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-0 pl-4">
+   653→                              {sub.links.map((link) => (
+   654→                                <CheckSubLink
+   655→                                  key={link.href}
+   656→                                  link={link}
+   657→                                  accent={cat.accent}
+   658→                                  checked={checked.has(link.href)}
+   659→                                  onToggle={toggle}
+   660→                                />
+   661→                              ))}
+   662→                            </div>
+   663→                          </div>
+   664→                        ))}
+   665→                      </div>
+   666→                    )}
+   667→                  </div>
+   668→                </div>
+   669→              </motion.div>
+   670→            );
+   671→          })}
+   672→        </div>
+   673→      </section>
+   674→
+   675→      {/* ══════════ CTA ══════════ */}
+   676→      <section className="py-16 lg:py-20 mt-auto" style={{ background: C.dark }}>
+   677→        <div className="container-kept">
+   678→          <div className="text-center max-w-2xl mx-auto">
+   679→            <h2
+   680→              style={{ fontSize: "clamp(1.5rem, 3vw, 2.25rem)", fontWeight: 700, lineHeight: 1.25, color: C.white }}
+   681→            >
+   682→              {progress === 100 ? "Все страницы проверены!" : "Проверяйте страницы по порядку"}
+   683→            </h2>
+   684→            <p className="text-[14px] mt-3" style={{ color: "rgba(255,255,255,0.55)" }}>
+   685→              {progress === 100
+   686→                ? "Отличная работа! Все разделы сайта прошли проверку."
+   687→                : "Состояние сохраняется в браузере — можно закрыть и вернуться позже."}
+   688→            </p>
+   689→          </div>
+   690→        </div>
+   691→      </section>
+   692→    </main>
+   693→  );
+   694→}
+   695→
