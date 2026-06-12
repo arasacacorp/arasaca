@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { allPublications, getPublicationBySlug, typeLabels } from "@/data/publications";
+import { allPublications, getPublicationBySlug, getLatestPublications, typeLabels } from "@/data/publications";
 import PublicationDetailClient from "./PublicationDetailClient";
 
 /* ─── Static params for SSG ─── */
@@ -41,5 +41,12 @@ export default async function PublicationDetailPage({
     notFound();
   }
 
-  return <PublicationDetailClient publication={publication} />;
+  const latestPublications = getLatestPublications(5);
+
+  return (
+    <PublicationDetailClient
+      publication={publication}
+      latestPublications={latestPublications}
+    />
+  );
 }
