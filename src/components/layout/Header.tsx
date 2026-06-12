@@ -7,104 +7,10 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Search, ChevronDown, X, ArrowRight, ChevronRight, Phone, Eye, Mail } from "lucide-react"
 import { coreIndustries } from "@/data/industries"
+import { buildHeaderServicesMenu } from "@/data/servicesData"
 
-// Структура услуг с подуслугами
-const servicesMenu = {
-  name: "Услуги",
-  href: "/services",
-  inHeader: true,
-  description: "Консалтинг, аналитика и исследования, технологии, инжиниринг, развитие территорий, HR, обучение, коммуникации и стартапы.",
-  categories: [
-    {
-      name: "Консалтинг",
-      href: "/services/consulting",
-      services: [
-        { name: "Стратегия и корпоративное управление", href: "/services/consulting/strategic-consulting" },
-        { name: "Управление проектами и программами", href: "/services/consulting/project-management" },
-        { name: "Инвестиционный консалтинг", href: "/services/consulting/investment-design" },
-        { name: "Господдержка и сопровождение", href: "/services/consulting/government-support" },
-      ],
-    },
-    {
-      name: "Аналитика и исследования",
-      href: "/services/analytics",
-      services: [
-        { name: "Рыночная аналитика и исследования", href: "/services/analytics/market-analytics" },
-        { name: "Экономические исследования", href: "/services/analytics/economic-research" },
-        { name: "Аналитика данных и моделирование", href: "/services/analytics/data-analytics" },
-      ],
-    },
-    {
-      name: "Технологии",
-      href: "/services/technologies",
-      highlight: true,
-      services: [
-        { name: "Цифровая трансформация и стратегия", href: "/services/technologies/digital-transformation" },
-        { name: "ИТ-аудит и Due Diligence", href: "/services/technologies/it-audit" },
-        { name: "Разработка и внедрение ИТ-решений", href: "/services/technologies/development" },
-        { name: "Корпоративные инновации и R&D", href: "/services/technologies/innovation" },
-        { name: "Промышленная автоматизация и IIoT", href: "/services/technologies/industrial-automation" },
-        { name: "Облачные решения и инфраструктура", href: "/services/technologies/cloud" },
-      ],
-    },
-    {
-      name: "Инжиниринг",
-      href: "/services/engineering",
-      services: [
-        { name: "Предпроектная проработка", href: "/services/engineering/pre-project" },
-        { name: "Экспертиза капитальных проектов", href: "/services/engineering/expertise" },
-        { name: "Управление строительными проектами", href: "/services/engineering/construction-management" },
-      ],
-    },
-    {
-      name: "Развитие территорий",
-      href: "/services/territorial-development",
-      services: [
-        { name: "Пространственное и стратегическое планирование", href: "/services/territorial-development/spatial-strategic-planning" },
-        { name: "Экономическое моделирование", href: "/services/territorial-development/economic-modeling" },
-        { name: "Механизмы реализации", href: "/services/territorial-development/implementation-mechanisms" },
-      ],
-    },
-    {
-      name: "HR и организационное развитие",
-      href: "/services/hr",
-      services: [
-        { name: "Управление человеческим капиталом", href: "/services/hr/human-capital-management" },
-        { name: "Организационное развитие и трансформация", href: "/services/hr/organizational-development" },
-        { name: "HR-аналитика и цифровизация", href: "/services/hr/hr-analytics" },
-      ],
-    },
-    {
-      name: "Обучение и развитие",
-      href: "/services/learning",
-      services: [
-        { name: "Корпоративные программы развития", href: "/services/learning/corporate-development" },
-        { name: "Lean & 5С и производственные практики", href: "/services/learning/lean-production" },
-        { name: "Управление знаниями", href: "/services/learning/knowledge-management" },
-        { name: "Корпоративная академия Арасаки", href: "/services/learning/arasaca-academy" },
-      ],
-    },
-    {
-      name: "Коммуникации и бренд",
-      href: "/services/communications",
-      services: [
-        { name: "Бренд и позиционирование", href: "/services/communications/brand-positioning" },
-        { name: "Коммуникационные стратегии", href: "/services/communications/communication-strategy" },
-        { name: "Медийное присутствие и репутация", href: "/services/communications/media-reputation" },
-        { name: "Корпоративная идентичность и культура", href: "/services/communications/corporate-culture" },
-      ],
-    },
-    {
-      name: "Стартапы и инновации",
-      href: "/services/startups",
-      services: [
-        { name: "Развитие стартапов", href: "/services/startups/startup-development" },
-        { name: "Инновации и R&D сопровождение", href: "/services/startups/innovation-rd" },
-        { name: "Корпоративные инновации", href: "/services/startups/corporate-innovation" },
-      ],
-    },
-  ],
-}
+// Структура услуг — генерируется из единого источника (servicesData)
+const servicesMenu = buildHeaderServicesMenu()
 
 // Полная навигация — используется в бургер-меню
 const navigation = [

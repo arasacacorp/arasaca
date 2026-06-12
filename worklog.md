@@ -448,3 +448,28 @@ Stage Summary:
 - 8 секций в отдельных файлах (87-312 строк каждая)
 - Анимации импортируются из @/lib/animations вместо инлайн
 - Визуально для пользователя — нулевые изменения
+
+---
+Task ID: 7
+Agent: main
+Task: Рефакторинг Header.tsx — устранение дублирования навигации с servicesData.ts
+
+Work Log:
+- Изучил Header.tsx (1202 строки) и servicesData.ts — выявил полное дублирование данных об услугах
+- Установил ключевые различия: другой порядок категорий, subset услуг (4/7 для Консалтинга), другие отображаемые имена, highlight на Технологиях
+- Добавил опциональные поля в интерфейсы: SubService.headerName, SubService.showInHeader, ServiceCategory.highlight, ServiceCategory.headerName, ServiceCategory.headerOrder
+- Обновил все 9 категорий в servicesData.ts с header-метаданными (headerOrder 1-9, headerName где отличается, showInHeader:false для 3 скрытых услуг Консалтинга)
+- Создал функцию buildHeaderServicesMenu() с типами HeaderMenuItem, HeaderMenuCategory, HeaderServicesMenu
+- Заменил 96 строк хардкода servicesMenu (строки 12-107) на: import + const servicesMenu = buildHeaderServicesMenu()
+- Lint: 0 ошибок, dev-сервер: HTTP 200
+- Визуальная проверка Agent Browser: десктоп + мобильная версия — все проверки пройдены
+- Порядок категорий: Консалтинг → Аналитика → Технологии → Инжиниринг → Территории → HR → Обучение → Коммуникации → Стартапы — совпадает
+- Консалтинг: ровно 4 услуги с правильными именами
+- Технологии: зелёная точка highlight
+- Все остальные страницы-потребители servicesData (industries/[slug]) работают корректно
+
+Stage Summary:
+- Header.tsx: -96 строк хардкода → +2 строки (импорт + вызов функции)
+- servicesData.ts: +4 опциональных поля в интерфейсах, +метаданные в данных, +buildHeaderServicesMenu() (55 строк)
+- Единый источник истины: servicesData.ts — при изменении структуры услуг обновляем 1 место
+- Визуально для пользователя — нулевые изменения
