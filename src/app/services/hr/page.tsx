@@ -1,26 +1,39 @@
-"use client";
-
-import { Users as UsersIcon, Network, BarChart2, BarChart3, ClipboardList } from "lucide-react";
+import type { Metadata } from "next";
+import { createMetadata } from "@/lib/seo";
 import { C } from "@/lib/colors";
 import { hrSubDirections } from "@/data/hrServices";
 import ServicePageTemplate from "@/components/templates/ServicePageTemplate";
+
+export const metadata: Metadata = createMetadata({
+  title: "HR и организационное развитие",
+  description:
+    "HR-консалтинг от Арасака: управление человеческим капиталом, организационное проектирование, HR-аналитика и цифровизация HR-процессов.",
+  path: "/services/hr",
+  keywords: [
+    "HR",
+    "организационное развитие",
+    "человеческий капитал",
+    "HR-аналитика",
+    "Арасака",
+    "управление персоналом",
+  ],
+});
 
 export default function HrPage() {
   return (
     <ServicePageTemplate
       subDirections={hrSubDirections}
-      iconMap={{ Users: UsersIcon, Network, BarChart2 }}
-      fallbackIcon={UsersIcon}
+      fallbackIcon="Users"
       hero={{
         breadcrumb: "HR-консалтинг",
         badgeText: "Экспертное направление",
         title: "HR-консалтинг",
         subtitle: "Стратегический HR-консалтинг, организационное развитие и аналитика персонала для формирования эффективной команды и устойчивого роста организации.",
         stats: [
-          { number: "3", label: "практик", icon: UsersIcon, accent: C.dna },
-          { number: "30+", label: "отраслей", icon: BarChart3, accent: C.mintDark },
-          { number: "50+", label: "экспертов", icon: UsersIcon, accent: C.orange },
-          { number: "500+", label: "проектов", icon: ClipboardList, accent: C.dna },
+          { number: "3", label: "практик", icon: "Users", accent: C.dna },
+          { number: "30+", label: "отраслей", icon: "BarChart3", accent: C.mintDark },
+          { number: "50+", label: "экспертов", icon: "Users", accent: C.orange },
+          { number: "500+", label: "проектов", icon: "ClipboardList", accent: C.dna },
         ],
       }}
       directions={{
@@ -31,9 +44,9 @@ export default function HrPage() {
       approach={{
         subtitle: "От диагностики до трансформации: выстраиваем HR-системы, которые работают на бизнес-результат.",
         steps: [
-          { icon: UsersIcon, title: "Диагностика", description: "Аудит HR-процессов и организационной структуры", step: "01" },
-          { icon: Network, title: "Проектирование", description: "Разработка HR-стратегии и целевой модели", step: "02" },
-          { icon: BarChart2, title: "Реализация", description: "Внедрение изменений и оценка эффективности", step: "03" },
+          { icon: "Users", title: "Диагностика", description: "Аудит HR-процессов и организационной структуры", step: "01" },
+          { icon: "Network", title: "Проектирование", description: "Разработка HR-стратегии и целевой модели", step: "02" },
+          { icon: "BarChart2", title: "Реализация", description: "Внедрение изменений и оценка эффективности", step: "03" },
         ],
       }}
     />

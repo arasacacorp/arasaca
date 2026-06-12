@@ -12,18 +12,16 @@ import { cn } from "@/lib/utils";
 import { C } from "@/lib/colors";
 import { fadeUp, fadeIn, scaleIn, vp } from "@/lib/animations";
 import { quickLinks } from "@/data/quickLinks";
+import { Icon } from "@/lib/iconRegistry";
 import type { SubDirection } from "@/data/types";
-import type { LucideIcon } from "lucide-react";
 
 /* ─── Config types ─── */
 
 export interface ServicePageConfig {
   /** Массив поднаправлений */
   subDirections: SubDirection[];
-  /** Маппинг имя иконки → компонент */
-  iconMap: Record<string, React.ComponentType<{ className?: string }>>;
-  /** Fallback-иконка для карточек направлений */
-  fallbackIcon: LucideIcon;
+  /** Fallback-иконка (string ID) для карточек направлений */
+  fallbackIcon?: string;
 
   /** Hero-секция */
   hero: {
@@ -34,7 +32,7 @@ export interface ServicePageConfig {
     stats: {
       number: string;
       label: string;
-      icon: LucideIcon;
+      icon: string;
       accent: string;
     }[];
   };
@@ -57,7 +55,7 @@ export interface ServicePageConfig {
   approach: {
     subtitle: string;
     steps: {
-      icon: LucideIcon;
+      icon: string;
       title: string;
       description: string;
       step: string;
@@ -68,7 +66,7 @@ export interface ServicePageConfig {
 /* ─── Template component ─── */
 
 export default function ServicePageTemplate(config: ServicePageConfig) {
-  const { subDirections, iconMap, fallbackIcon, hero, directions, approach } = config;
+  const { subDirections, fallbackIcon, hero, directions, approach } = config;
 
   return (
     <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
@@ -134,11 +132,10 @@ export default function ServicePageTemplate(config: ServicePageConfig) {
 
             <motion.div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:w-[420px] lg:flex-shrink-0 lg:gap-4" variants={fadeUp} initial="hidden" animate="visible" custom={0.3}>
               {hero.stats.map((stat, index) => {
-                const StatIcon = stat.icon;
                 return (
                   <motion.div key={stat.label} className="relative overflow-hidden rounded-lg p-5 md:p-6" style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }} variants={scaleIn} initial="hidden" animate="visible" custom={0.4 + index * 0.08}>
                     <div className="absolute left-0 top-0 h-0.5 w-full" style={{ background: `linear-gradient(90deg, ${stat.accent}, ${stat.accent}50)` }} />
-                    <StatIcon className="mb-3 h-5 w-5" style={{ color: stat.accent }} />
+                    <Icon name={stat.icon} fallback="Search" className="mb-3 h-5 w-5" style={{ color: stat.accent }} />
                     <div className="text-2xl font-bold leading-none md:text-3xl" style={{ fontFamily: "var(--font-russo)", color: C.white }}>{stat.number}</div>
                     <div className="mt-1.5 text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.45)" }}>{stat.label}</div>
                   </motion.div>
@@ -164,7 +161,7 @@ export default function ServicePageTemplate(config: ServicePageConfig) {
 
           <div className={cn("grid gap-3 md:gap-4", subDirections.length <= 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2 sm:grid-cols-3")}>
             {subDirections.map((direction, index) => {
-              const IconComponent = iconMap[direction.icon] || fallbackIcon;
+              // icon resolved via <Icon> component below
               const isHighlight = directions.highlightSlug != null && direction.slug === directions.highlightSlug;
               const isWide = directions.wideIndices?.includes(index) ?? false;
 
@@ -182,7 +179,7 @@ export default function ServicePageTemplate(config: ServicePageConfig) {
 
                       <div className="relative z-10">
                         <div className="flex items-center gap-2 mb-1">
-                          <IconComponent className="h-4 w-4 opacity-60" />
+                          <Icon name={direction.icon} fallback={fallbackIcon} className="h-4 w-4 opacity-60" />
                           <span className="block text-sm font-semibold md:text-base">{direction.title}</span>
                         </div>
                         {isHighlight && directions.highlightBadge && (
@@ -223,13 +220,13 @@ export default function ServicePageTemplate(config: ServicePageConfig) {
 
           <div className="grid md:grid-cols-3 gap-5">
             {approach.steps.map((item, index) => {
-              const StepIcon = item.icon;
+              // icon resolved via <Icon> component below
               return (
                 <motion.div key={index} variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={index * 0.12}>
                   <div className="relative overflow-hidden rounded-lg p-6 md:p-8 h-full" style={{ background: "rgba(255,255,255,0.05)" }}>
                     <div className="relative z-10">
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg mb-5" style={{ background: "rgba(0,140,149,0.15)" }}>
-                        <StepIcon className="h-6 w-6" style={{ color: C.dna }} />
+                        <Icon name={item.icon} fallback="Search" className="h-6 w-6" style={{ color: C.dna }} />
                       </div>
                       <span className="block text-[11px] font-semibold uppercase tracking-[0.2em] mb-2" style={{ color: C.mint }}>Шаг {item.step}</span>
                       <h3 className="text-lg font-bold mb-2" style={{ color: C.white }}>{item.title}</h3>

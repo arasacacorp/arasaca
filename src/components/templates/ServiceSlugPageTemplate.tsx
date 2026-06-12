@@ -21,18 +21,16 @@ import { cn } from "@/lib/utils";
 import { C } from "@/lib/colors";
 import { fadeUp, scaleIn, vp } from "@/lib/animations";
 import { quickLinks } from "@/data/quickLinks";
+import { Icon } from "@/lib/iconRegistry";
 import type { SubDirection } from "@/data/types";
-import type { LucideIcon } from "lucide-react";
 
 /* ─── Config types ─── */
 
 export interface ServiceSlugPageConfig {
   /** Массив всех поднаправлений данной категории */
   subDirections: SubDirection[];
-  /** Маппинг имя иконки → компонент */
-  iconMap: Record<string, React.ComponentType<{ className?: string }>>;
-  /** Fallback-иконка */
-  fallbackIcon: LucideIcon;
+  /** Fallback-иконка (string ID) */
+  fallbackIcon?: string;
 
   /** Родительская страница */
   parent: {
@@ -126,7 +124,7 @@ function ServiceAccordionItem({
 /* ─── Template component ─── */
 
 export default function ServiceSlugPageTemplate(config: ServiceSlugPageConfig) {
-  const { subDirections, iconMap, fallbackIcon, parent } = config;
+  const { subDirections, fallbackIcon, parent } = config;
 
   const params = useParams();
   const slug = params.slug as string;
@@ -138,7 +136,7 @@ export default function ServiceSlugPageTemplate(config: ServiceSlugPageConfig) {
     notFound();
   }
 
-  const IconComponent = iconMap[direction.icon] || fallbackIcon;
+  // icon resolved via <Icon> component below
   const otherDirections = subDirections.filter((d) => d.slug !== slug);
 
   const scroll = (dir: "left" | "right") => {
@@ -176,7 +174,7 @@ export default function ServiceSlugPageTemplate(config: ServiceSlugPageConfig) {
 
               <motion.div className="mb-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider" style={{ background: "rgba(0,140,149,0.15)", color: C.mint, borderRadius: "2px" }}>
-                  <IconComponent className="h-3 w-3" />
+                  <Icon name={direction.icon} fallback={fallbackIcon} className="h-3 w-3" />
                   {parent.badgeText}
                 </span>
               </motion.div>
@@ -305,7 +303,7 @@ export default function ServiceSlugPageTemplate(config: ServiceSlugPageConfig) {
               style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
             >
               {otherDirections.map((relDirection) => {
-                const RelIcon = iconMap[relDirection.icon] || fallbackIcon;
+                // icon resolved via <Icon> component below
                 return (
                   <motion.div key={relDirection.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4 }} className="flex-shrink-0 w-[280px]">
                     <Link
@@ -316,7 +314,7 @@ export default function ServiceSlugPageTemplate(config: ServiceSlugPageConfig) {
                       onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
                     >
                       <div className="w-11 h-11 flex items-center justify-center rounded-lg mb-4 transition-colors duration-300" style={{ background: "rgba(0,140,149,0.15)" }}>
-                        <RelIcon className="w-5 h-5" style={{ color: C.dna }} />
+                        <Icon name={relDirection.icon} fallback={fallbackIcon} className="w-5 h-5" style={{ color: C.dna }} />
                       </div>
                       <h3 className="mb-2 text-[15px] font-semibold transition-colors duration-300" style={{ color: C.white }}>{relDirection.shortTitle}</h3>
                       <p className="text-[13px] leading-relaxed line-clamp-2" style={{ color: "rgba(255,255,255,0.5)" }}>{relDirection.description}</p>

@@ -330,3 +330,32 @@ Stage Summary:
 - Создано: сервисный реестр в servicesData.ts с serviceSubDirectionsMap, getSubDirectionBySlug(), getSubDirectionsByCategory()
 - Упрощён ServiceSlugPageTemplate — убран проп getSubDirectionBySlug (slug-lookup делается внутри шаблона)
 - Все сервисные страницы работают идентично — визуально ничего не изменилось для пользователя
+
+---
+Task ID: 3
+Agent: main
+Task: Этап 3 рефакторинга — 41 layout-файл, удаление boilerplate
+
+Work Log:
+- Проанализировал все 41 layout.tsx файл — все boilerplate (metadata + return children)
+- Выявил что 18 сервисных page.tsx после Этапа 1 — тривиальные обёртки над "use client" шаблонами, не использующие хуки → можно конвертировать в серверные компоненты
+- Конвертировал 9 category page.tsx: убрал "use client", добавил import Metadata/createMetadata, добавил export const metadata из layout
+- Конвертировал 9 [slug] page.tsx: убрал "use client", добавил generateMetadata + generateStaticParams из layout
+- Обнаружил критическую проблему: серверные компоненты не могут передавать функции (Lucide иконки) как пропсы клиентским компонентам → HTTP 500
+- Создал src/lib/iconRegistry.tsx: реестр string→LucideIcon, getIcon() функция, Icon wrapper-компонент
+- Обновил ServicePageTemplate: иконки передаются как string IDs, резолвятся через <Icon name={} /> компонент
+- Обновил ServiceSlugPageTemplate: аналогично, иконки через <Icon name={} />
+- Обновил все 18 page.tsx: иконки передаются как строки (icon: "Search" вместо icon: Search)
+- Исправил lint-ошибку: иконки создавались в рендере (const IconComponent = getIcon(...)) → заменено на стабильный <Icon /> компонент
+- Удалил 18 layout.tsx файлов (9 category + 9 [slug])
+- Lint чист (только предсуществующие watchdog ошибки)
+- Все 13 проверенных URL → HTTP 200 с правильными title-тегами
+- Agent Browser: 0 JS-ошибок, страницы рендерятся корректно
+
+Stage Summary:
+- Удалено 18 boilerplate layout.tsx файлов
+- Создан iconRegistry.tsx — центральный реестр иконок для проброса через server/client boundary
+- 18 page.tsx конвертированы из "use client" в серверные компоненты с inline metadata
+- SEO metadata полностью сохранена (перенесена из layout.tsx в page.tsx)
+- Визуально ничего не изменилось для пользователя
+- Оставшиеся 23 layout.tsx (about, career, cases, etc.) — нужны для metadata "use client" страниц, оставлены без изменений
