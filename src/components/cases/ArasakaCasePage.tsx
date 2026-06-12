@@ -229,7 +229,7 @@ export default function ArasakaCasePage() {
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
               <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)` }} />
-              <Image src="/cases/arasaka-website/hero-mockup.png" alt="Корпоративный сайт Арасака — мокап" width={1344} height={768} className="w-full h-auto relative z-10" priority />
+              <Image src="/cases/arasaka-website/hero-mockup.png" alt="Корпоративный сайт Арасака — главная страница" width={1440} height={900} className="w-full h-auto relative z-10" priority />
             </div>
           </motion.div>
         </div>
@@ -275,7 +275,7 @@ export default function ArasakaCasePage() {
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
-              <Image src="/cases/arasaka-website/before-after.png" alt="Сравнение дизайна до и после" width={1344} height={768} className="w-full h-auto" />
+              <Image src="/cases/arasaka-website/before-after.png" alt="Сравнение дизайна до и после" width={1460} height={610} className="w-full h-auto" />
             </div>
           </motion.div>
           <motion.div className="grid md:grid-cols-2 gap-6 mt-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
@@ -355,7 +355,7 @@ export default function ArasakaCasePage() {
           </div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-              <Image src="/cases/arasaka-website/tech-stack.png" alt="Архитектура технологического стека" width={1344} height={768} className="w-full h-auto" />
+              <Image src="/cases/arasaka-website/tech-stack.png" alt="Страница услуг — архитектура сервисов" width={1440} height={900} className="w-full h-auto" />
             </div>
           </motion.div>
         </div>
@@ -409,7 +409,7 @@ export default function ArasakaCasePage() {
           </div>
           <motion.div className="mt-10" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
-              <Image src="/cases/arasaka-website/code-review.png" alt="Code review — архитектура проекта" width={1344} height={768} className="w-full h-auto" />
+              <Image src="/cases/arasaka-website/code-review.png" alt="Архитектура кода — шаблоны и дизайн-система" width={1440} height={900} className="w-full h-auto" />
             </div>
           </motion.div>
         </div>
@@ -424,7 +424,7 @@ export default function ArasakaCasePage() {
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
-              <Image src="/cases/arasaka-website/responsive-devices.png" alt="Адаптивная вёрстка" width={1344} height={768} className="w-full h-auto" />
+              <Image src="/cases/arasaka-website/responsive-devices.png" alt="Адаптивная вёрстка — десктоп, планшет, мобильный" width={1230} height={1143} className="w-full h-auto" />
             </div>
           </motion.div>
           <motion.div className="grid sm:grid-cols-3 gap-5 mt-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
@@ -468,7 +468,7 @@ export default function ArasakaCasePage() {
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
             <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-              <Image src="/cases/arasaka-website/performance-metrics.png" alt="Метрики производительности и SEO" width={1344} height={768} className="w-full h-auto" />
+              <Image src="/cases/arasaka-website/performance-metrics.png" alt="Страница «О компании» — метрики и результаты" width={1440} height={900} className="w-full h-auto" />
             </div>
           </motion.div>
         </div>

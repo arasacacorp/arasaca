@@ -1,0 +1,599 @@
+     1→     1→"use client";
+     2→     2→
+     3→     3→import { motion } from "framer-motion";
+     4→     4→import Link from "next/link";
+     5→     5→import Image from "next/image";
+     6→     6→import {
+     7→     7→  ChevronRight,
+     8→     8→  ArrowRight,
+     9→     9→  CheckCircle2,
+    10→    10→  Code2,
+    11→    11→  Palette,
+    12→    12→  Layers,
+    13→    13→  Zap,
+    14→    14→  Globe,
+    15→    15→  Smartphone,
+    16→    16→  BarChart3,
+    17→    17→  GitBranch,
+    18→    18→  FileCode2,
+    19→    19→  Cpu,
+    20→    20→  Mail,
+    21→    21→  Phone,
+    22→    22→  Briefcase,
+    23→    23→  TrendingUp,
+    24→    24→} from "lucide-react";
+    25→    25→import { cn } from "@/lib/utils";
+    26→    26→import { C } from "@/lib/colors";
+    27→    27→import { quickLinks } from "@/data/quickLinks";
+    28→    28→
+    29→    29→const fadeUp = {
+    30→    30→  hidden: { opacity: 0, y: 32 },
+    31→    31→  visible: (i: number = 0) => ({
+    32→    32→    opacity: 1,
+    33→    33→    y: 0,
+    34→    34→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    35→    35→  }),
+    36→    36→};
+    37→    37→
+    38→    38→const scaleIn = {
+    39→    39→  hidden: { opacity: 0, scale: 0.85 },
+    40→    40→  visible: (i: number = 0) => ({
+    41→    41→    opacity: 1,
+    42→    42→    scale: 1,
+    43→    43→    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+    44→    44→  }),
+    45→    45→};
+    46→    46→
+    47→    47→const vp = { once: true, amount: 0.2 as const };
+    48→    48→
+    49→    49→/* ─── Data ─── */
+    50→    50→
+    51→    51→const metrics = [
+    52→    52→  { number: "16", label: "страниц", icon: Globe, accent: C.dna },
+    53→    53→  { number: "99%", label: "сокращение бойлерплейта", icon: GitBranch, accent: C.mintDark },
+    54→    54→  { number: "<1.5с", label: "время загрузки", icon: Zap, accent: C.orange },
+    55→    55→  { number: "100", label: "Lighthouse SEO", icon: BarChart3, accent: C.dna },
+    56→    56→  { number: "20", label: "design-токенов", icon: Palette, accent: C.mintDark },
+    57→    57→  { number: "7K+", label: "строк удалено", icon: FileCode2, accent: C.orange },
+    58→    58→];
+    59→    59→
+    60→    60→const techStack = [
+    61→    61→  { name: "Next.js 16", desc: "App Router, Server Components, Streaming", icon: "▲" },
+    62→    62→  { name: "TypeScript 5", desc: "Строгая типизация, интерфейсы, generics", icon: "TS" },
+    63→    63→  { name: "Tailwind CSS 4", desc: "Utility-first, кастомные токены, responsive", icon: "🌊" },
+    64→    64→  { name: "Framer Motion", desc: "fadeUp, scaleIn, viewport-анимации", icon: "✦" },
+    65→    65→  { name: "shadcn/ui", desc: "New York style, Lucide icons, доступность", icon: "◈" },
+    66→    66→  { name: "Prisma ORM", desc: "SQLite, type-safe queries, migrations", icon: "◇" },
+    67→    67→];
+    68→    68→
+    69→    69→const solutionSteps = [
+    70→    70→  {
+    71→    71→    title: "Исследование и стратегия",
+    72→    72→    desc: "Аудит существующего сайта, анализ конкурентов (Big 4, McKinsey, BCG), интервью с заказчиком. Формирование позиционирования: «структурируем сложное, реализуем важное». Определение ключевых пользовательских сценариев и информационной архитектуры.",
+    73→    73→    icon: Layers,
+    74→    74→  },
+    75→    75→  {
+    76→    76→    title: "Дизайн-система и визуальная идентичность",
+    77→    77→    desc: "Создание единой системы design-токенов (C.*) — 20 цветовых переменных, покрывающих все состояния. Фирменная палитра: тёмно-синий (#00313C), бирюзовый (#008C95), оранжевый (#E04E39), мятный (#77e2c3). Типографика: Manrope для текста, Russo One для заголовков и чисел. Паттерн: тёмный hero с диагональными линиями и glassmorphism-карточками.",
+    78→    78→    icon: Palette,
+    79→    79→  },
+    80→    80→  {
+    81→    81→    title: "Информационная архитектура",
+    82→    82→    desc: "Редукция структуры: удаление 5 сиротских директорий, объединение /media → /press-center, настройка 301-редиректов. Иерархия: Услуги (3 категории, 9 направлений, 40+ поднаправлений), Отрасли (22), Решения (3 продукта), Пресс-центр (50+ публикаций).",
+    83→    83→    icon: Globe,
+    84→    84→  },
+    85→    85→  {
+    86→    86→    title: "Разработка и инженерия",
+    87→    87→    desc: "Next.js 16 с App Router: серверные компоненты для SEO, клиентские — только для интерактивности. Модульная архитектура: Homepage 2806 → 23 строки (99.2% сокращение), данные вынесены в отдельные файлы. Универсальные шаблоны ServicePageTemplate и ServiceSlugPageTemplate для генерации 40+ страниц из данных. Сервисный реестр servicesData.ts — единый источник истины для навигации и контента.",
+    88→    88→    icon: Code2,
+    89→    89→  },
+    90→    90→  {
+    91→    91→    title: "Оптимизация и качество",
+    92→    92→    desc: "Удалено 7000+ строк дублирующегося и мёртвого кода. 18 boilerplate-layout'ов заменены на серверные компоненты с inline metadata. Иконки через строковый реестр (iconRegistry.tsx) для проброса через server/client boundary. Статистика компании (companyStats.ts) — единый источник, устраняющий противоречия между страницами.",
+    93→    93→    icon: Cpu,
+    94→    94→  },
+    95→    95→  {
+    96→    96→    title: "Адаптивность и доступность",
+    97→    97→    desc: "Mobile-first responsive: все 16 страниц оптимизированы для мобильных, планшетов и десктопа. Семантическая HTML-разметка (main, nav, section, article). ARIA-атрибуты, keyboard navigation, alt-text для всех изображений. Кастомные scrollbar-стили, touch-friendly targets ≥ 44px.",
+    98→    98→    icon: Smartphone,
+    99→    99→  },
+   100→   100→];
+   101→   101→
+   102→   102→const codeSnippet = `// Design Tokens — единый источник цвета
+   103→   103→export const C = {
+   104→   104→  dna:       "#008C95",  // Фирменный бирюзовый
+   105→   105→  dark:      "#00313C",  // Тёмный hero-фон
+   106→   106→  orange:    "#E04E39",  // CTA, акценты
+   107→   107→  mint:      "#77e2c3",  // Мятный на тёмном
+   108→   108→  muted:     "#f1f2f4",  // Нейтральный фон
+   109→   109→} as const;
+   110→   110→
+   111→   111→// Сервисный реестр — один источник истины
+   112→   112→export const serviceSubDirectionsMap = {
+   113→   113→  consulting: { title: "Консалтинг", subDirections: [...] },
+   114→   114→  analytics:  { title: "Аналитика",  subDirections: [...] },
+   115→   115→  technologies: { title: "Технологии", subDirections: [...] },
+   116→   116→};
+   117→   117→
+   118→   118→// Шаблон генерирует 40+ страниц из данных
+   119→   119→export default function ServiceSlugPageTemplate(
+   120→   120→  config: ServiceSlugPageConfig
+   121→   121→) {
+   122→   122→  const direction = subDirections
+   123→   123→    .find(d => d.slug === slug);
+   124→   124→  // → Hero + Accordion + Carousel + QuickLinks
+   125→   125→}`;
+   126→   126→
+   127→   127→export default function ArasakaCasePage() {
+   128→   128→  const category = "Коммуникации и бренд";
+   129→   129→
+   130→   130→  return (
+   131→   131→    <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
+   132→   132→      {/* ═══ HERO ═══ */}
+   133→   133→      <section className="relative overflow-hidden pt-16 lg:pt-[120px]" style={{ background: C.dna }}>
+   134→   134→        <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(105deg, #006a72 0%, #008C95 50%, #00a3ae 100%)" }} />
+   135→   135→        <div className="pointer-events-none absolute -right-20 top-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full blur-[200px]" style={{ background: "rgba(255,255,255,0.06)" }} />
+   136→   136→        <div className="pointer-events-none absolute inset-0" style={{ background: `linear-gradient(165deg, transparent 0%, transparent 48%, rgba(255,255,255,0.06) 48.5%, rgba(255,255,255,0.03) 49%, transparent 49.5%, transparent 100%)` }} />
+   137→   137→
+   138→   138→        <div className="container-kept relative z-10">
+   139→   139→          <div className="py-6 md:py-10 lg:py-12">
+   140→   140→            <motion.nav className="flex items-center gap-2 mb-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.1 }}>
+   141→   141→              <Link href="/" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>Главная</Link>
+   142→   142→              <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   143→   143→              <Link href="/cases" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>Кейсы</Link>
+   144→   144→              <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   145→   145→              <span className="text-[12px] font-medium" style={{ color: C.mint }}>{category}</span>
+   146→   146→            </motion.nav>
+   147→   147→
+   148→   148→            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+   149→   149→              <div className="flex-1">
+   150→   150→                <motion.div className="mb-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}>
+   151→   151→                  <span className="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: "rgba(255,255,255,0.15)", color: "#ffffff", borderRadius: "3px" }}>{category}</span>
+   152→   152→                  <span className="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-wider ml-2" style={{ background: "rgba(119,226,195,0.2)", color: C.mint, borderRadius: "3px" }}>2025</span>
+   153→   153→                  <span className="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-wider ml-2" style={{ background: "rgba(224,78,57,0.2)", color: "#ffffff", borderRadius: "3px" }}>Собственный проект</span>
+   154→   154→                </motion.div>
+   155→   155→
+   156→   156→                <motion.h1 className="mb-5 max-w-3xl" style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)", fontWeight: 700, lineHeight: 1.3, letterSpacing: "-0.01em", color: "#ffffff" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
+   157→   157→                  Корпоративный сайт Арасака: редизайн, ребрендинг и инженерия с нуля
+   158→   158→                </motion.h1>
+   159→   159→
+   160→   160→                <motion.p className="mb-6 max-w-2xl text-[14px] font-light leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}>
+   161→   161→                  Полный цикл создания корпоративного сайта — от дизайн-системы и визуальной идентичности до архитектуры, разработки и оптимизации. 16 страниц, 40+ подстраниц, 99% сокращение бойлерплейта, загрузка менее 1.5&nbsp;секунды.
+   162→   162→                </motion.p>
+   163→   163→
+   164→   164→                <motion.div className="flex flex-wrap gap-2" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.35 }}>
+   165→   165→                  {["Редизайн", "Ребрендинг", "Next.js 16", "TypeScript", "Design System", "SEO"].map((tag) => (
+   166→   166→                    <span key={tag} className="px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider" style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)", borderRadius: "2px" }}>{tag}</span>
+   167→   167→                  ))}
+   168→   168→                </motion.div>
+   169→   169→              </div>
+   170→   170→
+   171→   171→              <motion.div className="flex flex-col sm:flex-row lg:flex-col gap-3 lg:w-[280px] lg:flex-shrink-0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.4 }}>
+   172→   172→                <div className="flex-1">
+   173→   173→                  <div className="relative overflow-hidden rounded-lg p-5 h-full flex flex-col justify-center" style={{ background: "rgba(0,0,0,0.2)" }}>
+   174→   174→                    <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.mint }} />
+   175→   175→                    <div className="relative z-10">
+   176→   176→                      <div className="flex items-center gap-2.5 mb-2">
+   177→   177→                        <div className="flex h-8 w-8 items-center justify-center rounded-md" style={{ background: "rgba(255,255,255,0.15)" }}><Layers className="h-4 w-4" style={{ color: "#ffffff" }} /></div>
+   178→   178→                        <span className="text-[11px] uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.5)" }}>Клиент</span>
+   179→   179→                      </div>
+   180→   180→                      <p className="text-[14px] font-semibold leading-snug pl-[42px]" style={{ color: "#ffffff" }}>Корпорация Арасака</p>
+   181→   181→                    </div>
+   182→   182→                  </div>
+   183→   183→                </div>
+   184→   184→                <div className="flex-1">
+   185→   185→                  <div className="relative overflow-hidden rounded-lg p-5 h-full flex flex-col justify-center" style={{ background: "#ffffff" }}>
+   186→   186→                    <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.orange }} />
+   187→   187→                    <div className="relative z-10">
+   188→   188→                      <div className="flex items-center gap-2.5 mb-2">
+   189→   189→                        <div className="flex h-8 w-8 items-center justify-center rounded-md" style={{ background: "rgba(224,78,57,0.1)" }}><TrendingUp className="h-4 w-4" style={{ color: C.orange }} /></div>
+   190→   190→                        <span className="text-[11px] uppercase tracking-wider" style={{ color: C.textMuted }}>Результат</span>
+   191→   191→                      </div>
+   192→   192→                      <p className="text-[13px] font-semibold leading-snug pl-[42px]" style={{ color: C.dna }}>99% сокращение бойлерплейта</p>
+   193→   193→                    </div>
+   194→   194→                  </div>
+   195→   195→                </div>
+   196→   196→              </motion.div>
+   197→   197→            </div>
+   198→   198→          </div>
+   199→   199→        </div>
+   200→   200→      </section>
+   201→   201→
+   202→   202→      {/* ═══ KEY METRICS ═══ */}
+   203→   203→      <section className="py-20 md:py-28 bg-white">
+   204→   204→        <div className="container-kept">
+   205→   205→          <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   206→   206→            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Ключевые метрики</span>
+   207→   207→            <h2 className="heading-section" style={{ color: C.textDark }}>Проект в цифрах</h2>
+   208→   208→          </motion.div>
+   209→   209→          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+   210→   210→            {metrics.map((m, i) => (
+   211→   211→              <motion.div key={m.label} variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={i * 0.08}>
+   212→   212→                <div className="relative overflow-hidden rounded-lg p-6 md:p-7" style={{ background: C.muted, border: `1px solid ${C.borderLight}` }}>
+   213→   213→                  <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: m.accent }} />
+   214→   214→                  <div className="flex items-center gap-3 mb-4">
+   215→   215→                    <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ background: `${m.accent}15` }}><m.icon className="h-5 w-5" style={{ color: m.accent }} /></div>
+   216→   216→                  </div>
+   217→   217→                  <div className="text-3xl font-bold mb-1" style={{ fontFamily: "var(--font-russo)", color: C.textDark }}>{m.number}</div>
+   218→   218→                  <div className="text-[13px] font-medium" style={{ color: C.textMuted }}>{m.label}</div>
+   219→   219→                </div>
+   220→   220→              </motion.div>
+   221→   221→            ))}
+   222→   222→          </div>
+   223→   223→        </div>
+   224→   224→      </section>
+   225→   225→
+   226→   226→      {/* ═══ HERO MOCKUP IMAGE ═══ */}
+   227→   227→      <section className="py-16 lg:py-24" style={{ background: C.dark }}>
+   228→   228→        <div className="container-kept relative z-10">
+   229→   229→          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   230→   230→            <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+   231→   231→              <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)` }} />
+   232→   232→              <Image src="/cases/arasaka-website/hero-mockup.png" alt="Корпоративный сайт Арасака — мокап" width={1344} height={768} className="w-full h-auto relative z-10" priority />
+   233→   233→            </div>
+   234→   234→          </motion.div>
+   235→   235→        </div>
+   236→   236→      </section>
+   237→   237→
+   238→   238→      {/* ═══ ЗАДАЧА ═══ */}
+   239→   239→      <section className="py-20 md:py-28 bg-white">
+   240→   240→        <div className="container-kept">
+   241→   241→          <div className="grid lg:grid-cols-[280px_1fr] gap-8 lg:gap-16">
+   242→   242→            <div className="lg:sticky lg:top-32 lg:self-start">
+   243→   243→              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vp} transition={{ duration: 0.5 }}>
+   244→   244→                <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Контекст</span>
+   245→   245→                <h2 className="heading-section mb-4" style={{ color: C.textDark }}>Задача</h2>
+   246→   246→                <div className="flex items-center gap-3 mt-6">
+   247→   247→                  <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ background: C.light }}><Layers className="h-5 w-5" style={{ color: C.dna }} /></div>
+   248→   248→                  <div>
+   249→   249→                    <p className="text-[12px] font-medium" style={{ color: C.textDark }}>Корпорация Арасака</p>
+   250→   250→                    <p className="text-[11px]" style={{ color: C.textMuted }}>Консалтинговая компания</p>
+   251→   251→                  </div>
+   252→   252→                </div>
+   253→   253→              </motion.div>
+   254→   254→            </div>
+   255→   255→            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={vp} transition={{ duration: 0.6 }}>
+   256→   256→              <div className="relative rounded-lg p-6 md:p-8" style={{ background: C.muted, border: `1px solid ${C.borderLight}` }}>
+   257→   257→                <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: C.dna }} />
+   258→   258→                <div className="space-y-4 text-[14px] font-normal leading-relaxed" style={{ color: C.textMid }}>
+   259→   259→                  <p>Арасака — российская консалтинговая компания с 9 направлениями практики, от стратегического консалтинга до цифровой трансформации и развития территорий. К 2025 году компания выросла из boutique-фирмы в полноценного игрока рынка с клиентами уровня Росатом, Сибур и Новатэк.</p>
+   260→   260→                  <p>Существующий сайт не отражал масштаб экспертизы: типовой шаблон, серые hero-секции, отсутствие единой дизайн-системы, дублирующийся код (2800 строк на одной странице), противоречивая статистика между разделами, мёртвые маршруты и отсутствие адаптивности для мобильных устройств.</p>
+   261→   261→                  <p>Требовалось создать с нуля корпоративный сайт, который транслирует профессионализм и масштаб консалтинговой компании, обеспечивает удобную навигацию по 40+ услугам и 22 отраслям, и при этом легко масштабируется при добавлении новых направлений.</p>
+   262→   262→                </div>
+   263→   263→              </div>
+   264→   264→            </motion.div>
+   265→   265→          </div>
+   266→   266→        </div>
+   267→   267→      </section>
+   268→   268→
+   269→   269→      {/* ═══ BEFORE/AFTER ═══ */}
+   270→   270→      <section className="py-16 lg:py-24" style={{ background: C.muted }}>
+   271→   271→        <div className="container-kept">
+   272→   272→          <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   273→   273→            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Трансформация</span>
+   274→   274→            <h2 className="heading-section" style={{ color: C.textDark }}>До и после</h2>
+   275→   275→          </motion.div>
+   276→   276→          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
+   277→   277→            <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
+   278→   278→              <Image src="/cases/arasaka-website/before-after.png" alt="Сравнение дизайна до и после" width={1344} height={768} className="w-full h-auto" />
+   279→   279→            </div>
+   280→   280→          </motion.div>
+   281→   281→          <motion.div className="grid md:grid-cols-2 gap-6 mt-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
+   282→   282→            <div className="relative rounded-lg p-6" style={{ background: "#ffffff", border: `1px solid ${C.borderLight}` }}>
+   283→   283→              <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: C.textMuted }} />
+   284→   284→              <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: C.textMuted }}>До</span>
+   285→   285→              <h3 className="text-lg font-bold mt-2 mb-3" style={{ color: C.textDark }}>Типовой шаблон</h3>
+   286→   286→              <ul className="space-y-2">
+   287→   287→                {["Серые hero-секции без характера", "Дублирующийся код (2800 строк на странице)", "Противоречивая статистика между страницами", "Мёртвые маршруты и сиротские директории", "Отсутствие дизайн-системы и токенов", "Неоптимизированный мобильный опыт"].map((item) => (
+   288→   288→                  <li key={item} className="flex items-start gap-2 text-[13px]" style={{ color: C.textMid }}><span className="mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ background: C.textMuted }} />{item}</li>
+   289→   289→                ))}
+   290→   290→              </ul>
+   291→   291→            </div>
+   292→   292→            <div className="relative rounded-lg p-6" style={{ background: "#ffffff", border: `1px solid ${C.borderLight}` }}>
+   293→   293→              <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: C.dna }} />
+   294→   294→              <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: C.dna }}>После</span>
+   295→   295→              <h3 className="text-lg font-bold mt-2 mb-3" style={{ color: C.textDark }}>Кастомная дизайн-система</h3>
+   296→   296→              <ul className="space-y-2">
+   297→   297→                {["Тёмные hero с диагональными паттернами и glassmorphism", "Модульная архитектура (23 строки вместо 2800)", "Единый источник статистики (companyStats.ts)", "Чистая структура с 301-редиректами", "20 design-токенов (C.*) и шаблоны страниц", "Mobile-first responsive, Lighthouse 100"].map((item) => (
+   298→   298→                  <li key={item} className="flex items-start gap-2 text-[13px]" style={{ color: C.textMid }}><CheckCircle2 className="h-4 w-4 flex-shrink-0 mt-0.5" style={{ color: C.dna }} />{item}</li>
+   299→   299→                ))}
+   300→   300→              </ul>
+   301→   301→            </div>
+   302→   302→          </motion.div>
+   303→   303→        </div>
+   304→   304→      </section>
+   305→   305→
+   306→   306→      {/* ═══ РЕШЕНИЕ ═══ */}
+   307→   307→      <section className="py-20 md:py-28 bg-white">
+   308→   308→        <div className="container-kept">
+   309→   309→          <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   310→   310→            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+   311→   311→              <div>
+   312→   312→                <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Подход</span>
+   313→   313→                <h2 className="heading-section" style={{ color: C.textDark }}>Как мы решали</h2>
+   314→   314→              </div>
+   315→   315→              <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>6 этапов, нацеленных на измеримый результат</p>
+   316→   316→            </div>
+   317→   317→          </motion.div>
+   318→   318→          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+   319→   319→            {solutionSteps.map((step, index) => (
+   320→   320→              <motion.div key={step.title} variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={index * 0.1}>
+   321→   321→                <div className="relative overflow-hidden rounded-lg p-6 md:p-7 h-full" style={{ background: C.muted, border: `1px solid ${C.borderLight}` }}>
+   322→   322→                  <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: index % 3 === 0 ? C.dna : index % 3 === 1 ? C.mintDark : C.orange }} />
+   323→   323→                  <div className="flex items-center gap-3 mb-4">
+   324→   324→                    <div className="flex h-8 w-8 items-center justify-center rounded-md text-[12px] font-bold" style={{ background: index % 3 === 0 ? C.light : index % 3 === 1 ? "rgba(77,201,165,0.1)" : "rgba(224,78,57,0.1)", color: index % 3 === 0 ? C.dna : index % 3 === 1 ? C.mintDark : C.orange }}>{String(index + 1).padStart(2, "0")}</div>
+   325→   325→                    <step.icon className="h-4 w-4" style={{ color: index % 3 === 0 ? C.dna : index % 3 === 1 ? C.mintDark : C.orange }} />
+   326→   326→                  </div>
+   327→   327→                  <h3 className="text-[15px] font-bold mb-2" style={{ color: C.textDark }}>{step.title}</h3>
+   328→   328→                  <p className="text-[13px] leading-relaxed" style={{ color: C.textMid }}>{step.desc}</p>
+   329→   329→                </div>
+   330→   330→              </motion.div>
+   331→   331→            ))}
+   332→   332→          </div>
+   333→   333→        </div>
+   334→   334→      </section>
+   335→   335→
+   336→   336→      {/* ═══ TECH STACK ═══ */}
+   337→   337→      <section className="py-16 lg:py-24 relative overflow-hidden" style={{ background: C.dark }}>
+   338→   338→        <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)` }} />
+   339→   339→        <div className="container-kept relative z-10">
+   340→   340→          <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   341→   341→            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.mint }}>Технологии</span>
+   342→   342→            <h2 className="heading-section" style={{ color: C.white }}>Стек и архитектура</h2>
+   343→   343→          </motion.div>
+   344→   344→          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 mb-12">
+   345→   345→            {techStack.map((tech, i) => (
+   346→   346→              <motion.div key={tech.name} variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={i * 0.08}>
+   347→   347→                <div className="relative overflow-hidden rounded-lg p-6 h-full" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+   348→   348→                  <div className="pointer-events-none absolute left-0 top-0 h-0.5 w-full" style={{ background: `linear-gradient(90deg, ${C.dna}, ${C.dna}50)` }} />
+   349→   349→                  <div className="text-2xl mb-3">{tech.icon}</div>
+   350→   350→                  <h3 className="text-[15px] font-bold mb-1" style={{ color: C.white }}>{tech.name}</h3>
+   351→   351→                  <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>{tech.desc}</p>
+   352→   352→                </div>
+   353→   353→              </motion.div>
+   354→   354→            ))}
+   355→   355→          </div>
+   356→   356→          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
+   357→   357→            <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+   358→   358→              <Image src="/cases/arasaka-website/tech-stack.png" alt="Архитектура технологического стека" width={1344} height={768} className="w-full h-auto" />
+   359→   359→            </div>
+   360→   360→          </motion.div>
+   361→   361→        </div>
+   362→   362→      </section>
+   363→   363→
+   364→   364→      {/* ═══ CODE VIEW ═══ */}
+   365→   365→      <section className="py-20 md:py-28 bg-white">
+   366→   366→        <div className="container-kept">
+   367→   367→          <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   368→   368→            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+   369→   369→              <div>
+   370→   370→                <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Архитектура</span>
+   371→   371→                <h2 className="heading-section" style={{ color: C.textDark }}>Как устроен код</h2>
+   372→   372→              </div>
+   373→   373→              <p className="text-[14px] font-normal leading-relaxed max-w-sm lg:text-right" style={{ color: C.textMuted }}>Design-токены, сервисный реестр и шаблоны — ядро масштабируемой архитектуры</p>
+   374→   374→            </div>
+   375→   375→          </motion.div>
+   376→   376→          <div className="grid lg:grid-cols-[1fr_400px] gap-8 items-start">
+   377→   377→            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   378→   378→              <div className="relative rounded-xl overflow-hidden" style={{ background: "#0d1117", border: `1px solid ${C.border}` }}>
+   379→   379→                <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: `1px solid rgba(255,255,255,0.06)` }}>
+   380→   380→                  <span className="h-3 w-3 rounded-full" style={{ background: "#ff5f57" }} />
+   381→   381→                  <span className="h-3 w-3 rounded-full" style={{ background: "#febc2e" }} />
+   382→   382→                  <span className="h-3 w-3 rounded-full" style={{ background: "#28c840" }} />
+   383→   383→                  <span className="ml-3 text-[11px] font-mono" style={{ color: "rgba(255,255,255,0.3)" }}>colors.ts + servicesData.ts + ServiceSlugPageTemplate.tsx</span>
+   384→   384→                </div>
+   385→   385→                <pre className="p-6 text-[12px] md:text-[13px] leading-relaxed overflow-x-auto" style={{ color: "#c9d1d9", fontFamily: "ui-monospace, SFMono-Regular, monospace" }}>
+   386→   386→                  <code>{codeSnippet}</code>
+   387→   387→                </pre>
+   388→   388→              </div>
+   389→   389→            </motion.div>
+   390→   390→            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2} className="space-y-4">
+   391→   391→              {[
+   392→   392→                { icon: Palette, title: "Design Tokens", desc: "20 цветовых переменных в одном файле. Никакого хардкода hex-значений." },
+   393→   393→                { icon: Layers, title: "Сервисный реестр", desc: "Единый источник данных об услугах — и для навигации, и для контента страниц." },
+   394→   394→                { icon: Code2, title: "Шаблоны страниц", desc: "2 шаблона генерируют 40+ страниц из данных. Новая услуга — 5 строк в data-файле." },
+   395→   395→                { icon: GitBranch, title: "Модульность", desc: "Homepage: 2806 → 23 строки. Данные в отдельных файлах, секции — независимые компоненты." },
+   396→   396→              ].map((item, i) => (
+   397→   397→                <div key={item.title} className="relative rounded-lg p-5" style={{ background: C.muted, border: `1px solid ${C.borderLight}` }}>
+   398→   398→                  <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: i % 2 === 0 ? C.dna : C.mintDark }} />
+   399→   399→                  <div className="flex items-start gap-3">
+   400→   400→                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md" style={{ background: i % 2 === 0 ? C.light : "rgba(77,201,165,0.1)" }}><item.icon className="h-4 w-4" style={{ color: i % 2 === 0 ? C.dna : C.mintDark }} /></div>
+   401→   401→                    <div>
+   402→   402→                      <h4 className="text-[14px] font-semibold mb-1" style={{ color: C.textDark }}>{item.title}</h4>
+   403→   403→                      <p className="text-[12px] leading-relaxed" style={{ color: C.textMuted }}>{item.desc}</p>
+   404→   404→                    </div>
+   405→   405→                  </div>
+   406→   406→                </div>
+   407→   407→              ))}
+   408→   408→            </motion.div>
+   409→   409→          </div>
+   410→   410→          <motion.div className="mt-10" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
+   411→   411→            <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
+   412→   412→              <Image src="/cases/arasaka-website/code-review.png" alt="Code review — архитектура проекта" width={1344} height={768} className="w-full h-auto" />
+   413→   413→            </div>
+   414→   414→          </motion.div>
+   415→   415→        </div>
+   416→   416→      </section>
+   417→   417→
+   418→   418→      {/* ═══ RESPONSIVE ═══ */}
+   419→   419→      <section className="py-16 lg:py-24" style={{ background: C.muted }}>
+   420→   420→        <div className="container-kept">
+   421→   421→          <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   422→   422→            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Адаптивность</span>
+   423→   423→            <h2 className="heading-section" style={{ color: C.textDark }}>На всех устройствах</h2>
+   424→   424→          </motion.div>
+   425→   425→          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
+   426→   426→            <div className="relative rounded-xl overflow-hidden" style={{ border: `1px solid ${C.border}` }}>
+   427→   427→              <Image src="/cases/arasaka-website/responsive-devices.png" alt="Адаптивная вёрстка" width={1344} height={768} className="w-full h-auto" />
+   428→   428→            </div>
+   429→   429→          </motion.div>
+   430→   430→          <motion.div className="grid sm:grid-cols-3 gap-5 mt-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
+   431→   431→            {[
+   432→   432→              { label: "Mobile-first", desc: "Все 16 страниц оптимизированы для мобильных, начиная с 320px" },
+   433→   433→              { label: "Touch-friendly", desc: "Минимум 44px для интерактивных элементов, жесты прокрутки" },
+   434→   434→              { label: "Breakpoints", desc: "sm:640px, md:768px, lg:1024px — три уровня адаптации" },
+   435→   435→            ].map((item) => (
+   436→   436→              <div key={item.label} className="relative rounded-lg p-5" style={{ background: "#ffffff", border: `1px solid ${C.borderLight}` }}>
+   437→   437→                <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.dna }} />
+   438→   438→                <h4 className="text-[14px] font-semibold mb-1" style={{ color: C.textDark }}>{item.label}</h4>
+   439→   439→                <p className="text-[12px] leading-relaxed" style={{ color: C.textMuted }}>{item.desc}</p>
+   440→   440→              </div>
+   441→   441→            ))}
+   442→   442→          </motion.div>
+   443→   443→        </div>
+   444→   444→      </section>
+   445→   445→
+   446→   446→      {/* ═══ РЕЗУЛЬТАТ ═══ */}
+   447→   447→      <section className="relative overflow-hidden py-20 md:py-28" style={{ background: C.dark }}>
+   448→   448→        <div className="pointer-events-none absolute -right-40 top-0 h-[500px] w-[500px] rounded-full blur-[180px]" style={{ background: "rgba(0,140,149,0.1)" }} />
+   449→   449→        <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)` }} />
+   450→   450→        <div className="container-kept relative z-10">
+   451→   451→          <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   452→   452→            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.mint }}>Итог</span>
+   453→   453→            <h2 className="heading-section" style={{ color: "#ffffff" }}>Результат</h2>
+   454→   454→          </motion.div>
+   455→   455→          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   456→   456→            <div className="relative overflow-hidden rounded-lg p-8 md:p-10 mb-10" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
+   457→   457→              <div className="pointer-events-none absolute left-0 top-0 h-full w-1 rounded-l-lg" style={{ background: C.mint }} />
+   458→   458→              <div className="flex items-center gap-3 mb-5">
+   459→   459→                <div className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ background: "rgba(0,140,149,0.15)" }}><CheckCircle2 className="h-5 w-5" style={{ color: C.dna }} /></div>
+   460→   460→                <span className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: C.mint }}>Достигнуто</span>
+   461→   461→              </div>
+   462→   462→              <div className="space-y-4 text-[15px] leading-relaxed" style={{ color: "rgba(255,255,255,0.8)" }}>
+   463→   463→                <p>Создан с нуля корпоративный сайт консалтинговой компании Арасака — 16 полноценных страниц, 40+ подстраниц услуг, пресс-центр с 50+ публикациями, единая дизайн-система из 20 токенов и 2 универсальных шаблона.</p>
+   464→   464→                <p>Проведён масштабный рефакторинг: удалено 7000+ строк бойлерплейта и дублирующегося кода, Homepage сокращён с 2806 до 23 строк (99.2%), 9 дублирующихся интерфейсов объединены в единый сервисный реестр, Header сокращён на 96 строк хардкода.</p>
+   465→   465→                <p>Сайт загружается менее чем за 1.5 секунды, получает 100 баллов в Lighthouse SEO, полностью адаптивен и доступен. При добавлении новой услуги достаточно добавить 5 строк в data-файл — шаблон сгенерирует страницу автоматически.</p>
+   466→   466→              </div>
+   467→   467→            </div>
+   468→   468→          </motion.div>
+   469→   469→          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.2}>
+   470→   470→            <div className="relative rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+   471→   471→              <Image src="/cases/arasaka-website/performance-metrics.png" alt="Метрики производительности и SEO" width={1344} height={768} className="w-full h-auto" />
+   472→   472→            </div>
+   473→   473→          </motion.div>
+   474→   474→        </div>
+   475→   475→      </section>
+   476→   476→
+   477→   477→      {/* ═══ СТРУКТУРА САЙТА ═══ */}
+   478→   478→      <section className="py-20 md:py-28 bg-white">
+   479→   479→        <div className="container-kept">
+   480→   480→          <motion.div className="mb-12" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   481→   481→            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Карта сайта</span>
+   482→   482→            <h2 className="heading-section" style={{ color: C.textDark }}>Структура и навигация</h2>
+   483→   483→          </motion.div>
+   484→   484→          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+   485→   485→            {[
+   486→   486→              { title: "Услуги", count: "40+", desc: "3 категории, 9 направлений, подстраницы", href: "/services" },
+   487→   487→              { title: "Отрасли", count: "22", desc: "Ключевые отрасли с бейджами", href: "/industries" },
+   488→   488→              { title: "Решения", count: "3", desc: "ЕОСДО, ЕСУИП, Мастер-планирование", href: "/solutions" },
+   489→   489→              { title: "Пресс-центр", count: "50+", desc: "Новости, статьи, инсайты", href: "/press-center" },
+   490→   490→              { title: "О компании", count: "1", desc: "Миссия, цифры, принципы", href: "/about" },
+   491→   491→              { title: "Кейсы", count: "8", desc: "Реализованные проекты", href: "/cases" },
+   492→   492→              { title: "Карьера", count: "8", desc: "Вакансии с фильтрами", href: "/career" },
+   493→   493→              { title: "Контакты", count: "1", desc: "Офиса, форма, карта", href: "/contacts" },
+   494→   494→            ].map((page, i) => (
+   495→   495→              <motion.div key={page.title} variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={i * 0.06}>
+   496→   496→                <Link href={page.href} className="group block h-full">
+   497→   497→                  <div className="relative overflow-hidden rounded-lg p-5 h-full transition-all duration-300 group-hover:shadow-md" style={{ background: C.muted, border: `1px solid ${C.borderLight}` }}>
+   498→   498→                    <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.dna }} />
+   499→   499→                    <div className="text-2xl font-bold mb-1" style={{ fontFamily: "var(--font-russo)", color: C.dna }}>{page.count}</div>
+   500→   500→                    <h4 className="text-[14px] font-semibold mb-1" style={{ color: C.textDark }}>{page.title}</h4>
+   501→   501→                    <p className="text-[11px] leading-relaxed" style={{ color: C.textMuted }}>{page.desc}</p>
+   502→   502→                  </div>
+   503→   503→                </Link>
+   504→   504→              </motion.div>
+   505→   505→            ))}
+   506→   506→          </div>
+   507→   507→        </div>
+   508→   508→      </section>
+   509→   509→
+   510→   510→      {/* ═══ СВЯЗАННЫЕ УСЛУГИ ═══ */}
+   511→   511→      <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   512→   512→        <div className="container-kept">
+   513→   513→          <motion.div className="mb-10" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   514→   514→            <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Экспертиза</span>
+   515→   515→            <h2 className="heading-section" style={{ color: C.textDark }}>Связанные услуги</h2>
+   516→   516→          </motion.div>
+   517→   517→          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+   518→   518→            {[
+   519→   519→              { name: "Коммуникации и бренд", href: "/services/communications", desc: "Визуальная идентичность, позиционирование, дизайн-система" },
+   520→   520→              { name: "Технологии", href: "/services/technologies", desc: "Веб-разработка, архитектура, оптимизация" },
+   521→   521→              { name: "Арасака Лаб", href: "/lab", desc: "Индивидуальная разработка, CRM, дашборды" },
+   522→   522→            ].map((service, index) => (
+   523→   523→              <motion.div key={service.name} variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={index * 0.08}>
+   524→   524→                <Link href={service.href} className="group block h-full">
+   525→   525→                  <div className="relative flex flex-col gap-2 overflow-hidden rounded-lg p-5 md:p-6 transition-all duration-300 group-hover:shadow-lg border h-full" style={{ borderColor: C.borderLight, background: "#ffffff" }}>
+   526→   526→                    <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: C.dna }} />
+   527→   527→                    <div className="flex items-center gap-3">
+   528→   528→                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg" style={{ background: C.light }}><Briefcase className="h-5 w-5" style={{ color: C.dna }} /></div>
+   529→   529→                      <h3 className="text-[14px] font-semibold leading-tight transition-colors group-hover:text-[#008C95]" style={{ color: C.textDark }}>{service.name}</h3>
+   530→   530→                    </div>
+   531→   531→                    <p className="text-[12px] leading-relaxed" style={{ color: C.textMuted }}>{service.desc}</p>
+   532→   532→                    <div className="flex items-center gap-1.5 text-[12px] font-medium mt-auto" style={{ color: C.dna }}>Подробнее <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" /></div>
+   533→   533→                  </div>
+   534→   534→                </Link>
+   535→   535→              </motion.div>
+   536→   536→            ))}
+   537→   537→          </div>
+   538→   538→        </div>
+   539→   539→      </section>
+   540→   540→
+   541→   541→      {/* ═══ QUICK LINKS ═══ */}
+   542→   542→      <section className="py-20 md:py-28 bg-white">
+   543→   543→        <div className="container-kept">
+   544→   544→          <motion.div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp}>
+   545→   545→            <div>
+   546→   546→              <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]" style={{ color: C.dna }}>Навигация</span>
+   547→   547→              <h2 className="heading-section" style={{ color: C.textDark }}>Полезные ссылки</h2>
+   548→   548→            </div>
+   549→   549→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании</p>
+   550→   550→          </motion.div>
+   551→   551→          <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+   552→   552→            <div className="flex-1 flex">
+   553→   553→              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 w-full h-full auto-rows-fr">
+   554→   554→                {quickLinks.map((card, index) => {
+   555→   555→                  const isWhite = card.bg === C.white;
+   556→   556→                  return (
+   557→   557→                    <motion.div key={card.title} className="flex" variants={scaleIn} initial="hidden" whileInView="visible" viewport={vp} custom={index * 0.08}>
+   558→   558→                      <Link href={card.href} className="group block h-full w-full">
+   559→   559→                        <motion.div className={cn("relative flex flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300 h-full", isWhite && "border shadow-sm group-hover:shadow-md")} style={{ background: card.bg, color: card.textColor, borderColor: isWhite ? C.border : undefined, minHeight: "130px" }} whileHover={{ y: -3, transition: { duration: 0.25 } }}>
+   560→   560→                          {card.bg === C.dark && <div className="pointer-events-none absolute inset-0 opacity-[0.06]" style={{ backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`, backgroundSize: "20px 20px" }} />}
+   561→   561→                          {isWhite && <div className="pointer-events-none absolute inset-0 opacity-[0.1]" style={{ backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`, backgroundSize: "12px 12px" }} />}
+   562→   562→                          <div className="pointer-events-none absolute left-0 top-0 h-full w-1" style={{ background: isWhite ? C.dna : "rgba(255,255,255,0.4)" }} />
+   563→   563→                          <div className="relative z-10">
+   564→   564→                            <div className="flex items-center gap-2">{card.icon && <card.icon className="h-4 w-4 opacity-60" />}<span className="block text-sm font-semibold md:text-base">{card.title}</span></div>
+   565→   565→                            <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+   566→   566→                          </div>
+   567→   567→                          <div className="relative z-10 flex justify-end">
+   568→   568→                            <div className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}>
+   569→   569→                              <ArrowRight className="h-4 w-4" style={{ color: isWhite ? C.dna : "#ffffff" }} />
+   570→   570→                            </div>
+   571→   571→                          </div>
+   572→   572→                        </motion.div>
+   573→   573→                      </Link>
+   574→   574→                    </motion.div>
+   575→   575→                  );
+   576→   576→                })}
+   577→   577→              </div>
+   578→   578→            </div>
+   579→   579→            <motion.div className="lg:w-[340px] flex-shrink-0" variants={fadeUp} initial="hidden" whileInView="visible" viewport={vp} custom={0.3}>
+   580→   580→              <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg p-6 md:p-8" style={{ background: C.dark }}>
+   581→   581→                <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)` }} />
+   582→   582→                <div className="relative z-10">
+   583→   583→                  <div className="h-px w-12 mb-5" style={{ background: C.mint }} />
+   584→   584→                  <h3 className="text-xl font-bold leading-tight mb-2" style={{ color: "#ffffff" }}>Хотите такой же сайт?</h3>
+   585→   585→                  <p className="text-[13px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>Обсудим ваш проект — подготовим предложение с&nbsp;дизайн-системой, архитектурой и&nbsp;сроками.</p>
+   586→   586→                </div>
+   587→   587→                <div className="relative z-10 flex flex-col gap-3">
+   588→   588→                  <Link href="/feedback?type=proposals" className="group/kp inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300 rounded-md" style={{ background: C.dna }}><Mail className="h-4 w-4" />Запросить КП</Link>
+   589→   589→                  <Link href="/feedback?type=callback" className="group/cb inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider border transition-all duration-300 rounded-md" style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.8)" }}><Phone className="h-4 w-4" />Обратный звонок</Link>
+   590→   590→                </div>
+   591→   591→              </div>
+   592→   592→            </motion.div>
+   593→   593→          </div>
+   594→   594→        </div>
+   595→   595→      </section>
+   596→   596→    </main>
+   597→   597→  );
+   598→   598→}
+   599→   599→
