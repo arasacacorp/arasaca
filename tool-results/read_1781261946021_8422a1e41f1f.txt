@@ -1,0 +1,645 @@
+     1→"use client";
+     2→
+     3→import { motion } from "framer-motion";
+     4→import Link from "next/link";
+     5→import { cn } from "@/lib/utils";
+     6→import {
+     7→  ArrowRight,
+     8→  ChevronRight,
+     9→  Phone,
+    10→  Mail,
+    11→  Building2,
+    12→  Layers,
+    13→  Newspaper,
+    14→  Briefcase,
+    15→  Users,
+    16→  Wrench,
+    17→  BarChart3,
+    18→} from "lucide-react";
+    19→import { industries } from "@/data/industries";
+    20→import { C } from "@/lib/colors";
+    21→
+    22→/* ─── Animation variants ─── */
+    23→const fadeUp = {
+    24→  hidden: { opacity: 0, y: 32 },
+    25→  visible: (i: number = 0) => ({
+    26→    opacity: 1,
+    27→    y: 0,
+    28→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    29→  }),
+    30→};
+    31→
+    32→const fadeIn = {
+    33→  hidden: { opacity: 0 },
+    34→  visible: (i: number = 0) => ({
+    35→    opacity: 1,
+    36→    transition: { duration: 0.8, delay: i * 0.12 },
+    37→  }),
+    38→};
+    39→
+    40→const scaleIn = {
+    41→  hidden: { opacity: 0, scale: 0.85 },
+    42→  visible: (i: number = 0) => ({
+    43→    opacity: 1,
+    44→    scale: 1,
+    45→    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+    46→  }),
+    47→};
+    48→
+    49→const vp = { once: true, amount: 0.2 as const };
+    50→
+    51→/* ─── Key industry colors (same as main page) ─── */
+    52→const keyIndustrySlugs = new Set(["oil-gas", "nuclear", "defense", "it"]);
+    53→
+    54→const keyIndustryColors: Record<string, string> = {
+    55→  nuclear: C.dark,       // тёмно-бирюзовый — атомная энергия
+    56→  "oil-gas": C.dna,      // бирюзовый — нефтегаз
+    57→  it: C.mintDark,        // мятный — цифровые технологии
+    58→  defense: C.orange,     // оранжевый — ОПК
+    59→};
+    60→
+    61→/* ─── Section label component ─── */
+    62→function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+    63→  return (
+    64→    <motion.span
+    65→      className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+    66→      style={{ color: light ? C.mint : C.dna }}
+    67→      variants={fadeIn}
+    68→      initial="hidden"
+    69→      whileInView="visible"
+    70→      viewport={vp}
+    71→    >
+    72→      {children}
+    73→    </motion.span>
+    74→  );
+    75→}
+    76→
+    77→/* ─── Quick Links cards ─── */
+    78→const sectionCards = [
+    79→  {
+    80→    title: "О компании",
+    81→    description: "Миссия, ценности, команда",
+    82→    bg: C.dark,
+    83→    textColor: "#ffffff",
+    84→    href: "/about",
+    85→    icon: Building2,
+    86→  },
+    87→  {
+    88→    title: "Услуги",
+    89→    description: "9 направлений консалтинга",
+    90→    bg: C.orange,
+    91→    textColor: "#ffffff",
+    92→    href: "/services",
+    93→    icon: Briefcase,
+    94→  },
+    95→  {
+    96→    title: "Решения",
+    97→    description: "Цифровые продукты и платформы",
+    98→    bg: C.white,
+    99→    textColor: C.textDark,
+   100→    href: "/solutions/master-planning",
+   101→    icon: Layers,
+   102→  },
+   103→  {
+   104→    title: "Пресс-центр",
+   105→    description: "Новости, пресс-релизы, СМИ",
+   106→    bg: C.dna,
+   107→    textColor: "#ffffff",
+   108→    href: "/media",
+   109→    icon: Newspaper,
+   110→  },
+   111→  {
+   112→    title: "Карьера",
+   113→    description: "Присоединяйтесь к команде",
+   114→    bg: C.mintDark,
+   115→    textColor: "#ffffff",
+   116→    href: "/career",
+   117→    icon: Users,
+   118→  },
+   119→  {
+   120→    title: "Контакты",
+   121→    description: "Свяжитесь с нами",
+   122→    bg: C.dark,
+   123→    textColor: "#ffffff",
+   124→    href: "/contacts",
+   125→    icon: Mail,
+   126→  },
+   127→];
+   128→
+   129→const interestingArticles = [
+   130→  {
+   131→    title: "Цифровая трансформация в промышленности",
+   132→    category: "Аналитика",
+   133→    date: "15 января 2026",
+   134→  },
+   135→  {
+   136→    title: "Тренды развития энергетики в 2026 году",
+   137→    category: "Энергетика",
+   138→    date: "12 января 2026",
+   139→  },
+   140→  {
+   141→    title: "Господдержка судостроения: новые программы",
+   142→    category: "Судостроение",
+   143→    date: "10 января 2026",
+   144→  },
+   145→  {
+   146→    title: "Устойчивое развитие в АПК",
+   147→    category: "АПК",
+   148→    date: "8 января 2026",
+   149→  },
+   150→  {
+   151→    title: "Инвестиции в телеком-инфраструктуру",
+   152→    category: "Телеком",
+   153→    date: "5 января 2026",
+   154→  },
+   155→  {
+   156→    title: "Фармацевтический рынок: итоги года",
+   157→    category: "Здравоохранение",
+   158→    date: "3 января 2026",
+   159→  },
+   160→];
+   161→
+   162→/* ═══════════════════════════════════════════════════════
+   163→   PAGE
+   164→   ═══════════════════════════════════════════════════════ */
+   165→export default function IndustriesPage() {
+   166→  return (
+   167→    <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
+   168→      {/* ═══════════════════════════════════════════════════
+   169→          HERO — Dark background with diagonal lines + stats grid
+   170→          ═══════════════════════════════════════════════════ */}
+   171→      <section className="relative overflow-hidden pt-16 lg:pt-[120px]" style={{ background: C.dark }}>
+   172→        {/* Decorative diagonal lines */}
+   173→        <div
+   174→          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   175→          style={{
+   176→            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   177→          }}
+   178→        />
+   179→        {/* Decorative glow */}
+   180→        <div
+   181→          className="pointer-events-none absolute -right-40 -top-20 h-[500px] w-[500px] rounded-full blur-[180px]"
+   182→          style={{ background: "rgba(224,78,57,0.10)" }}
+   183→        />
+   184→        <div
+   185→          className="pointer-events-none absolute -left-20 bottom-0 h-[300px] w-[300px] rounded-full blur-[120px]"
+   186→          style={{ background: "rgba(0,140,149,0.08)" }}
+   187→        />
+   188→
+   189→        <div className="container-kept relative z-10">
+   190→          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between py-6 md:py-10 lg:py-12">
+   191→            {/* LEFT: Label + heading + text + buttons */}
+   192→            <motion.div
+   193→              className="flex-1"
+   194→              variants={fadeUp}
+   195→              initial="hidden"
+   196→              animate="visible"
+   197→              custom={0.1}
+   198→            >
+   199→              {/* Breadcrumb */}
+   200→              <motion.nav
+   201→                className="flex items-center gap-2 mb-6"
+   202→                initial={{ opacity: 0 }}
+   203→                animate={{ opacity: 1 }}
+   204→                transition={{ duration: 0.5, delay: 0.1 }}
+   205→              >
+   206→                <Link href="/" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+   207→                  Главная
+   208→                </Link>
+   209→                <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   210→                <span className="text-[12px] font-medium" style={{ color: C.mint }}>Отрасли</span>
+   211→              </motion.nav>
+   212→
+   213→              {/* Main heading */}
+   214→              <motion.h1
+   215→                className="mb-4 max-w-lg"
+   216→                style={{
+   217→                  fontFamily: "var(--font-russo)",
+   218→                  fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   219→                  fontWeight: 700,
+   220→                  lineHeight: 1.25,
+   221→                  letterSpacing: "-0.01em",
+   222→                  color: C.white,
+   223→                }}
+   224→                initial={{ opacity: 0, y: 16 }}
+   225→                animate={{ opacity: 1, y: 0 }}
+   226→                transition={{ duration: 0.6, delay: 0.15 }}
+   227→              >
+   228→                Отрасли
+   229→              </motion.h1>
+   230→
+   231→              {/* Subtitle */}
+   232→              <motion.p
+   233→                className="mb-6 max-w-md text-[14px] font-light leading-relaxed"
+   234→                style={{ color: "rgba(255,255,255,0.55)" }}
+   235→                initial={{ opacity: 0, y: 12 }}
+   236→                animate={{ opacity: 1, y: 0 }}
+   237→                transition={{ duration: 0.6, delay: 0.3 }}
+   238→              >
+   239→                Российская экономика многогранна — от высокотехнологичной энергетики и&nbsp;атомной промышленности до&nbsp;агропромышленного комплекса и&nbsp;цифровых платформ. Мы имеем широкий практический опыт в&nbsp;различных областях экономики.
+   240→              </motion.p>
+   241→
+   242→              {/* CTA buttons */}
+   243→              <motion.div
+   244→                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
+   245→                initial={{ opacity: 0, y: 12 }}
+   246→                animate={{ opacity: 1, y: 0 }}
+   247→                transition={{ duration: 0.6, delay: 0.45 }}
+   248→              >
+   249→                <Link href="/feedback?type=proposals" className="sm:auto">
+   250→                  <motion.span
+   251→                    className="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white w-full sm:w-auto"
+   252→                    style={{ background: C.dna, borderRadius: "4px" }}
+   253→                    whileHover={{ background: C.dnaHover, transition: { duration: 0.3 } }}
+   254→                  >
+   255→                    Запросить КП
+   256→                    <ArrowRight className="h-4 w-4" />
+   257→                  </motion.span>
+   258→                </Link>
+   259→                <Link href="/feedback?type=callback" className="sm:auto">
+   260→                  <motion.span
+   261→                    className="inline-flex items-center justify-center gap-2 border px-7 py-3 text-sm font-medium uppercase tracking-[0.05em] w-full sm:w-auto"
+   262→                    style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)", borderRadius: "4px" }}
+   263→                    whileHover={{
+   264→                      borderColor: C.mint,
+   265→                      color: C.mint,
+   266→                      transition: { duration: 0.3 },
+   267→                    }}
+   268→                  >
+   269→                    Заказать звонок
+   270→                  </motion.span>
+   271→                </Link>
+   272→              </motion.div>
+   273→            </motion.div>
+   274→
+   275→            {/* RIGHT: Stats — 4 cards in 2x2 grid */}
+   276→            <motion.div
+   277→              className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:w-[420px] lg:flex-shrink-0 lg:gap-4"
+   278→              variants={fadeUp}
+   279→              initial="hidden"
+   280→              animate="visible"
+   281→              custom={0.3}
+   282→            >
+   283→              {[
+   284→                { number: "9", label: "ключевых отраслей", icon: Building2, accent: C.dna },
+   285→                { number: "22", label: "отрасли всего", icon: BarChart3, accent: C.mintDark },
+   286→                { number: "50+", label: "экспертов", icon: Users, accent: C.orange },
+   287→                { number: "500+", label: "проектов", icon: Briefcase, accent: C.dna },
+   288→              ].map((stat, index) => (
+   289→                <motion.div
+   290→                  key={stat.label}
+   291→                  className="relative overflow-hidden rounded-lg p-5 md:p-6"
+   292→                  style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }}
+   293→                  variants={scaleIn}
+   294→                  initial="hidden"
+   295→                  animate="visible"
+   296→                  custom={0.4 + index * 0.08}
+   297→                >
+   298→                  {/* Top accent */}
+   299→                  <div
+   300→                    className="absolute left-0 top-0 h-0.5 w-full"
+   301→                    style={{ background: `linear-gradient(90deg, ${stat.accent}, ${stat.accent}50)` }}
+   302→                  />
+   303→                  <stat.icon className="mb-3 h-5 w-5" style={{ color: stat.accent }} />
+   304→                  <div
+   305→                    className="text-2xl font-bold leading-none md:text-3xl"
+   306→                    style={{ fontFamily: "var(--font-russo)", color: C.white }}
+   307→                  >
+   308→                    {stat.number}
+   309→                  </div>
+   310→                  <div className="mt-1.5 text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.45)" }}>
+   311→                    {stat.label}
+   312→                  </div>
+   313→                </motion.div>
+   314→              ))}
+   315→            </motion.div>
+   316→          </div>
+   317→        </div>
+   318→      </section>
+   319→
+   320→      {/* ═══════════════════════════════════════════════════
+   321→          INDUSTRIES — All industries in 4-col grid (same as main page)
+   322→          ═══════════════════════════════════════════════════ */}
+   323→      <section className="relative bg-white py-20 md:py-28">
+   324→        <div className="container-kept">
+   325→          <motion.div
+   326→            className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   327→            variants={fadeUp}
+   328→            initial="hidden"
+   329→            whileInView="visible"
+   330→            viewport={vp}
+   331→          >
+   332→            <div>
+   333→              <SectionLabel>Отрасли</SectionLabel>
+   334→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   335→                Экспертиза в ключевых отраслях
+   336→              </h2>
+   337→            </div>
+   338→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   339→              Российская экономика многогранна — от<br />высокотехнологичной энергетики до<br />цифровых платформ
+   340→            </p>
+   341→          </motion.div>
+   342→
+   343→          {/* Industries grid — all 22 industries, key ones highlighted */}
+   344→          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 md:gap-4 mb-10">
+   345→            {industries.map((industry, index) => {
+   346→              const Icon = industry.icon;
+   347→              const isKey = keyIndustrySlugs.has(industry.slug);
+   348→              const keyBg = isKey ? keyIndustryColors[industry.slug] : undefined;
+   349→
+   350→              return (
+   351→                <motion.div
+   352→                  key={industry.slug}
+   353→                  variants={fadeUp}
+   354→                  initial="hidden"
+   355→                  whileInView="visible"
+   356→                  viewport={vp}
+   357→                  custom={index * 0.05}
+   358→                >
+   359→                  <Link href={`/industries/${industry.slug}`} className="group block h-full">
+   360→                    <div
+   361→                      className={cn(
+   362→                        "relative flex flex-col h-full overflow-hidden rounded-lg p-5 md:p-6 transition-all duration-300 group-hover:shadow-lg border",
+   363→                        isKey
+   364→                          ? "border-transparent"
+   365→                          : "border-transparent group-hover:border-gray-100 bg-[#f8f9fa] group-hover:bg-white",
+   366→                      )}
+   367→                      style={isKey ? { background: keyBg, color: "#ffffff" } : undefined}
+   368→                    >
+   369→                      {/* Accent left line */}
+   370→                      <div
+   371→                        className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   372→                        style={{ background: isKey ? "rgba(255,255,255,0.3)" : C.dna }}
+   373→                      />
+   374→
+   375→                      {/* "Ключевая отрасль" badge — only for key industries */}
+   376→                      {isKey && (
+   377→                        <div className="mb-3">
+   378→                          <span
+   379→                            className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+   380→                            style={{
+   381→                              background: "rgba(255,255,255,0.2)",
+   382→                              color: "rgba(255,255,255,0.95)",
+   383→                              borderRadius: "2px",
+   384→                            }}
+   385→                          >
+   386→                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-white" />
+   387→                            Ключевая отрасль
+   388→                          </span>
+   389→                        </div>
+   390→                      )}
+   391→
+   392→                      {/* Icon + Title */}
+   393→                      <div className="flex items-center gap-3 mb-3">
+   394→                        <div
+   395→                          className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-300"
+   396→                          style={{ background: isKey ? "rgba(255,255,255,0.15)" : `${C.dna}10` }}
+   397→                        >
+   398→                          <Icon
+   399→                            className="h-5 w-5"
+   400→                            style={{ color: isKey ? "rgba(255,255,255,0.9)" : C.dna }}
+   401→                          />
+   402→                        </div>
+   403→                        <h3
+   404→                          className="text-[15px] font-semibold leading-tight transition-colors group-hover:text-[#008C95]"
+   405→                          style={{ color: isKey ? "#ffffff" : C.textDark }}
+   406→                        >
+   407→                          {industry.name}
+   408→                        </h3>
+   409→                      </div>
+   410→
+   411→                      {/* Description */}
+   412→                      <p
+   413→                        className="text-[12px] leading-relaxed flex-1"
+   414→                        style={{ color: isKey ? "rgba(255,255,255,0.7)" : C.textMuted }}
+   415→                      >
+   416→                        {industry.description}
+   417→                      </p>
+   418→
+   419→                      {/* Arrow */}
+   420→                      <div className="flex justify-end mt-4">
+   421→                        <div
+   422→                          className="flex h-7 w-7 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   423→                          style={{ background: isKey ? "rgba(255,255,255,0.2)" : `${C.dna}10` }}
+   424→                        >
+   425→                          <ArrowRight
+   426→                            className="h-3 w-3"
+   427→                            style={{ color: isKey ? "#ffffff" : C.dna }}
+   428→                          />
+   429→                        </div>
+   430→                      </div>
+   431→                    </div>
+   432→                  </Link>
+   433→                </motion.div>
+   434→              )
+   435→            })}
+   436→          </div>
+   437→        </div>
+   438→      </section>
+   439→
+   440→      {/* ═══════════════════════════════════════════════════
+   441→          CTA — Не нашли свою отрасль?
+   442→          ═══════════════════════════════════════════════════ */}
+   443→      <section className="relative overflow-hidden py-20 md:py-28" style={{ background: C.dark }}>
+   444→        {/* Decorative pattern */}
+   445→        <div
+   446→          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   447→          style={{
+   448→            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   449→          }}
+   450→        />
+   451→        <div className="container-kept relative z-10">
+   452→          <motion.div
+   453→            initial={{ opacity: 0, y: 20 }}
+   454→            whileInView={{ opacity: 1, y: 0 }}
+   455→            viewport={{ once: true }}
+   456→            transition={{ duration: 0.6 }}
+   457→            className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8"
+   458→          >
+   459→            <div>
+   460→              <h2
+   461→                className="heading-section mb-4"
+   462→                style={{ color: C.white }}
+   463→              >
+   464→                Не нашли свою отрасль?
+   465→              </h2>
+   466→              <p className="max-w-xl text-[15px] leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>
+   467→                Свяжитесь с нами для консультации. Мы работаем с широким
+   468→                спектром отраслей и готовы обсудить ваш проект.
+   469→              </p>
+   470→            </div>
+   471→            <div className="flex flex-col sm:flex-row gap-3">
+   472→              <Link
+   473→                href="/contacts"
+   474→                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300 group"
+   475→                style={{ background: C.dna }}
+   476→              >
+   477→                Связаться с нами
+   478→                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+   479→              </Link>
+   480→              <Link
+   481→                href="/feedback?type=proposals"
+   482→                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-[12px] font-semibold uppercase tracking-wider transition-all duration-300 border"
+   483→                style={{ color: "rgba(255,255,255,0.8)", borderColor: "rgba(255,255,255,0.2)" }}
+   484→              >
+   485→                Запросить КП
+   486→              </Link>
+   487→            </div>
+   488→          </motion.div>
+   489→        </div>
+   490→      </section>
+   491→
+   492→      {/* ═══════════════════════════════════════════════════
+   493→          QUICK LINKS — Navigation cards + CTA panel
+   494→          ═══════════════════════════════════════════════════ */}
+   495→      <section className="bg-white py-20 md:py-28">
+   496→        <div className="container-kept">
+   497→          {/* Section header */}
+   498→          <motion.div
+   499→            className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   500→            variants={fadeUp}
+   501→            initial="hidden"
+   502→            whileInView="visible"
+   503→            viewport={vp}
+   504→          >
+   505→            <div>
+   506→              <SectionLabel>Навигация</SectionLabel>
+   507→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   508→                Полезные ссылки
+   509→              </h2>
+   510→            </div>
+   511→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   512→              Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании
+   513→            </p>
+   514→          </motion.div>
+   515→
+   516→          {/* Cards + CTA row */}
+   517→          <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+   518→            {/* Left: 6 navigation cards */}
+   519→            <div className="flex-1 flex">
+   520→              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 w-full h-full auto-rows-fr">
+   521→                {sectionCards.map((card, index) => {
+   522→                  const isWhite = card.bg === C.white;
+   523→                  return (
+   524→                    <motion.div
+   525→                      key={card.title}
+   526→                      className="flex"
+   527→                      variants={scaleIn}
+   528→                      initial="hidden"
+   529→                      whileInView="visible"
+   530→                      viewport={vp}
+   531→                      custom={index * 0.08}
+   532→                    >
+   533→                      <Link href={card.href} className="group block h-full w-full">
+   534→                        <motion.div
+   535→                          className={cn(
+   536→                            "relative flex flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300 h-full",
+   537→                            isWhite && "border shadow-sm group-hover:shadow-md",
+   538→                          )}
+   539→                          style={{ background: card.bg, color: card.textColor, borderColor: isWhite ? C.border : undefined, minHeight: "130px" }}
+   540→                          whileHover={{ y: -3, transition: { duration: 0.25 } }}
+   541→                        >
+   542→                          {card.bg === C.dark && (
+   543→                            <div
+   544→                              className="pointer-events-none absolute inset-0 opacity-[0.06]"
+   545→                              style={{
+   546→                                backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`,
+   547→                                backgroundSize: "20px 20px",
+   548→                              }}
+   549→                            />
+   550→                          )}
+   551→                          {isWhite && (
+   552→                            <div
+   553→                              className="pointer-events-none absolute inset-0 opacity-[0.1]"
+   554→                              style={{
+   555→                                backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`,
+   556→                                backgroundSize: "12px 12px",
+   557→                              }}
+   558→                            />
+   559→                          )}
+   560→
+   561→                          {/* Colored accent bar on left */}
+   562→                          <div
+   563→                            className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   564→                            style={{ background: isWhite ? C.dna : "rgba(255,255,255,0.4)" }}
+   565→                          />
+   566→
+   567→                          <div className="relative z-10">
+   568→                            <div className="flex items-center gap-2">
+   569→                              {card.icon && (
+   570→                                <card.icon className="h-4 w-4 opacity-60" />
+   571→                              )}
+   572→                              <span className="block text-sm font-semibold md:text-base">{card.title}</span>
+   573→                            </div>
+   574→                            <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+   575→                          </div>
+   576→
+   577→                          <div className="relative z-10 flex justify-end">
+   578→                            <div
+   579→                              className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   580→                              style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}
+   581→                            >
+   582→                              <ArrowRight className="h-4 w-4" style={{ color: isWhite ? C.dna : "#ffffff" }} />
+   583→                            </div>
+   584→                          </div>
+   585→                        </motion.div>
+   586→                      </Link>
+   587→                    </motion.div>
+   588→                  );
+   589→                })}
+   590→              </div>
+   591→            </div>
+   592→
+   593→            {/* Right: CTA panel */}
+   594→            <motion.div
+   595→              className="lg:w-[340px] flex-shrink-0"
+   596→              variants={fadeUp}
+   597→              initial="hidden"
+   598→              whileInView="visible"
+   599→              viewport={vp}
+   600→              custom={0.3}
+   601→            >
+   602→              <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg p-6 md:p-8" style={{ background: C.dark }}>
+   603→                {/* Decorative pattern */}
+   604→                <div
+   605→                  className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   606→                  style={{
+   607→                    backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+   608→                  }}
+   609→                />
+   610→
+   611→                <div className="relative z-10">
+   612→                  {/* Decorative line */}
+   613→                  <div className="h-px w-12 mb-5" style={{ background: C.mint }} />
+   614→
+   615→                  <h3
+   616→                    className="text-xl font-bold leading-tight mb-2"
+   617→                    style={{ fontFamily: "var(--font-russo)", color: "#ffffff" }}
+   618→                  >
+   619→                    Начните сотрудничество
+   620→                  </h3>
+   621→                  <p className="text-[13px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+   622→                    Оставьте заявку — мы свяжемся с&nbsp;вами, обсудим задачу и&nbsp;подготовим индивидуальное предложение.
+   623→                  </p>
+   624→                </div>
+   625→
+   626→                <div className="relative z-10 flex flex-col gap-3">
+   627→                  <Link href="/feedback?type=proposals" className="group/kp inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300" style={{ background: C.dna }}>
+   628→                    Запросить КП
+   629→                    <ArrowRight className="w-3.5 h-3.5 group-hover/kp:translate-x-0.5 transition-transform" />
+   630→                  </Link>
+   631→                  <Link href="/feedback?type=callback" className="group/cb inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider transition-all duration-300 border" style={{ color: "rgba(255,255,255,0.7)", borderColor: "rgba(255,255,255,0.15)" }}>
+   632→                    Обратный звонок
+   633→                    <Phone className="w-3.5 h-3.5 group-hover/cb:translate-x-0.5 transition-transform" />
+   634→                  </Link>
+   635→                </div>
+   636→              </div>
+   637→            </motion.div>
+   638→          </div>
+   639→        </div>
+   640→      </section>
+   641→
+   642→    </main>
+   643→  );
+   644→}
+   645→

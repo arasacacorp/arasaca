@@ -1,0 +1,995 @@
+     1→"use client";
+     2→
+     3→import { motion } from "framer-motion";
+     4→import Link from "next/link";
+     5→import { cn } from "@/lib/utils";
+     6→import {
+     7→  ChevronRight,
+     8→  ArrowRight,
+     9→  ArrowUpRight,
+    10→  Heart,
+    11→  HandHeart,
+    12→  FileCheck,
+    13→  MessageCircle,
+    14→  Users,
+    15→  Target,
+    16→  BookOpen,
+    17→  Scale,
+    18→  Building2,
+    19→  Sparkles,
+    20→  Lightbulb,
+    21→  Handshake,
+    22→  Mail,
+    23→  Briefcase,
+    24→  BarChart3,
+    25→  Cpu,
+    26→  Layers,
+    27→  Newspaper,
+    28→  Phone,
+    29→  CheckCircle2,
+    30→  FileText,
+    31→  MessageSquare,
+    32→  ClipboardCheck,
+    33→} from "lucide-react";
+    34→import { C } from "@/lib/colors";
+    35→
+    36→/* ─── Animation variants ─── */
+    37→const fadeUp = {
+    38→  hidden: { opacity: 0, y: 32 },
+    39→  visible: (i: number = 0) => ({
+    40→    opacity: 1,
+    41→    y: 0,
+    42→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    43→  }),
+    44→};
+    45→
+    46→const fadeIn = {
+    47→  hidden: { opacity: 0 },
+    48→  visible: (i: number = 0) => ({
+    49→    opacity: 1,
+    50→    transition: { duration: 0.8, delay: i * 0.12 },
+    51→  }),
+    52→};
+    53→
+    54→const scaleIn = {
+    55→  hidden: { opacity: 0, scale: 0.92 },
+    56→  visible: (i: number = 0) => ({
+    57→    opacity: 1,
+    58→    scale: 1,
+    59→    transition: { duration: 0.6, delay: i * 0.08, ease: [0.22, 0.61, 0.36, 1] },
+    60→  }),
+    61→};
+    62→
+    63→const vp = { once: true, amount: 0.15 as const };
+    64→
+    65→/* ─── Section label component ─── */
+    66→function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+    67→  return (
+    68→    <motion.span
+    69→      className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+    70→      style={{ color: light ? C.mint : C.dna }}
+    71→      variants={fadeIn}
+    72→      initial="hidden"
+    73→      whileInView="visible"
+    74→      viewport={vp}
+    75→    >
+    76→      {children}
+    77→    </motion.span>
+    78→  );
+    79→}
+    80→
+    81→/* ═══════════════════════════════════════════════════════
+    82→   DATA
+    83→   ═══════════════════════════════════════════════════════ */
+    84→
+    85→/* Stats for hero */
+    86→const proBonoStats = [
+    87→  { number: "15+", label: "проектов выполнено", icon: FileCheck, accent: C.dna },
+    88→  { number: "10+", label: "организаций поддержано", icon: HandHeart, accent: C.mintDark },
+    89→  { number: "3", label: "направления помощи", icon: Target, accent: C.orange },
+    90→  { number: "100%", label: "безвозмездно", icon: Heart, accent: C.dna },
+    91→];
+    92→
+    93→/* What we offer */
+    94→const services = [
+    95→  {
+    96→    icon: FileCheck,
+    97→    title: "Стратегия и планирование",
+    98→    description: "Помощь в разработке стратегий, целей и планов развития для НКО и социальных проектов. Формирование дорожных карт и приоритизация инициатив.",
+    99→    accent: C.dna,
+   100→  },
+   101→  {
+   102→    icon: HandHeart,
+   103→    title: "Управление проектами",
+   104→    description: "Консультации по постановке процессов, управлению рисками и контролю результатов. Сопровождение от идеи до реализации.",
+   105→    accent: C.mintDark,
+   106→  },
+   107→  {
+   108→    icon: MessageCircle,
+   109→    title: "Аналитика и исследования",
+   110→    description: "Экспертная поддержка в анализе данных, оценке эффективности и подготовке отчётности. Исследования для обоснования решений.",
+   111→    accent: C.orange,
+   112→  },
+   113→  {
+   114→    icon: Scale,
+   115→    title: "Организационное развитие",
+   116→    description: "Проектирование организационных структур, оптимизация процессов, разработка систем управления и мотивации.",
+   117→    accent: C.dna,
+   118→  },
+   119→  {
+   120→    icon: BookOpen,
+   121→    title: "Обучение и знания",
+   122→    description: "Проведение мастер-классов, воркшопов и тренингов для команд НКО. Передача экспертизы и лучших практик.",
+   123→    accent: C.mintDark,
+   124→  },
+   125→  {
+   126→    icon: Lightbulb,
+   127→    title: "Цифровая трансформация",
+   128→    description: "Консультации по автоматизации процессов, внедрению ИТ-решений и цифровой грамотности для социальных организаций.",
+   129→    accent: C.orange,
+   130→  },
+   131→];
+   132→
+   133→/* Target audience */
+   134→const audience = [
+   135→  {
+   136→    icon: Building2,
+   137→    title: "Некоммерческие организации",
+   138→    description: "Благотворительные фонды, НКО и общественные объединения, которым нужна профессиональная консалтинговая помощь",
+   139→    accent: C.dna,
+   140→  },
+   141→  {
+   142→    icon: Users,
+   143→    title: "Социальные проекты",
+   144→    description: "Инициативы в сфере социальной поддержки, образования и культуры, направленные на решение общественных проблем",
+   145→    accent: C.mintDark,
+   146→  },
+   147→  {
+   148→    icon: BookOpen,
+   149→    title: "Образовательные инициативы",
+   150→    description: "Просветительские проекты, программы развития образования и науки, инициативы по распространению знаний",
+   151→    accent: C.orange,
+   152→  },
+   153→];
+   154→
+   155→/* How it works — process steps */
+   156→const processSteps = [
+   157→  {
+   158→    step: "01",
+   159→    title: "Заявка",
+   160→    description: "Заполните форму на сайте или напишите нам — опишите организацию, задачу и ожидаемый результат",
+   161→    accent: C.mint,
+   162→    icon: FileText,
+   163→  },
+   164→  {
+   165→    step: "02",
+   166→    title: "Оценка",
+   167→    description: "Мы рассматриваем заявку, оцениваем соответствие критериям и определяем формат поддержки",
+   168→    accent: C.dna,
+   169→    icon: ClipboardCheck,
+   170→  },
+   171→  {
+   172→    step: "03",
+   173→    title: "Согласование",
+   174→    description: "Обсуждаем детали, сроки, состав команды и формируем план работ, комфортный для обеих сторон",
+   175→    accent: C.mintDark,
+   176→    icon: MessageSquare,
+   177→  },
+   178→  {
+   179→    step: "04",
+   180→    title: "Реализация",
+   181→    description: "Работаем над проектом с тем же качеством и вовлечённостью, что и в коммерческих проектах",
+   182→    accent: C.orange,
+   183→    icon: CheckCircle2,
+   184→  },
+   185→];
+   186→
+   187→/* Principles */
+   188→const principles = [
+   189→  {
+   190→    icon: Sparkles,
+   191→    title: "Тот же уровень экспертизы",
+   192→    description: "Pro bono проекты выполняются с тем же качеством, что и коммерческие — без компромиссов",
+   193→  },
+   194→  {
+   195→    icon: Handshake,
+   196→    title: "Партнёрский подход",
+   197→    description: "Мы не просто консультируем — мы становимся частью команды на время проекта",
+   198→  },
+   199→  {
+   200→    icon: Target,
+   201→    title: "Ориентация на результат",
+   202→    description: "Каждый проект завершается измеримым результатом, а не просто рекомендациями",
+   203→  },
+   204→  {
+   205→    icon: Heart,
+   206→    title: "Ответственный выбор",
+   207→    description: "Мы выбираем проекты, где наша экспертиза даст максимальный социальный эффект",
+   208→  },
+   209→];
+   210→
+   211→const PRO_BONO_EMAIL = "info@arasaca.ru";
+   212→
+   213→/* Quick links */
+   214→const sectionCards = [
+   215→  {
+   216→    title: "О компании",
+   217→    description: "Миссия, ценности, команда",
+   218→    bg: C.dark,
+   219→    textColor: "#ffffff",
+   220→    href: "/about",
+   221→    icon: Building2,
+   222→  },
+   223→  {
+   224→    title: "Услуги",
+   225→    description: "9 направлений консалтинга",
+   226→    bg: C.orange,
+   227→    textColor: "#ffffff",
+   228→    href: "/services",
+   229→    icon: Briefcase,
+   230→  },
+   231→  {
+   232→    title: "Решения",
+   233→    description: "Цифровые продукты и платформы",
+   234→    bg: C.white,
+   235→    textColor: C.textDark,
+   236→    href: "/solutions/master-planning",
+   237→    icon: Layers,
+   238→  },
+   239→  {
+   240→    title: "Пресс-центр",
+   241→    description: "Новости, пресс-релизы, СМИ",
+   242→    bg: C.dna,
+   243→    textColor: "#ffffff",
+   244→    href: "/media",
+   245→    icon: Newspaper,
+   246→  },
+   247→  {
+   248→    title: "Карьера",
+   249→    description: "Присоединяйтесь к команде",
+   250→    bg: C.mintDark,
+   251→    textColor: "#ffffff",
+   252→    href: "/career",
+   253→    icon: Users,
+   254→  },
+   255→  {
+   256→    title: "Контакты",
+   257→    description: "Свяжитесь с нами",
+   258→    bg: C.dark,
+   259→    textColor: "#ffffff",
+   260→    href: "/contacts",
+   261→    icon: Mail,
+   262→  },
+   263→];
+   264→
+   265→/* ═══════════════════════════════════════════════════════
+   266→   SECTION 1 — HERO
+   267→   ═══════════════════════════════════════════════════════ */
+   268→function HeroSection() {
+   269→  return (
+   270→    <section className="relative overflow-hidden pt-16 lg:pt-[120px]" style={{ background: C.dark }}>
+   271→      {/* Decorative diagonal lines */}
+   272→      <div
+   273→        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   274→        style={{
+   275→          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   276→        }}
+   277→      />
+   278→      {/* Decorative glow */}
+   279→      <div
+   280→        className="pointer-events-none absolute -right-40 -top-20 h-[500px] w-[500px] rounded-full blur-[180px]"
+   281→        style={{ background: "rgba(0,140,149,0.15)" }}
+   282→      />
+   283→      <div
+   284→        className="pointer-events-none absolute -left-20 bottom-0 h-[300px] w-[300px] rounded-full blur-[120px]"
+   285→        style={{ background: "rgba(119,226,195,0.08)" }}
+   286→      />
+   287→
+   288→      <div className="container-kept relative z-10">
+   289→        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between py-6 md:py-10 lg:py-12">
+   290→          {/* LEFT: Label + heading + text + buttons */}
+   291→          <motion.div
+   292→            className="flex-1"
+   293→            variants={fadeUp}
+   294→            initial="hidden"
+   295→            animate="visible"
+   296→            custom={0.1}
+   297→          >
+   298→            {/* Breadcrumb */}
+   299→            <motion.nav
+   300→              className="flex items-center gap-2 mb-6"
+   301→              initial={{ opacity: 0 }}
+   302→              animate={{ opacity: 1 }}
+   303→              transition={{ duration: 0.5, delay: 0.1 }}
+   304→            >
+   305→              <Link href="/" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+   306→                Главная
+   307→              </Link>
+   308→              <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   309→              <span className="text-[12px] font-medium" style={{ color: C.mint }}>Pro bono</span>
+   310→            </motion.nav>
+   311→
+   312→            {/* Label badge */}
+   313→            <span
+   314→              className="mb-4 inline-flex items-center gap-2 border px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.3em]"
+   315→              style={{ borderColor: "rgba(119,226,195,0.4)", color: C.mint }}
+   316→            >
+   317→              <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: C.mint }} />
+   318→              Безвозмездная помощь
+   319→            </span>
+   320→
+   321→            {/* Main heading */}
+   322→            <motion.h1
+   323→              className="mb-4 max-w-lg"
+   324→              style={{
+   325→                fontFamily: "var(--font-russo)",
+   326→                fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   327→                fontWeight: 700,
+   328→                lineHeight: 1.25,
+   329→                letterSpacing: "-0.01em",
+   330→                color: C.white,
+   331→              }}
+   332→              initial={{ opacity: 0, y: 16 }}
+   333→              animate={{ opacity: 1, y: 0 }}
+   334→              transition={{ duration: 0.6, delay: 0.15 }}
+   335→            >
+   336→              Экспертиза, которая
+   337→              <br />
+   338→              <span style={{ color: C.mint }}>работает на благо</span>
+   339→            </motion.h1>
+   340→
+   341→            {/* Subtitle */}
+   342→            <motion.p
+   343→              className="mb-6 max-w-md text-[14px] font-light leading-relaxed"
+   344→              style={{ color: "rgba(255,255,255,0.55)" }}
+   345→              initial={{ opacity: 0, y: 12 }}
+   346→              animate={{ opacity: 1, y: 0 }}
+   347→              transition={{ duration: 0.6, delay: 0.3 }}
+   348→            >
+   349→              Мы оказываем консалтинговую поддержку на безвозмездной основе некоммерческим организациям и социальным проектам, которым важна профессиональная экспертиза для развития и масштабирования.
+   350→            </motion.p>
+   351→
+   352→            {/* CTA buttons */}
+   353→            <motion.div
+   354→              className="flex flex-wrap items-center gap-3"
+   355→              initial={{ opacity: 0, y: 12 }}
+   356→              animate={{ opacity: 1, y: 0 }}
+   357→              transition={{ duration: 0.6, delay: 0.45 }}
+   358→            >
+   359→              <Link href="/contacts">
+   360→                <motion.span
+   361→                  className="inline-flex items-center gap-2 px-7 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white"
+   362→                  style={{ background: C.dna, borderRadius: "4px" }}
+   363→                  whileHover={{ background: C.dnaHover, transition: { duration: 0.3 } }}
+   364→                >
+   365→                  Подать заявку
+   366→                  <ArrowRight className="h-4 w-4" />
+   367→                </motion.span>
+   368→              </Link>
+   369→              <a href={`mailto:${PRO_BONO_EMAIL}?subject=Pro+bono+заявка`}>
+   370→                <motion.span
+   371→                  className="inline-flex items-center gap-2 border px-7 py-3 text-sm font-medium uppercase tracking-[0.05em]"
+   372→                  style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)", borderRadius: "4px" }}
+   373→                  whileHover={{
+   374→                    borderColor: C.mint,
+   375→                    color: C.mint,
+   376→                    transition: { duration: 0.3 },
+   377→                  }}
+   378→                >
+   379→                  Написать нам
+   380→                </motion.span>
+   381→              </a>
+   382→            </motion.div>
+   383→          </motion.div>
+   384→
+   385→          {/* RIGHT: Stats — 4 cards in 2x2 grid */}
+   386→          <motion.div
+   387→            className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:w-[420px] lg:flex-shrink-0 lg:gap-4"
+   388→            variants={fadeUp}
+   389→            initial="hidden"
+   390→            animate="visible"
+   391→            custom={0.3}
+   392→          >
+   393→            {proBonoStats.map((stat, index) => (
+   394→              <motion.div
+   395→                key={stat.label}
+   396→                className="relative overflow-hidden rounded-lg p-5 md:p-6"
+   397→                style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }}
+   398→                variants={scaleIn}
+   399→                initial="hidden"
+   400→                animate="visible"
+   401→                custom={0.4 + index * 0.08}
+   402→              >
+   403→                {/* Top accent */}
+   404→                <div
+   405→                  className="absolute left-0 top-0 h-0.5 w-full"
+   406→                  style={{ background: `linear-gradient(90deg, ${stat.accent}, ${stat.accent}50)` }}
+   407→                />
+   408→                <stat.icon className="mb-3 h-5 w-5" style={{ color: stat.accent }} />
+   409→                <div
+   410→                  className="text-2xl font-bold leading-none md:text-3xl"
+   411→                  style={{ fontFamily: "var(--font-russo)", color: C.white }}
+   412→                >
+   413→                  {stat.number}
+   414→                </div>
+   415→                <div className="mt-1.5 text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.45)" }}>
+   416→                  {stat.label}
+   417→                </div>
+   418→              </motion.div>
+   419→            ))}
+   420→          </motion.div>
+   421→        </div>
+   422→      </div>
+   423→    </section>
+   424→  );
+   425→}
+   426→
+   427→/* ═══════════════════════════════════════════════════════
+   428→   SECTION 2 — WHAT WE OFFER (Bento-style grid)
+   429→   ═══════════════════════════════════════════════════════ */
+   430→function ServicesSection() {
+   431→  return (
+   432→    <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   433→      <div className="container-kept">
+   434→        <motion.div
+   435→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   436→          variants={fadeUp}
+   437→          initial="hidden"
+   438→          whileInView="visible"
+   439→          viewport={vp}
+   440→        >
+   441→          <div>
+   442→            <SectionLabel>Направления помощи</SectionLabel>
+   443→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   444→              Чем мы можем помочь
+   445→            </h2>
+   446→          </div>
+   447→          <p className="text-section-desc max-w-xs lg:text-right">
+   448→            В рамках pro bono мы предоставляем<br />консалтинговые услуги в областях,<br />в которых у нас есть экспертиза
+   449→          </p>
+   450→        </motion.div>
+   451→
+   452→        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+   453→          {services.map((item, index) => (
+   454→            <motion.div
+   455→              key={item.title}
+   456→              className="flex"
+   457→              variants={fadeUp}
+   458→              initial="hidden"
+   459→              whileInView="visible"
+   460→              viewport={vp}
+   461→              custom={index * 0.06}
+   462→            >
+   463→              <div
+   464→                className="group relative flex w-full flex-col rounded-xl bg-white p-7 transition-all duration-300 hover:shadow-xl md:p-8"
+   465→              >
+   466→                {/* Accent line on left */}
+   467→                <div
+   468→                  className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   469→                  style={{ background: item.accent }}
+   470→                />
+   471→                {/* Subtle dot pattern */}
+   472→                <div
+   473→                  className="pointer-events-none absolute inset-0 opacity-[0.04]"
+   474→                  style={{
+   475→                    backgroundImage: `radial-gradient(circle, ${item.accent} 1px, transparent 1px)`,
+   476→                    backgroundSize: "16px 16px",
+   477→                  }}
+   478→                />
+   479→                {/* Decorative circle */}
+   480→                <div
+   481→                  className="pointer-events-none absolute -bottom-6 -right-6 h-24 w-24 rounded-full opacity-[0.05] transition-opacity duration-300 group-hover:opacity-[0.1]"
+   482→                  style={{ background: item.accent }}
+   483→                />
+   484→
+   485→                <div className="relative z-10 flex flex-1 flex-col">
+   486→                  <div
+   487→                    className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-300"
+   488→                    style={{ background: `${item.accent}14` }}
+   489→                  >
+   490→                    <item.icon className="h-5.5 w-5.5" style={{ color: item.accent }} />
+   491→                  </div>
+   492→                  <h3 className="font-semibold leading-tight mb-3 text-base" style={{ color: C.textDark }}>
+   493→                    {item.title}
+   494→                  </h3>
+   495→                  <p className="text-[13px] leading-relaxed opacity-70 flex-1" style={{ color: C.textMuted }}>
+   496→                    {item.description}
+   497→                  </p>
+   498→                </div>
+   499→              </div>
+   500→            </motion.div>
+   501→          ))}
+   502→        </div>
+   503→      </div>
+   504→    </section>
+   505→  );
+   506→}
+   507→
+   508→/* ═══════════════════════════════════════════════════════
+   509→   SECTION 3 — FOR WHOM (Target audience cards)
+   510→   ═══════════════════════════════════════════════════════ */
+   511→function AudienceSection() {
+   512→  return (
+   513→    <section className="py-20 md:py-28 bg-white">
+   514→      <div className="container-kept">
+   515→        <motion.div
+   516→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   517→          variants={fadeUp}
+   518→          initial="hidden"
+   519→          whileInView="visible"
+   520→          viewport={vp}
+   521→        >
+   522→          <div>
+   523→            <SectionLabel>Целевая аудитория</SectionLabel>
+   524→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   525→              Для кого мы работаем
+   526→            </h2>
+   527→          </div>
+   528→          <p className="text-section-desc max-w-xs lg:text-right">
+   529→            Тем, кому важна профессиональная<br />консалтинговая помощь, но нет<br />возможности оплачивать её
+   530→          </p>
+   531→        </motion.div>
+   532→
+   533→        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+   534→          {audience.map((item, index) => (
+   535→            <motion.div
+   536→              key={item.title}
+   537→              className="flex"
+   538→              variants={fadeUp}
+   539→              initial="hidden"
+   540→              whileInView="visible"
+   541→              viewport={vp}
+   542→              custom={index * 0.1}
+   543→            >
+   544→              <div
+   545→                className="group relative flex w-full flex-col rounded-xl border p-7 transition-all duration-300 hover:shadow-lg hover:border-transparent md:p-8"
+   546→                style={{ borderColor: C.border }}
+   547→              >
+   548→                {/* Hover accent top */}
+   549→                <div
+   550→                  className="absolute left-0 top-0 h-0.5 w-0 transition-all duration-500 group-hover:w-full"
+   551→                  style={{ background: item.accent }}
+   552→                />
+   553→
+   554→                <div className="relative z-10 flex flex-1 flex-col">
+   555→                  <div
+   556→                    className="mb-5 flex h-14 w-14 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110"
+   557→                    style={{ background: C.light }}
+   558→                  >
+   559→                    <item.icon className="h-6 w-6" style={{ color: item.accent }} />
+   560→                  </div>
+   561→                  <h3 className="font-semibold leading-tight mb-3 text-base" style={{ color: C.textDark }}>
+   562→                    {item.title}
+   563→                  </h3>
+   564→                  <p className="text-[13px] leading-relaxed opacity-70 flex-1" style={{ color: C.textMuted }}>
+   565→                    {item.description}
+   566→                  </p>
+   567→                </div>
+   568→              </div>
+   569→            </motion.div>
+   570→          ))}
+   571→        </div>
+   572→
+   573→        {/* Additional note */}
+   574→        <motion.div
+   575→          className="mt-10 rounded-lg p-6 md:p-8"
+   576→          style={{ background: C.light }}
+   577→          variants={fadeUp}
+   578→          initial="hidden"
+   579→          whileInView="visible"
+   580→          viewport={vp}
+   581→        >
+   582→          <div className="flex items-start gap-4">
+   583→            <div
+   584→              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+   585→              style={{ background: `${C.dna}14` }}
+   586→            >
+   587→              <MessageCircle className="h-5 w-5" style={{ color: C.dna }} />
+   588→            </div>
+   589→            <div>
+   590→              <h3 className="text-[15px] font-semibold mb-2" style={{ color: C.textDark }}>
+   591→                Объём и формат поддержки определяются индивидуально
+   592→              </h3>
+   593→              <p className="text-[13px] leading-relaxed" style={{ color: C.textMuted }}>
+   594→                Мы рассматриваем каждую заявку отдельно и&nbsp;формируем оптимальный формат взаимодействия в&nbsp;зависимости от&nbsp;запроса и&nbsp;наших возможностей. Обычно проект занимает от&nbsp;2&nbsp;до&nbsp;6&nbsp;месяцев.
+   595→              </p>
+   596→            </div>
+   597→          </div>
+   598→        </motion.div>
+   599→      </div>
+   600→    </section>
+   601→  );
+   602→}
+   603→
+   604→/* ═══════════════════════════════════════════════════════
+   605→   SECTION 4 — PROCESS (Timeline)
+   606→   ═══════════════════════════════════════════════════════ */
+   607→function ProcessSection() {
+   608→  return (
+   609→    <section className="relative overflow-hidden py-20 md:py-28" style={{ background: C.dark }}>
+   610→      {/* Decorative glow */}
+   611→      <div
+   612→        className="pointer-events-none absolute right-0 top-0 h-[400px] w-[400px] rounded-full blur-[160px]"
+   613→        style={{ background: "rgba(0,140,149,0.08)" }}
+   614→      />
+   615→      <div
+   616→        className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   617→        style={{
+   618→          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   619→        }}
+   620→      />
+   621→
+   622→      <div className="container-kept relative z-10">
+   623→        <motion.div
+   624→          className="mb-14 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   625→          variants={fadeUp}
+   626→          initial="hidden"
+   627→          whileInView="visible"
+   628→          viewport={vp}
+   629→        >
+   630→          <div>
+   631→            <SectionLabel light>Процесс</SectionLabel>
+   632→            <h2
+   633→              className="leading-[1.1] tracking-tight"
+   634→              style={{
+   635→                fontFamily: "var(--font-russo)",
+   636→                fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   637→                color: C.white,
+   638→              }}
+   639→            >
+   640→              Как подать заявку
+   641→            </h2>
+   642→          </div>
+   643→          <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: "rgba(255,255,255,0.55)" }}>
+   644→            Простой и прозрачный процесс<br />от заявки до результата
+   645→          </p>
+   646→        </motion.div>
+   647→
+   648→        {/* Process steps — horizontal timeline */}
+   649→        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+   650→          {processSteps.map((step, index) => (
+   651→            <motion.div
+   652→              key={step.step}
+   653→              variants={fadeUp}
+   654→              initial="hidden"
+   655→              whileInView="visible"
+   656→              viewport={vp}
+   657→              custom={index * 0.12}
+   658→              className="relative flex"
+   659→            >
+   660→              {/* Connecting line — only between cards on lg */}
+   661→              {index < processSteps.length - 1 && (
+   662→                <div
+   663→                  className="pointer-events-none absolute -right-3 top-8 hidden h-0.5 w-6 lg:block"
+   664→                  style={{ background: "rgba(255,255,255,0.1)" }}
+   665→                />
+   666→              )}
+   667→
+   668→              <div
+   669→                className="group relative rounded-lg p-6 md:p-7 transition-all duration-300 hover:shadow-xl flex flex-col h-full"
+   670→                style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(4px)" }}
+   671→              >
+   672→                {/* Accent top line */}
+   673→                <div
+   674→                  className="absolute left-0 top-0 h-0.5 w-full"
+   675→                  style={{ background: `linear-gradient(90deg, ${step.accent}, ${step.accent}50)` }}
+   676→                />
+   677→
+   678→                {/* Step number + icon */}
+   679→                <div className="flex items-center gap-3 mb-4">
+   680→                  <div
+   681→                    className="text-3xl font-bold leading-none"
+   682→                    style={{ fontFamily: "var(--font-russo)", color: step.accent, opacity: 0.7 }}
+   683→                  >
+   684→                    {step.step}
+   685→                  </div>
+   686→                  <div
+   687→                    className="flex h-8 w-8 items-center justify-center rounded-lg"
+   688→                    style={{ background: `${step.accent}20` }}
+   689→                  >
+   690→                    <step.icon className="h-4 w-4" style={{ color: step.accent }} />
+   691→                  </div>
+   692→                </div>
+   693→
+   694→                <h3 className="mb-2 text-[15px] font-semibold leading-tight text-white">
+   695→                  {step.title}
+   696→                </h3>
+   697→                <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
+   698→                  {step.description}
+   699→                </p>
+   700→
+   701→                {/* Decorative corner */}
+   702→                <svg
+   703→                  className="pointer-events-none absolute bottom-4 right-4 opacity-10"
+   704→                  width="40" height="40"
+   705→                  viewBox="0 0 40 40"
+   706→                  fill="none"
+   707→                >
+   708→                  <path d="M40 0v15h-3V3H25V0h15z" fill={step.accent} />
+   709→                </svg>
+   710→              </div>
+   711→            </motion.div>
+   712→          ))}
+   713→        </div>
+   714→      </div>
+   715→    </section>
+   716→  );
+   717→}
+   718→
+   719→/* ═══════════════════════════════════════════════════════
+   720→   SECTION 5 — PRINCIPLES
+   721→   ═══════════════════════════════════════════════════════ */
+   722→function PrinciplesSection() {
+   723→  return (
+   724→    <section className="py-20 md:py-28 bg-white">
+   725→      <div className="container-kept">
+   726→        <motion.div
+   727→          className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   728→          variants={fadeUp}
+   729→          initial="hidden"
+   730→          whileInView="visible"
+   731→          viewport={vp}
+   732→        >
+   733→          <div>
+   734→            <SectionLabel>Наши принципы</SectionLabel>
+   735→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   736→              Как мы работаем
+   737→            </h2>
+   738→          </div>
+   739→          <p className="text-section-desc max-w-xs lg:text-right">
+   740→            Качество и ответственность,<br />которые мы гарантируем каждому проекту
+   741→          </p>
+   742→        </motion.div>
+   743→
+   744→        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-5">
+   745→          {principles.map((value, index) => (
+   746→            <motion.div
+   747→              key={value.title}
+   748→              variants={fadeUp}
+   749→              initial="hidden"
+   750→              whileInView="visible"
+   751→              viewport={vp}
+   752→              custom={index * 0.1}
+   753→            >
+   754→              <div
+   755→                className="group relative flex flex-col items-center text-center rounded-lg border p-6 md:p-8 transition-all duration-300 hover:shadow-lg hover:border-transparent"
+   756→                style={{ borderColor: C.border }}
+   757→              >
+   758→                {/* Hover accent top */}
+   759→                <div
+   760→                  className="absolute left-0 top-0 h-0.5 w-0 transition-all duration-500 group-hover:w-full"
+   761→                  style={{ background: C.dna }}
+   762→                />
+   763→
+   764→                <div
+   765→                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-110"
+   766→                  style={{ background: C.light }}
+   767→                >
+   768→                  <value.icon className="h-6 w-6" style={{ color: C.dna }} />
+   769→                </div>
+   770→                <h3 className="mb-2 text-[15px] font-semibold" style={{ color: C.textDark }}>
+   771→                  {value.title}
+   772→                </h3>
+   773→                <p className="text-[12px] leading-relaxed" style={{ color: C.textMuted }}>
+   774→                  {value.description}
+   775→                </p>
+   776→              </div>
+   777→            </motion.div>
+   778→          ))}
+   779→        </div>
+   780→      </div>
+   781→    </section>
+   782→  );
+   783→}
+   784→
+   785→/* ═══════════════════════════════════════════════════════
+   786→   SECTION 6 — CTA
+   787→   ═══════════════════════════════════════════════════════ */
+   788→function CtaSection() {
+   789→  return (
+   790→    <section className="relative overflow-hidden py-20 md:py-28" style={{ background: C.dna }}>
+   791→      {/* Decorative elements */}
+   792→      <div
+   793→        className="pointer-events-none absolute -left-40 top-0 h-[400px] w-[400px] rounded-full blur-[160px]"
+   794→        style={{ background: "rgba(0,49,60,0.3)" }}
+   795→      />
+   796→      <div
+   797→        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+   798→        style={{
+   799→          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.2) 30px, rgba(255,255,255,0.2) 31px)`,
+   800→        }}
+   801→      />
+   802→      {/* Corner bracket decoration */}
+   803→      <svg
+   804→        className="pointer-events-none absolute bottom-8 right-8 opacity-10"
+   805→        width="80" height="80"
+   806→        viewBox="0 0 80 80"
+   807→        fill="none"
+   808→      >
+   809→        <path d="M80 0v30h-4V4H50V0h30z" fill="white" />
+   810→        <path d="M0 80V50h4v26h26v4H0z" fill="white" />
+   811→      </svg>
+   812→
+   813→      <div className="container-kept relative z-10">
+   814→        <motion.div
+   815→          className="flex flex-col items-center text-center"
+   816→          variants={fadeUp}
+   817→          initial="hidden"
+   818→          whileInView="visible"
+   819→          viewport={vp}
+   820→        >
+   821→          <span
+   822→            className="mb-6 inline-flex items-center gap-2 border px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.3em]"
+   823→            style={{ borderColor: "rgba(255,255,255,0.3)", color: "rgba(255,255,255,0.8)" }}
+   824→          >
+   825→            <span className="inline-block h-1.5 w-1.5 rounded-full bg-white" />
+   826→            Присоединяйтесь
+   827→          </span>
+   828→
+   829→          <h2
+   830→            className="mb-4 leading-[1.1] tracking-tight"
+   831→            style={{
+   832→              fontFamily: "var(--font-russo)",
+   833→              fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   834→              color: C.white,
+   835→            }}
+   836→          >
+   837→            Расскажите о вашем проекте
+   838→          </h2>
+   839→
+   840→          <p className="mb-10 max-w-lg text-[15px] font-light leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>
+   841→            Если вы представляете НКО или социальный проект и вам нужна консалтинговая поддержка — напишите нам. Мы рассмотрим заявку и свяжемся с вами.
+   842→          </p>
+   843→
+   844→          <div className="flex flex-col gap-4 sm:flex-row">
+   845→            <Link href="/contacts">
+   846→              <motion.span
+   847→                className="inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-semibold uppercase tracking-[0.05em] transition-colors"
+   848→                style={{ background: C.white, color: C.dark, borderRadius: "4px" }}
+   849→                whileHover={{ background: C.mint, color: C.dark, transition: { duration: 0.3 } }}
+   850→              >
+   851→                Подать заявку
+   852→                <ArrowRight className="h-4 w-4" />
+   853→              </motion.span>
+   854→            </Link>
+   855→            <a href={`mailto:${PRO_BONO_EMAIL}?subject=Pro+bono+заявка`}>
+   856→              <motion.span
+   857→                className="inline-flex items-center justify-center gap-2 border-2 px-8 py-4 text-sm font-semibold uppercase tracking-[0.05em]"
+   858→                style={{ borderColor: "rgba(255,255,255,0.4)", color: C.white, borderRadius: "4px" }}
+   859→                whileHover={{
+   860→                  borderColor: C.white,
+   861→                  background: "rgba(255,255,255,0.1)",
+   862→                  transition: { duration: 0.3 },
+   863→                }}
+   864→              >
+   865→                Написать нам
+   866→                <ArrowUpRight className="h-4 w-4" />
+   867→              </motion.span>
+   868→            </a>
+   869→          </div>
+   870→        </motion.div>
+   871→      </div>
+   872→    </section>
+   873→  );
+   874→}
+   875→
+   876→/* ═══════════════════════════════════════════════════════
+   877→   SECTION 7 — QUICK LINKS (same as homepage)
+   878→   ═══════════════════════════════════════════════════════ */
+   879→function NavigationSection() {
+   880→  return (
+   881→    <section className="bg-white py-20 md:py-28">
+   882→      <div className="container-kept">
+   883→        {/* Section header */}
+   884→        <motion.div
+   885→          className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   886→          variants={fadeUp}
+   887→          initial="hidden"
+   888→          whileInView="visible"
+   889→          viewport={vp}
+   890→        >
+   891→          <div>
+   892→            <SectionLabel>Навигация</SectionLabel>
+   893→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   894→              Полезные ссылки
+   895→            </h2>
+   896→          </div>
+   897→          <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   898→            Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании
+   899→          </p>
+   900→        </motion.div>
+   901→
+   902→        {/* Cards grid */}
+   903→        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
+   904→          {sectionCards.map((card, index) => {
+   905→            const isWhite = card.bg === C.white;
+   906→            return (
+   907→              <motion.div
+   908→                key={card.title}
+   909→                className="flex"
+   910→                variants={scaleIn}
+   911→                initial="hidden"
+   912→                whileInView="visible"
+   913→                viewport={vp}
+   914→                custom={index * 0.08}
+   915→              >
+   916→                <Link href={card.href} className="group block h-full w-full">
+   917→                  <motion.div
+   918→                    className={cn(
+   919→                      "relative flex flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300 h-full",
+   920→                      isWhite && "border shadow-sm group-hover:shadow-md",
+   921→                    )}
+   922→                    style={{ background: card.bg, color: card.textColor, borderColor: isWhite ? C.border : undefined, minHeight: "130px" }}
+   923→                    whileHover={{ y: -3, transition: { duration: 0.25 } }}
+   924→                  >
+   925→                    {card.bg === C.dark && (
+   926→                      <div
+   927→                        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+   928→                        style={{
+   929→                          backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`,
+   930→                          backgroundSize: "20px 20px",
+   931→                        }}
+   932→                      />
+   933→                    )}
+   934→                    {isWhite && (
+   935→                      <div
+   936→                        className="pointer-events-none absolute inset-0 opacity-[0.1]"
+   937→                        style={{
+   938→                          backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`,
+   939→                          backgroundSize: "12px 12px",
+   940→                        }}
+   941→                      />
+   942→                    )}
+   943→
+   944→                    {/* Colored accent bar on left */}
+   945→                    <div
+   946→                      className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   947→                      style={{ background: isWhite ? C.dna : "rgba(255,255,255,0.4)" }}
+   948→                    />
+   949→
+   950→                    <div className="relative z-10">
+   951→                      <div className="flex items-center gap-2">
+   952→                        {card.icon && (
+   953→                          <card.icon className="h-4 w-4 opacity-60" />
+   954→                        )}
+   955→                        <span className="block text-sm font-semibold md:text-base">{card.title}</span>
+   956→                      </div>
+   957→                      <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+   958→                    </div>
+   959→
+   960→                    <div className="relative z-10 flex justify-end">
+   961→                      <div
+   962→                        className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   963→                        style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}
+   964→                      >
+   965→                        <ArrowRight className="h-4 w-4" style={{ color: isWhite ? C.dna : "#ffffff" }} />
+   966→                      </div>
+   967→                    </div>
+   968→                  </motion.div>
+   969→                </Link>
+   970→              </motion.div>
+   971→            );
+   972→          })}
+   973→        </div>
+   974→      </div>
+   975→    </section>
+   976→  );
+   977→}
+   978→
+   979→/* ═══════════════════════════════════════════════════════
+   980→   PAGE
+   981→   ═══════════════════════════════════════════════════════ */
+   982→export default function ProBonoPage() {
+   983→  return (
+   984→    <main className="min-h-screen flex flex-col">
+   985→      <HeroSection />
+   986→      <ServicesSection />
+   987→      <AudienceSection />
+   988→      <ProcessSection />
+   989→      <PrinciplesSection />
+   990→      <CtaSection />
+   991→      <NavigationSection />
+   992→    </main>
+   993→  );
+   994→}
+   995→

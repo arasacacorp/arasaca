@@ -1,0 +1,877 @@
+     1→"use client";
+     2→
+     3→import { motion } from "framer-motion";
+     4→import Link from "next/link";
+     5→import { cn } from "@/lib/utils";
+     6→import {
+     7→  Briefcase,
+     8→  BarChart3,
+     9→  Cpu,
+    10→  Wrench,
+    11→  Users,
+    12→  Megaphone,
+    13→  Rocket,
+    14→  MapPin,
+    15→  FlaskConical,
+    16→  GraduationCap,
+    17→  ArrowRight,
+    18→  ChevronRight,
+    19→  Phone,
+    20→  Mail,
+    21→  Building2,
+    22→  Layers,
+    23→  Newspaper,
+    24→} from "lucide-react";
+    25→import { C } from "@/lib/colors";
+    26→
+    27→/* ─── Animation variants ─── */
+    28→const fadeUp = {
+    29→  hidden: { opacity: 0, y: 32 },
+    30→  visible: (i: number = 0) => ({
+    31→    opacity: 1,
+    32→    y: 0,
+    33→    transition: { duration: 0.7, delay: i * 0.12, ease: [0.22, 0.61, 0.36, 1] },
+    34→  }),
+    35→};
+    36→
+    37→const fadeIn = {
+    38→  hidden: { opacity: 0 },
+    39→  visible: (i: number = 0) => ({
+    40→    opacity: 1,
+    41→    transition: { duration: 0.8, delay: i * 0.12 },
+    42→  }),
+    43→};
+    44→
+    45→const scaleIn = {
+    46→  hidden: { opacity: 0, scale: 0.85 },
+    47→  visible: (i: number = 0) => ({
+    48→    opacity: 1,
+    49→    scale: 1,
+    50→    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 0.61, 0.36, 1] },
+    51→  }),
+    52→};
+    53→
+    54→const vp = { once: true, amount: 0.2 as const };
+    55→
+    56→/* ─── Section label component ─── */
+    57→function SectionLabel({ children, light = false }: { children: React.ReactNode; light?: boolean }) {
+    58→  return (
+    59→    <motion.span
+    60→      className="mb-4 block text-[11px] font-semibold uppercase tracking-[0.3em]"
+    61→      style={{ color: light ? C.mint : C.dna }}
+    62→      variants={fadeIn}
+    63→      initial="hidden"
+    64→      whileInView="visible"
+    65→      viewport={vp}
+    66→    >
+    67→      {children}
+    68→    </motion.span>
+    69→  );
+    70→}
+    71→
+    72→/* ─── Data ─── */
+    73→const primaryServices = [
+    74→  {
+    75→    icon: Briefcase,
+    76→    name: "Консалтинг",
+    77→    description:
+    78→      "Разработка стратегий развития, совершенствование финансовых моделей, оптимизация процессов и сопровождение инвестиционных проектов.",
+    79→    slug: "consulting",
+    80→    bg: C.dark,
+    81→    textColor: "#ffffff",
+    82→  },
+    83→  {
+    84→    icon: BarChart3,
+    85→    name: "Аналитика и исследования",
+    86→    description:
+    87→      "Глубокое понимание рынков, отраслей и данных, поддерживающее стратегические и операционные решения.",
+    88→    slug: "analytics",
+    89→    bg: C.dna,
+    90→    textColor: "#ffffff",
+    91→  },
+    92→  {
+    93→    icon: Cpu,
+    94→    name: "Технологии",
+    95→    description:
+    96→      "Создание стратегий цифровой трансформации, внедрение ИТ-решений, развитие корпоративных инноваций, автоматизация.",
+    97→    slug: "technologies",
+    98→    bg: C.orange,
+    99→    textColor: "#ffffff",
+   100→  },
+   101→];
+   102→
+   103→const expertServices = [
+   104→  {
+   105→    icon: Wrench,
+   106→    name: "Инжиниринг",
+   107→    description:
+   108→      "Предпроектный анализ, экспертиза капитальных затрат, управление строительством. Технологическая, правовая и организационная поддержка сложных проектов.",
+   109→    slug: "engineering",
+   110→    bg: C.white,
+   111→    textColor: C.textDark,
+   112→  },
+   113→  {
+   114→    icon: Users,
+   115→    name: "HR и организационное развитие",
+   116→    description:
+   117→      "Управление человеческим капиталом, организационное проектирование и HR-аналитика для построения эффективных команд.",
+   118→    slug: "hr",
+   119→    bg: C.white,
+   120→    textColor: C.textDark,
+   121→  },
+   122→  {
+   123→    icon: GraduationCap,
+   124→    name: "Обучение и развитие",
+   125→    description:
+   126→      "Корпоративные программы развития, бережливое производство, управление знаниями и собственная Корпоративная академия.",
+   127→    slug: "learning",
+   128→    bg: C.white,
+   129→    textColor: C.textDark,
+   130→  },
+   131→  {
+   132→    icon: Megaphone,
+   133→    name: "Коммуникации и бренд",
+   134→    description:
+   135→      "Разработка бренд-стратегий, коммуникационных кампаний, управление репутацией и корпоративной культурой.",
+   136→    slug: "communications",
+   137→    bg: C.white,
+   138→    textColor: C.textDark,
+   139→  },
+   140→  {
+   141→    icon: Rocket,
+   142→    name: "Стартапы и инновации",
+   143→    description:
+   144→      "Сопровождение стартапов от идеи до масштабирования, поддержка НИОКР и корпоративных инноваций.",
+   145→    slug: "startups",
+   146→    bg: C.dark,
+   147→    textColor: "#ffffff",
+   148→  },
+   149→  {
+   150→    icon: MapPin,
+   151→    name: "Развитие территорий",
+   152→    description:
+   153→      "Мастер-планирование, экономическое моделирование и механизмы реализации территориальных проектов.",
+   154→    slug: "territorial-development",
+   155→    bg: C.mintDark,
+   156→    textColor: "#ffffff",
+   157→    isSpecial: true,
+   158→  },
+   159→];
+   160→
+   161→const separateDivisions = [
+   162→  {
+   163→    icon: FlaskConical,
+   164→    name: "Арасака.Лаб",
+   165→    description:
+   166→      "Лаборатория цифровых решений. Разрабатываем IT-системы для внутренних нужд и под индивидуальные запросы: CRM, автоматизации, интеграции, LMS, HR-системы.",
+   167→    slug: "lab",
+   168→    external: true,
+   169→    accent: C.mint,
+   170→    badge: "R&D и IT",
+   171→  },
+   172→  {
+   173→    icon: GraduationCap,
+   174→    name: "Арасака. Корпоративная академия",
+   175→    description:
+   176→      "Собственные образовательные продукты: курсы, тренинги, интенсивы и программы для развития организаций. Авторские методики и практический опыт.",
+   177→    slug: "learning/arasaca-academy",
+   178→    external: false,
+   179→    accent: C.orange,
+   180→    badge: "Обучение",
+   181→  },
+   182→];
+   183→
+   184→/* ─── Quick Links cards (same as main page) ─── */
+   185→const sectionCards = [
+   186→  {
+   187→    title: "О компании",
+   188→    description: "Миссия, ценности, команда",
+   189→    bg: C.dark,
+   190→    textColor: "#ffffff",
+   191→    href: "/about",
+   192→    icon: Building2,
+   193→  },
+   194→  {
+   195→    title: "Услуги",
+   196→    description: "9 направлений консалтинга",
+   197→    bg: C.orange,
+   198→    textColor: "#ffffff",
+   199→    href: "/services",
+   200→    icon: Briefcase,
+   201→  },
+   202→  {
+   203→    title: "Решения",
+   204→    description: "Цифровые продукты и платформы",
+   205→    bg: C.white,
+   206→    textColor: C.textDark,
+   207→    href: "/solutions/master-planning",
+   208→    icon: Layers,
+   209→  },
+   210→  {
+   211→    title: "Пресс-центр",
+   212→    description: "Новости, пресс-релизы, СМИ",
+   213→    bg: C.dna,
+   214→    textColor: "#ffffff",
+   215→    href: "/media",
+   216→    icon: Newspaper,
+   217→  },
+   218→  {
+   219→    title: "Карьера",
+   220→    description: "Присоединяйтесь к команде",
+   221→    bg: C.mintDark,
+   222→    textColor: "#ffffff",
+   223→    href: "/career",
+   224→    icon: Users,
+   225→  },
+   226→  {
+   227→    title: "Контакты",
+   228→    description: "Свяжитесь с нами",
+   229→    bg: C.dark,
+   230→    textColor: "#ffffff",
+   231→    href: "/contacts",
+   232→    icon: Mail,
+   233→  },
+   234→];
+   235→
+   236→/* ═══════════════════════════════════════════════════════
+   237→   PAGE
+   238→   ═══════════════════════════════════════════════════════ */
+   239→export default function ServicesPage() {
+   240→  return (
+   241→    <main className="min-h-screen flex flex-col" style={{ background: C.muted }}>
+   242→      {/* ═══════════════════════════════════════════════════
+   243→          HERO — Dark background with diagonal lines + stats grid
+   244→          ═══════════════════════════════════════════════════ */}
+   245→      <section className="relative overflow-hidden pt-16 lg:pt-[120px]" style={{ background: C.dark }}>
+   246→        {/* Decorative diagonal lines */}
+   247→        <div
+   248→          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   249→          style={{
+   250→            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(119,226,195,0.3) 40px, rgba(119,226,195,0.3) 41px)`,
+   251→          }}
+   252→        />
+   253→        {/* Decorative glow */}
+   254→        <div
+   255→          className="pointer-events-none absolute -right-40 -top-20 h-[500px] w-[500px] rounded-full blur-[180px]"
+   256→          style={{ background: "rgba(224,78,57,0.10)" }}
+   257→        />
+   258→        <div
+   259→          className="pointer-events-none absolute -left-20 bottom-0 h-[300px] w-[300px] rounded-full blur-[120px]"
+   260→          style={{ background: "rgba(0,140,149,0.08)" }}
+   261→        />
+   262→
+   263→        <div className="container-kept relative z-10">
+   264→          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between py-6 md:py-10 lg:py-12">
+   265→            {/* LEFT: Label + heading + text + buttons */}
+   266→            <motion.div
+   267→              className="flex-1"
+   268→              variants={fadeUp}
+   269→              initial="hidden"
+   270→              animate="visible"
+   271→              custom={0.1}
+   272→            >
+   273→              {/* Breadcrumb */}
+   274→              <motion.nav
+   275→                className="flex items-center gap-2 mb-6"
+   276→                initial={{ opacity: 0 }}
+   277→                animate={{ opacity: 1 }}
+   278→                transition={{ duration: 0.5, delay: 0.1 }}
+   279→              >
+   280→                <Link href="/" className="text-[12px] transition-colors hover:text-white" style={{ color: "rgba(255,255,255,0.4)" }}>
+   281→                  Главная
+   282→                </Link>
+   283→                <ChevronRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.25)" }} />
+   284→                <span className="text-[12px] font-medium" style={{ color: C.mint }}>Услуги</span>
+   285→              </motion.nav>
+   286→
+   287→              {/* Main heading */}
+   288→              <motion.h1
+   289→                className="mb-4 max-w-lg"
+   290→                style={{
+   291→                  fontFamily: "var(--font-russo)",
+   292→                  fontSize: "clamp(1.75rem, 4vw, 3rem)",
+   293→                  fontWeight: 700,
+   294→                  lineHeight: 1.25,
+   295→                  letterSpacing: "-0.01em",
+   296→                  color: C.white,
+   297→                }}
+   298→                initial={{ opacity: 0, y: 16 }}
+   299→                animate={{ opacity: 1, y: 0 }}
+   300→                transition={{ duration: 0.6, delay: 0.15 }}
+   301→              >
+   302→                Услуги и&nbsp;практики
+   303→              </motion.h1>
+   304→
+   305→              {/* Subtitle */}
+   306→              <motion.p
+   307→                className="mb-6 max-w-md text-[14px] font-light leading-relaxed"
+   308→                style={{ color: "rgba(255,255,255,0.55)" }}
+   309→                initial={{ opacity: 0, y: 12 }}
+   310→                animate={{ opacity: 1, y: 0 }}
+   311→                transition={{ duration: 0.6, delay: 0.3 }}
+   312→              >
+   313→                Повышение эффективности управления, цифровая трансформация и&nbsp;управление инвестиционными программами. Надёжный партнёр для&nbsp;тех, кто строит, развивает и&nbsp;трансформирует бизнес.
+   314→              </motion.p>
+   315→
+   316→              {/* CTA buttons */}
+   317→              <motion.div
+   318→                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
+   319→                initial={{ opacity: 0, y: 12 }}
+   320→                animate={{ opacity: 1, y: 0 }}
+   321→                transition={{ duration: 0.6, delay: 0.45 }}
+   322→              >
+   323→                <Link href="/feedback?type=proposals" className="sm:auto">
+   324→                  <motion.span
+   325→                    className="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold uppercase tracking-[0.05em] text-white w-full sm:w-auto"
+   326→                    style={{ background: C.dna, borderRadius: "4px" }}
+   327→                    whileHover={{ background: C.dnaHover, transition: { duration: 0.3 } }}
+   328→                  >
+   329→                    Запросить КП
+   330→                    <ArrowRight className="h-4 w-4" />
+   331→                  </motion.span>
+   332→                </Link>
+   333→                <Link href="/feedback?type=callback" className="sm:auto">
+   334→                  <motion.span
+   335→                    className="inline-flex items-center justify-center gap-2 border px-7 py-3 text-sm font-medium uppercase tracking-[0.05em] w-full sm:w-auto"
+   336→                    style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.7)", borderRadius: "4px" }}
+   337→                    whileHover={{
+   338→                      borderColor: C.mint,
+   339→                      color: C.mint,
+   340→                      transition: { duration: 0.3 },
+   341→                    }}
+   342→                  >
+   343→                    Заказать звонок
+   344→                  </motion.span>
+   345→                </Link>
+   346→              </motion.div>
+   347→            </motion.div>
+   348→
+   349→            {/* RIGHT: Stats — 4 cards in 2x2 grid */}
+   350→            <motion.div
+   351→              className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:w-[420px] lg:flex-shrink-0 lg:gap-4"
+   352→              variants={fadeUp}
+   353→              initial="hidden"
+   354→              animate="visible"
+   355→              custom={0.3}
+   356→            >
+   357→              {[
+   358→                { number: "9", label: "направлений", icon: Briefcase, accent: C.dna },
+   359→                { number: "30+", label: "отраслей", icon: BarChart3, accent: C.mintDark },
+   360→                { number: "50+", label: "экспертов", icon: Users, accent: C.orange },
+   361→                { number: "2", label: "обособленных подразделения", icon: FlaskConical, accent: C.dna },
+   362→              ].map((stat, index) => (
+   363→                <motion.div
+   364→                  key={stat.label}
+   365→                  className="relative overflow-hidden rounded-lg p-5 md:p-6"
+   366→                  style={{ background: "rgba(255,255,255,0.06)", backdropFilter: "blur(8px)" }}
+   367→                  variants={scaleIn}
+   368→                  initial="hidden"
+   369→                  animate="visible"
+   370→                  custom={0.4 + index * 0.08}
+   371→                >
+   372→                  {/* Top accent */}
+   373→                  <div
+   374→                    className="absolute left-0 top-0 h-0.5 w-full"
+   375→                    style={{ background: `linear-gradient(90deg, ${stat.accent}, ${stat.accent}50)` }}
+   376→                  />
+   377→                  <stat.icon className="mb-3 h-5 w-5" style={{ color: stat.accent }} />
+   378→                  <div
+   379→                    className="text-2xl font-bold leading-none md:text-3xl"
+   380→                    style={{ fontFamily: "var(--font-russo)", color: C.white }}
+   381→                  >
+   382→                    {stat.number}
+   383→                  </div>
+   384→                  <div className="mt-1.5 text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.45)" }}>
+   385→                    {stat.label}
+   386→                  </div>
+   387→                </motion.div>
+   388→              ))}
+   389→            </motion.div>
+   390→          </div>
+   391→        </div>
+   392→      </section>
+   393→
+   394→      {/* ═══════════════════════════════════════════════════
+   395→          PRIMARY SERVICES — 3 key directions (compact cards)
+   396→          ═══════════════════════════════════════════════════ */}
+   397→      <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   398→        <div className="container-kept">
+   399→          <motion.div
+   400→            className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   401→            variants={fadeUp}
+   402→            initial="hidden"
+   403→            whileInView="visible"
+   404→            viewport={vp}
+   405→          >
+   406→            <div>
+   407→              <SectionLabel>Основные направления</SectionLabel>
+   408→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   409→                Ключевая деятельность
+   410→              </h2>
+   411→            </div>
+   412→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   413→              Фундаментальные практики, формирующие<br />стратегический потенциал организации
+   414→            </p>
+   415→          </motion.div>
+   416→
+   417→          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 md:gap-4">
+   418→            {primaryServices.map((service, index) => {
+   419→              const isDark = service.bg === C.dark || service.bg === C.dna || service.bg === C.orange;
+   420→              return (
+   421→                <motion.div
+   422→                  key={service.slug}
+   423→                  variants={fadeUp}
+   424→                  initial="hidden"
+   425→                  whileInView="visible"
+   426→                  viewport={vp}
+   427→                  custom={index * 0.1}
+   428→                >
+   429→                  <Link href={`/services/${service.slug}`} className="group block h-full">
+   430→                    <motion.div
+   431→                      className={cn(
+   432→                        "relative flex flex-col justify-between overflow-hidden rounded-lg p-5 md:p-6 transition-all duration-300 group-hover:shadow-lg min-h-[170px]",
+   433→                        !isDark && "border group-hover:border-gray-100 bg-[#f8f9fa] group-hover:bg-white",
+   434→                      )}
+   435→                      style={isDark ? { background: service.bg, color: service.textColor } : undefined}
+   436→                      whileHover={{ y: -4, transition: { duration: 0.25 } }}
+   437→                    >
+   438→                      {/* Decorative pattern for dark cards */}
+   439→                      {service.bg === C.dark && (
+   440→                        <div
+   441→                          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+   442→                          style={{
+   443→                            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.3) 30px, rgba(255,255,255,0.3) 31px)`,
+   444→                          }}
+   445→                        />
+   446→                      )}
+   447→
+   448→                      {/* Accent line on left */}
+   449→                      <div
+   450→                        className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   451→                        style={{ background: isDark ? "rgba(255,255,255,0.25)" : C.dna }}
+   452→                      />
+   453→
+   454→                      {/* Icon + Title */}
+   455→                      <div className="flex items-center gap-3 mb-3">
+   456→                        <div
+   457→                          className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-300"
+   458→                          style={{ background: isDark ? "rgba(255,255,255,0.15)" : `${C.dna}10` }}
+   459→                        >
+   460→                          <service.icon className="h-5 w-5" style={{ color: isDark ? "rgba(255,255,255,0.9)" : C.dna }} />
+   461→                        </div>
+   462→                        <h3
+   463→                          className="text-[15px] font-semibold leading-tight transition-colors group-hover:text-[#008C95]"
+   464→                          style={{ color: isDark ? "#ffffff" : C.textDark }}
+   465→                        >
+   466→                          {service.name}
+   467→                        </h3>
+   468→                      </div>
+   469→
+   470→                      {/* Description */}
+   471→                      <p
+   472→                        className="text-[12px] leading-relaxed flex-1 mb-4"
+   473→                        style={{ color: isDark ? "rgba(255,255,255,0.7)" : C.textMuted }}
+   474→                      >
+   475→                        {service.description}
+   476→                      </p>
+   477→
+   478→                      {/* Arrow */}
+   479→                      <div className="flex justify-end">
+   480→                        <div
+   481→                          className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   482→                          style={{ background: isDark ? "rgba(255,255,255,0.2)" : `${C.dna}10` }}
+   483→                        >
+   484→                          <ArrowRight className="h-3.5 w-3.5" style={{ color: isDark ? "#ffffff" : C.dna }} />
+   485→                        </div>
+   486→                      </div>
+   487→                    </motion.div>
+   488→                  </Link>
+   489→                </motion.div>
+   490→              );
+   491→            })}
+   492→          </div>
+   493→        </div>
+   494→      </section>
+   495→
+   496→      {/* ═══════════════════════════════════════════════════
+   497→          EXPERT SERVICES — 6 directions (same card style)
+   498→          ═══════════════════════════════════════════════════ */}
+   499→      <section className="py-20 md:py-28 bg-white">
+   500→        <div className="container-kept">
+   501→          <motion.div
+   502→            className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   503→            variants={fadeUp}
+   504→            initial="hidden"
+   505→            whileInView="visible"
+   506→            viewport={vp}
+   507→          >
+   508→            <div>
+   509→              <SectionLabel>Экспертные направления</SectionLabel>
+   510→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   511→                Экспертная деятельность
+   512→              </h2>
+   513→            </div>
+   514→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   515→              Специализированные компетенции для<br />углублённой проработки задач
+   516→            </p>
+   517→          </motion.div>
+   518→
+   519→          <div className="grid grid-rows-2 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 md:gap-4">
+   520→            {expertServices.map((service, index) => {
+   521→              const isDark = service.bg === C.dark || service.bg === C.mintDark;
+   522→              return (
+   523→                <motion.div
+   524→                  key={service.slug}
+   525→                  className="flex"
+   526→                  variants={fadeUp}
+   527→                  initial="hidden"
+   528→                  whileInView="visible"
+   529→                  viewport={vp}
+   530→                  custom={index * 0.06}
+   531→                >
+   532→                  <Link href={`/services/${service.slug}`} className="group block h-full w-full">
+   533→                    <motion.div
+   534→                      className={cn(
+   535→                        "relative flex flex-col justify-between overflow-hidden rounded-lg p-5 md:p-6 transition-all duration-300 group-hover:shadow-lg h-full min-h-[170px]",
+   536→                        !isDark && "border group-hover:border-gray-100 bg-[#f8f9fa] group-hover:bg-white",
+   537→                      )}
+   538→                      style={isDark ? { background: service.bg, color: service.textColor } : undefined}
+   539→                      whileHover={{ y: -4, transition: { duration: 0.25 } }}
+   540→                    >
+   541→                      {/* Accent line on left */}
+   542→                      <div
+   543→                        className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   544→                        style={{ background: isDark ? "rgba(255,255,255,0.3)" : C.dna }}
+   545→                      />
+   546→
+   547→                      {/* Special badge */}
+   548→                      {"isSpecial" in service && service.isSpecial && (
+   549→                        <div className="mb-3">
+   550→                          <span
+   551→                            className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider"
+   552→                            style={{
+   553→                              background: "rgba(255,255,255,0.2)",
+   554→                              color: "rgba(255,255,255,0.95)",
+   555→                              borderRadius: "2px",
+   556→                            }}
+   557→                          >
+   558→                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-white" />
+   559→                            Специальное направление
+   560→                          </span>
+   561→                        </div>
+   562→                      )}
+   563→
+   564→                      {/* Icon + Title */}
+   565→                      <div className="flex items-center gap-3 mb-3">
+   566→                        <div
+   567→                          className="flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-300"
+   568→                          style={{ background: isDark ? "rgba(255,255,255,0.15)" : `${C.dna}10` }}
+   569→                        >
+   570→                          <service.icon
+   571→                            className="h-5 w-5"
+   572→                            style={{ color: isDark ? "rgba(255,255,255,0.9)" : C.dna }}
+   573→                          />
+   574→                        </div>
+   575→                        <h3
+   576→                          className="text-[15px] font-semibold leading-tight transition-colors group-hover:text-[#008C95]"
+   577→                          style={{ color: isDark ? "#ffffff" : C.textDark }}
+   578→                        >
+   579→                          {service.name}
+   580→                        </h3>
+   581→                      </div>
+   582→
+   583→                      {/* Description */}
+   584→                      <p
+   585→                        className="text-[12px] leading-relaxed flex-1 mb-4"
+   586→                        style={{ color: isDark ? "rgba(255,255,255,0.7)" : C.textMuted }}
+   587→                      >
+   588→                        {service.description}
+   589→                      </p>
+   590→
+   591→                      {/* Arrow */}
+   592→                      <div className="flex justify-end">
+   593→                        <div
+   594→                          className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   595→                          style={{ background: isDark ? "rgba(255,255,255,0.2)" : `${C.dna}10` }}
+   596→                        >
+   597→                          <ArrowRight
+   598→                            className="h-3.5 w-3.5"
+   599→                            style={{ color: isDark ? "#ffffff" : C.dna }}
+   600→                          />
+   601→                        </div>
+   602→                      </div>
+   603→                    </motion.div>
+   604→                  </Link>
+   605→                </motion.div>
+   606→              );
+   607→            })}
+   608→          </div>
+   609→        </div>
+   610→      </section>
+   611→
+   612→      {/* ═══════════════════════════════════════════════════
+   613→          SEPARATE DIVISIONS — Арасака.Лаб + Арасака. Корпоративная академия
+   614→          ═══════════════════════════════════════════════════ */}
+   615→      <section className="py-20 md:py-28" style={{ background: C.muted }}>
+   616→        <div className="container-kept">
+   617→          <motion.div
+   618→            className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   619→            variants={fadeUp}
+   620→            initial="hidden"
+   621→            whileInView="visible"
+   622→            viewport={vp}
+   623→          >
+   624→            <div>
+   625→              <SectionLabel>Подразделения</SectionLabel>
+   626→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   627→                Обособленные подразделения
+   628→              </h2>
+   629→            </div>
+   630→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   631→              Собственные продуктовые команды —<br />от R&D до корпоративного обучения
+   632→            </p>
+   633→          </motion.div>
+   634→
+   635→          <div className="grid gap-4 md:grid-cols-2">
+   636→            {separateDivisions.map((division, index) => (
+   637→              <motion.div
+   638→                key={division.name}
+   639→                variants={fadeUp}
+   640→                initial="hidden"
+   641→                whileInView="visible"
+   642→                viewport={vp}
+   643→                custom={index * 0.12}
+   644→              >
+   645→                <Link
+   646→                  href={division.external ? `/${division.slug}` : `/services/${division.slug}`}
+   647→                  className="group block h-full"
+   648→                >
+   649→                  <motion.div
+   650→                    className="relative flex flex-col justify-between overflow-hidden rounded-lg p-6 md:p-7 transition-all duration-300 group-hover:shadow-lg min-h-[200px]"
+   651→                    style={{ background: C.dark, color: "#ffffff" }}
+   652→                    whileHover={{ y: -4, transition: { duration: 0.25 } }}
+   653→                  >
+   654→                    {/* Decorative pattern */}
+   655→                    <div
+   656→                      className="pointer-events-none absolute inset-0 opacity-[0.04]"
+   657→                      style={{
+   658→                        backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.3) 30px, rgba(255,255,255,0.3) 31px)`,
+   659→                      }}
+   660→                    />
+   661→                    {/* Accent line on left */}
+   662→                    <div
+   663→                      className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   664→                      style={{ background: division.accent }}
+   665→                    />
+   666→                    {/* Accent glow bottom-right */}
+   667→                    <div
+   668→                      className="pointer-events-none absolute -bottom-10 -right-10 h-40 w-40 rounded-full blur-[80px]"
+   669→                      style={{ background: index === 0 ? "rgba(119,226,195,0.08)" : "rgba(224,78,57,0.08)" }}
+   670→                    />
+   671→
+   672→                    <div className="relative z-10">
+   673→                      {/* Badge */}
+   674→                      <span
+   675→                        className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider mb-4"
+   676→                        style={{
+   677→                          background: index === 0 ? "rgba(119,226,195,0.15)" : "rgba(224,78,57,0.15)",
+   678→                          color: division.accent,
+   679→                          borderRadius: "3px",
+   680→                        }}
+   681→                      >
+   682→                        <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: division.accent }} />
+   683→                        {division.badge}
+   684→                      </span>
+   685→
+   686→                      {/* Icon + Title */}
+   687→                      <div className="flex items-center gap-3 mb-3">
+   688→                        <div
+   689→                          className="flex h-10 w-10 items-center justify-center rounded-lg"
+   690→                          style={{ background: index === 0 ? "rgba(119,226,195,0.15)" : "rgba(224,78,57,0.15)" }}
+   691→                        >
+   692→                          <division.icon
+   693→                            className="h-5 w-5"
+   694→                            style={{ color: division.accent }}
+   695→                          />
+   696→                        </div>
+   697→                        <h3 className="text-[15px] font-semibold leading-tight" style={{ color: "#ffffff" }}>
+   698→                          {division.name}
+   699→                        </h3>
+   700→                      </div>
+   701→
+   702→                      <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>
+   703→                        {division.description}
+   704→                      </p>
+   705→                    </div>
+   706→
+   707→                    <div className="relative z-10 flex justify-end mt-4">
+   708→                      <div
+   709→                        className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   710→                        style={{ background: index === 0 ? "rgba(119,226,195,0.2)" : "rgba(224,78,57,0.2)" }}
+   711→                      >
+   712→                        <ArrowRight className="h-3.5 w-3.5" style={{ color: division.accent }} />
+   713→                      </div>
+   714→                    </div>
+   715→                  </motion.div>
+   716→                </Link>
+   717→              </motion.div>
+   718→            ))}
+   719→          </div>
+   720→        </div>
+   721→      </section>
+   722→
+   723→      {/* ═══════════════════════════════════════════════════
+   724→          QUICK LINKS — Navigation cards + CTA panel
+   725→          ═══════════════════════════════════════════════════ */}
+   726→      <section className="bg-white py-20 md:py-28">
+   727→        <div className="container-kept">
+   728→          {/* Section header */}
+   729→          <motion.div
+   730→            className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   731→            variants={fadeUp}
+   732→            initial="hidden"
+   733→            whileInView="visible"
+   734→            viewport={vp}
+   735→          >
+   736→            <div>
+   737→              <SectionLabel>Навигация</SectionLabel>
+   738→              <h2 className="heading-section" style={{ color: C.textDark }}>
+   739→                Полезные ссылки
+   740→              </h2>
+   741→            </div>
+   742→            <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   743→              Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании
+   744→            </p>
+   745→          </motion.div>
+   746→
+   747→          {/* Cards + CTA row */}
+   748→          <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+   749→            {/* Left: 6 navigation cards */}
+   750→            <div className="flex-1 flex">
+   751→              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 w-full h-full auto-rows-fr">
+   752→                {sectionCards.map((card, index) => {
+   753→                  const isWhite = card.bg === C.white;
+   754→                  return (
+   755→                    <motion.div
+   756→                      key={card.title}
+   757→                      className="flex"
+   758→                      variants={scaleIn}
+   759→                      initial="hidden"
+   760→                      whileInView="visible"
+   761→                      viewport={vp}
+   762→                      custom={index * 0.08}
+   763→                    >
+   764→                      <Link href={card.href} className="group block h-full w-full">
+   765→                        <motion.div
+   766→                          className={cn(
+   767→                            "relative flex flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300 h-full",
+   768→                            isWhite && "border shadow-sm group-hover:shadow-md",
+   769→                          )}
+   770→                          style={{ background: card.bg, color: card.textColor, borderColor: isWhite ? C.border : undefined }}
+   771→                          whileHover={{ y: -3, transition: { duration: 0.25 } }}
+   772→                        >
+   773→                          {card.bg === C.dark && (
+   774→                            <div
+   775→                              className="pointer-events-none absolute inset-0 opacity-[0.06]"
+   776→                              style={{
+   777→                                backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`,
+   778→                                backgroundSize: "20px 20px",
+   779→                              }}
+   780→                            />
+   781→                          )}
+   782→                          {isWhite && (
+   783→                            <div
+   784→                              className="pointer-events-none absolute inset-0 opacity-[0.1]"
+   785→                              style={{
+   786→                                backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`,
+   787→                                backgroundSize: "12px 12px",
+   788→                              }}
+   789→                            />
+   790→                          )}
+   791→
+   792→                          {/* Colored accent bar on left */}
+   793→                          <div
+   794→                            className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   795→                            style={{ background: isWhite ? C.dna : "rgba(255,255,255,0.4)" }}
+   796→                          />
+   797→
+   798→                          <div className="relative z-10">
+   799→                            <div className="flex items-center gap-2">
+   800→                              {card.icon && (
+   801→                                <card.icon className="h-4 w-4 opacity-60" />
+   802→                              )}
+   803→                              <span className="block text-sm font-semibold md:text-base">{card.title}</span>
+   804→                            </div>
+   805→                            <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+   806→                          </div>
+   807→
+   808→                          <div className="relative z-10 flex justify-end">
+   809→                            <div
+   810→                              className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   811→                              style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}
+   812→                            >
+   813→                              <ArrowRight className="h-4 w-4" style={{ color: isWhite ? C.dna : "#ffffff" }} />
+   814→                            </div>
+   815→                          </div>
+   816→                        </motion.div>
+   817→                      </Link>
+   818→                    </motion.div>
+   819→                  );
+   820→                })}
+   821→              </div>
+   822→            </div>
+   823→
+   824→            {/* Right: CTA panel — request commercial proposal / callback */}
+   825→            <motion.div
+   826→              className="lg:w-[340px] flex-shrink-0"
+   827→              variants={fadeUp}
+   828→              initial="hidden"
+   829→              whileInView="visible"
+   830→              viewport={vp}
+   831→              custom={0.3}
+   832→            >
+   833→              <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg p-6 md:p-8" style={{ background: C.dark }}>
+   834→                {/* Decorative pattern */}
+   835→                <div
+   836→                  className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   837→                  style={{
+   838→                    backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+   839→                  }}
+   840→                />
+   841→
+   842→                <div className="relative z-10">
+   843→                  {/* Decorative line */}
+   844→                  <div className="h-px w-12 mb-5" style={{ background: C.mint }} />
+   845→
+   846→                  <h3
+   847→                    className="text-xl font-bold leading-tight mb-2"
+   848→                    style={{ fontFamily: "var(--font-russo)", color: "#ffffff" }}
+   849→                  >
+   850→                    Начните сотрудничество
+   851→                  </h3>
+   852→                  <p className="text-[13px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+   853→                    Оставьте заявку — мы свяжемся с&nbsp;вами, обсудим задачу и&nbsp;подготовим индивидуальное предложение.
+   854→                  </p>
+   855→                </div>
+   856→
+   857→                <div className="relative z-10 flex flex-col gap-3">
+   858→                  <Link href="/feedback?type=proposals" className="group/kp inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300" style={{ background: C.dna, borderRadius: "4px" }}>
+   859→                    <Mail className="h-4 w-4" />
+   860→                    Запросить КП
+   861→                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/kp:translate-x-0.5" />
+   862→                  </Link>
+   863→                  <Link href="/feedback?type=callback" className="group/cb inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider transition-all duration-300 border" style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.8)", borderRadius: "4px" }}>
+   864→                    <Phone className="h-4 w-4" />
+   865→                    Заказать звонок
+   866→                  </Link>
+   867→                </div>
+   868→              </div>
+   869→            </motion.div>
+   870→          </div>
+   871→        </div>
+   872→      </section>
+   873→
+   874→    </main>
+   875→  );
+   876→}
+   877→
