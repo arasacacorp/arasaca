@@ -222,7 +222,6 @@ export function Header() {
     if (path === "/solutions" && !path.includes("/master-planning")) return "dark"
     if (path === "/lab") return "dark"
     if (path === "/pro-bono") return "dark"
-    if (path === "/roadmap2") return "dark"
     if (path === "/sitemap") return "dark"
     if (path === "/feedback") return "dark"
     // Teal (#008C95) hero pages
