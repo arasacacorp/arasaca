@@ -1,0 +1,608 @@
+   400→  2199→}
+   401→  2200→
+   402→  2201→/* ═══════════════════════════════════════════════════════
+   403→  2202→   SECTION 11 — ABOUT
+   404→  2203→   ═══════════════════════════════════════════════════════ */
+   405→  2204→const aboutStats = [
+   406→  2205→  { number: "8", label: "лет на рынке" },
+   407→  2206→  { number: "200+", label: "реализованных проектов" },
+   408→  2207→  { number: "50+", label: "экспертов в команде" },
+   409→  2208→  { number: "98%", label: "клиентов рекомендуют" },
+   410→  2209→];
+   411→  2210→
+   412→  2211→const aboutValues = [
+   413→  2212→  {
+   414→  2213→    icon: Target,
+   415→  2214→    title: "Фокус на результат",
+   416→  2215→    description:
+   417→  2216→      "Мы работаем до достижения измеримых бизнес-результатов, а не просто отдаём отчёты.",
+   418→  2217→  },
+   419→  2218→  {
+   420→  2219→    icon: Users,
+   421→  2220→    title: "Командный подход",
+   422→  2221→    description:
+   423→  2222→      "Проекты ведут опытные консультанты при поддержке отраслевых экспертов.",
+   424→  2223→  },
+   425→  2224→  {
+   426→  2225→    icon: Globe,
+   427→  2226→    title: "Глобальный опыт",
+   428→  2227→    description:
+   429→  2228→      "Сочетаем международную методологию с глубоким пониманием российской специфики.",
+   430→  2229→  },
+   431→  2230→];
+   432→  2231→
+   433→  2232→function AboutSection() {
+   434→  2233→  return (
+   435→  2234→    <section id="about" className="bg-white py-20">
+   436→  2235→      <div className="container-kept">
+   437→  2236→        <motion.div
+   438→  2237→          initial={{ opacity: 0, y: 20 }}
+   439→  2238→          whileInView={{ opacity: 1, y: 0 }}
+   440→  2239→          viewport={{ once: true }}
+   441→  2240→          transition={{ duration: 0.6 }}
+   442→  2241→          className="mb-16"
+   443→  2242→        >
+   444→  2243→          <div className="text-[#008C95] text-sm font-medium mb-4">06</div>
+   445→  2244→          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+   446→  2245→            О компании
+   447→  2246→          </h2>
+   448→  2247→          <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
+   449→  2248→            Арасака — консалтинговая компания, специализирующаяся на повышении
+   450→  2249→            эффективности управления, цифровой трансформации и управлении
+   451→  2250→            инвестиционными программами.
+   452→  2251→          </p>
+   453→  2252→        </motion.div>
+   454→  2253→
+   455→  2254→        <motion.div
+   456→  2255→          initial={{ opacity: 0, y: 20 }}
+   457→  2256→          whileInView={{ opacity: 1, y: 0 }}
+   458→  2257→          viewport={{ once: true }}
+   459→  2258→          transition={{ duration: 0.6, delay: 0.1 }}
+   460→  2259→          className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-gray-200 border border-gray-200 mb-16"
+   461→  2260→        >
+   462→  2261→          {aboutStats.map((stat, index) => (
+   463→  2262→            <div key={index} className="bg-white p-8 text-center">
+   464→  2263→              <div className="text-4xl font-bold text-[#008C95] mb-2">
+   465→  2264→                {stat.number}
+   466→  2265→              </div>
+   467→  2266→              <div className="text-gray-500">{stat.label}</div>
+   468→  2267→            </div>
+   469→  2268→          ))}
+   470→  2269→        </motion.div>
+   471→  2270→
+   472→  2271→        <div className="grid md:grid-cols-3 gap-8 mb-16">
+   473→  2272→          {aboutValues.map((value, index) => (
+   474→  2273→            <motion.div
+   475→  2274→              key={index}
+   476→  2275→              initial={{ opacity: 0, y: 20 }}
+   477→  2276→              whileInView={{ opacity: 1, y: 0 }}
+   478→  2277→              viewport={{ once: true }}
+   479→  2278→              transition={{ duration: 0.5, delay: index * 0.1 }}
+   480→  2279→              className="p-6 bg-gray-50 border border-gray-200"
+   481→  2280→            >
+   482→  2281→              <div className="w-12 h-12 flex items-center justify-center bg-[#e8f5f3] mb-4">
+   483→  2282→                <value.icon className="w-6 h-6 text-[#008C95]" />
+   484→  2283→              </div>
+   485→  2284→              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+   486→  2285→                {value.title}
+   487→  2286→              </h3>
+   488→  2287→              <p className="text-gray-500 text-sm leading-relaxed">
+   489→  2288→                {value.description}
+   490→  2289→              </p>
+   491→  2290→            </motion.div>
+   492→  2291→          ))}
+   493→  2292→        </div>
+   494→  2293→
+   495→  2294→        <motion.div
+   496→  2295→          initial={{ opacity: 0, y: 20 }}
+   497→  2296→          whileInView={{ opacity: 1, y: 0 }}
+   498→  2297→          viewport={{ once: true }}
+   499→  2298→          transition={{ duration: 0.5, delay: 0.2 }}
+   500→  2299→          className="mb-16"
+   501→  2300→        >
+   502→  2301→          <Link
+   503→  2302→            href="/pro-bono"
+   504→  2303→            className="flex items-center gap-4 p-6 bg-[#e8f5f3] border border-[#008C95]/20 rounded-xl hover:bg-[#d8f0ed] transition-colors group"
+   505→  2304→          >
+   506→  2305→            <div className="w-12 h-12 flex items-center justify-center bg-[#008C95]/10 rounded-lg shrink-0">
+   507→  2306→              <Heart className="w-6 h-6 text-[#008C95]" />
+   508→  2307→            </div>
+   509→  2308→            <div className="flex-1 min-w-0">
+   510→  2309→              <h3 className="font-semibold text-gray-900 group-hover:text-[#008C95] transition-colors">
+   511→  2310→                Услуги Pro Bono
+   512→  2311→              </h3>
+   513→  2312→              <p className="text-sm text-gray-500 mt-0.5">
+   514→  2313→                Оказываем консалтинговую поддержку на безвозмездной основе НКО и
+   515→  2314→                социальным проектам.
+   516→  2315→              </p>
+   517→  2316→            </div>
+   518→  2317→            <ArrowRight className="w-5 h-5 text-[#008C95] group-hover:translate-x-1 transition-transform shrink-0" />
+   519→  2318→          </Link>
+   520→  2319→        </motion.div>
+   521→  2320→
+   522→  2321→        <motion.div
+   523→  2322→          initial={{ opacity: 0, y: 20 }}
+   524→  2323→          whileInView={{ opacity: 1, y: 0 }}
+   525→  2324→          viewport={{ once: true }}
+   526→  2325→          transition={{ duration: 0.5, delay: 0.3 }}
+   527→  2326→          className="flex justify-center"
+   528→  2327→        >
+   529→  2328→          <Link
+   530→  2329→            href="/about"
+   531→  2330→            className="inline-flex items-center gap-2 px-8 py-4 bg-[#008C95] text-white font-medium hover:bg-[#02757d] transition-colors group"
+   532→  2331→          >
+   533→  2332→            Узнать больше о нас
+   534→  2333→            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+   535→  2334→          </Link>
+   536→  2335→        </motion.div>
+   537→  2336→      </div>
+   538→  2337→    </section>
+   539→  2338→  );
+   540→  2339→}
+   541→  2340→
+   542→  2341→/* ═══════════════════════════════════════════════════════
+   543→  2342→   SECTION 12 — LAB
+   544→  2343→   ═══════════════════════════════════════════════════════ */
+   545→  2344→const labHighlights = [
+   546→  2345→  { icon: Users, title: "CRM-системы", description: "Управление клиентами и продажами" },
+   547→  2346→  { icon: Workflow, title: "Автоматизация", description: "Рутинные процессы без ручного труда" },
+   548→  2347→  { icon: Plug, title: "Интеграции", description: "Связываем системы между собой" },
+   549→  2348→  { icon: GraduationCap, title: "LMS-платформы", description: "Корпоративное обучение" },
+   550→  2349→  { icon: Database, title: "HR-системы", description: "Учёт и мотивация персонала" },
+   551→  2350→  { icon: BarChart3, title: "Дашборды", description: "Аналитика в реальном времени" },
+   552→  2351→];
+   553→  2352→
+   554→  2353→function LabSection() {
+   555→  2354→  return (
+   556→  2355→    <section className="py-16 lg:py-24 bg-[#00313C] relative overflow-hidden">
+   557→  2356→      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+   558→  2357→        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl" />
+   559→  2358→        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-3xl" />
+   560→  2359→      </div>
+   561→  2360→
+   562→  2361→      <div className="container-kept relative z-10">
+   563→  2362→        <motion.div
+   564→  2363→          initial={{ opacity: 0, y: 20 }}
+   565→  2364→          whileInView={{ opacity: 1, y: 0 }}
+   566→  2365→          viewport={{ once: true }}
+   567→  2366→          transition={{ duration: 0.6 }}
+   568→  2367→          className="mb-12"
+   569→  2368→        >
+   570→  2369→          <div className="flex items-center gap-2 mb-4">
+   571→  2370→            <div className="w-10 h-10 flex items-center justify-center bg-white/10 rounded">
+   572→  2371→              <FlaskConical className="w-5 h-5 text-[#77e2c3]" />
+   573→  2372→            </div>
+   574→  2373→            <span className="text-[#77e2c3] text-sm font-medium uppercase tracking-wider">
+   575→  2374→              Лаборатория цифровых решений
+   576→  2375→            </span>
+   577→  2376→          </div>
+   578→  2377→          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+   579→  2378→            Арасака Лаб
+   580→  2379→          </h2>
+   581→  2380→          <p className="text-white/70 text-lg max-w-2xl leading-relaxed">
+   582→  2381→            Разрабатываем IT-системы для внутренних нужд компании и под индивидуальные запросы клиентов.
+   583→  2382→            Создаём решения, которые идеально подходят под ваши задачи.
+   584→  2383→          </p>
+   585→  2384→        </motion.div>
+   586→  2385→
+   587→  2386→        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-0 border border-white/10 bg-white/5">
+   588→  2387→          {labHighlights.map((item, index) => (
+   589→  2388→            <motion.div
+   590→  2389→              key={index}
+   591→  2390→              initial={{ opacity: 0, y: 20 }}
+   592→  2391→              whileInView={{ opacity: 1, y: 0 }}
+   593→  2392→              viewport={{ once: true }}
+   594→  2393→              transition={{ duration: 0.4, delay: index * 0.05 }}
+   595→  2394→              className="group"
+   596→  2395→            >
+   597→  2396→              <Link
+   598→  2397→                href="/lab"
+   599→  2398→                className="block p-6 border-r border-b border-white/10 h-full hover:bg-white/10 transition-colors"
+   600→  2399→              >
+   601→  2400→                <div className="flex items-start gap-4">
+   602→  2401→                  <div className="w-12 h-12 flex items-center justify-center bg-white/10 flex-shrink-0 group-hover:bg-white/20 transition-colors">
+   603→  2402→                    <item.icon className="w-6 h-6 text-white" />
+   604→  2403→                  </div>
+   605→  2404→                  <div className="flex-1 min-w-0">
+   606→  2405→                    <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-[#77e2c3] transition-colors">
+   607→  2406→                      {item.title}
+   608→  2407→                    </h3>
+   609→  2408→                    <p className="text-white/60 text-sm">{item.description}</p>
+   610→  2409→                  </div>
+   611→  2410→                  <div className="flex-shrink-0 p-2 text-white/30 group-hover:text-[#77e2c3] group-hover:translate-x-1 transition-all">
+   612→  2411→                    <ArrowRight className="w-5 h-5" />
+   613→  2412→                  </div>
+   614→  2413→                </div>
+   615→  2414→              </Link>
+   616→  2415→            </motion.div>
+   617→  2416→          ))}
+   618→  2417→        </div>
+   619→  2418→
+   620→  2419→        <motion.div
+   621→  2420→          initial={{ opacity: 0, y: 20 }}
+   622→  2421→          whileInView={{ opacity: 1, y: 0 }}
+   623→  2422→          viewport={{ once: true }}
+   624→  2423→          transition={{ duration: 0.6, delay: 0.3 }}
+   625→  2424→          className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 mt-12 pt-8 border-t border-white/10"
+   626→  2425→        >
+   627→  2426→          <div className="flex flex-wrap gap-8 lg:gap-12">
+   628→  2427→            {[
+   629→  2428→              { number: "20+", label: "решений разработано" },
+   630→  2429→              { number: "5+", label: "лет в разработке" },
+   631→  2430→              { number: "100%", label: "индивидуальный подход" },
+   632→  2431→            ].map((stat, index) => (
+   633→  2432→              <div key={index}>
+   634→  2433→                <div className="text-2xl lg:text-3xl font-bold text-white">{stat.number}</div>
+   635→  2434→                <div className="text-sm text-white/50">{stat.label}</div>
+   636→  2435→              </div>
+   637→  2436→            ))}
+   638→  2437→          </div>
+   639→  2438→
+   640→  2439→          <Link
+   641→  2440→            href="/lab"
+   642→  2441→            className="inline-flex items-center gap-2 px-6 py-3 bg-[#E04E39] text-white font-medium hover:bg-[#c94330] transition-colors group"
+   643→  2442→          >
+   644→  2443→            Подробнее о лаборатории
+   645→  2444→            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+   646→  2445→          </Link>
+   647→  2446→        </motion.div>
+   648→  2447→      </div>
+   649→  2448→    </section>
+   650→  2449→  );
+   651→  2450→}
+   652→  2451→
+   653→  2452→/* ═══════════════════════════════════════════════════════
+   654→  2453→   SECTION 13 — CONTACTS
+   655→  2454→   ═══════════════════════════════════════════════════════ */
+   656→  2455→const contacts = [
+   657→  2456→  {
+   658→  2457→    icon: MapPin,
+   659→  2458→    label: "Адрес",
+   660→  2459→    value: "Москва, Ленинградский проспект 34А",
+   661→  2460→    href: "/contacts",
+   662→  2461→  },
+   663→  2462→  {
+   664→  2463→    icon: Phone,
+   665→  2464→    label: "Телефон",
+   666→  2465→    value: "+7 495 937 4477",
+   667→  2466→    href: "tel:+74959374477",
+   668→  2467→  },
+   669→  2468→  {
+   670→  2469→    icon: Mail,
+   671→  2470→    label: "Email",
+   672→  2471→    value: "info@arasaca.ru",
+   673→  2472→    href: "mailto:info@arasaca.ru",
+   674→  2473→  },
+   675→  2474→];
+   676→  2475→
+   677→  2476→function ContactsSection() {
+   678→  2477→  return (
+   679→  2478→    <section id="contacts" className="relative flex bg-white">
+   680→  2479→      {/* Left: Teal Sidebar */}
+   681→  2480→      <div className="hidden lg:block w-[380px] bg-[#008C95] flex-shrink-0 relative">
+   682→  2481→        <div className="sticky top-16 h-[calc(100vh-64px)] flex flex-col justify-center p-12">
+   683→  2482→          <motion.div
+   684→  2483→            initial={{ opacity: 0, y: 20 }}
+   685→  2484→            whileInView={{ opacity: 1, y: 0 }}
+   686→  2485→            viewport={{ once: true }}
+   687→  2486→            transition={{ duration: 0.6 }}
+   688→  2487→          >
+   689→  2488→            <div className="text-white/30 text-sm font-medium mb-4">07</div>
+   690→  2489→            <h2 className="text-5xl font-bold text-white mb-6">Контакты</h2>
+   691→  2490→            <p className="text-white/70 leading-relaxed mb-8">
+   692→  2491→              Готовы обсудить ваш проект? Свяжитесь с нами удобным для вас
+   693→  2492→              способом.
+   694→  2493→            </p>
+   695→  2494→
+   696→  2495→            <div className="space-y-6">
+   697→  2496→              {contacts.map((contact, index) => (
+   698→  2497→                <Link
+   699→  2498→                  key={index}
+   700→  2499→                  href={contact.href}
+   701→  2500→                  className="flex items-start gap-4 group"
+   702→  2501→                >
+   703→  2502→                  <contact.icon className="w-5 h-5 text-white/50 group-hover:text-[#77e2c3] transition-colors mt-0.5" />
+   704→  2503→                  <div>
+   705→  2504→                    <div className="text-white/50 text-sm mb-1">
+   706→  2505→                      {contact.label}
+   707→  2506→                    </div>
+   708→  2507→                    <div className="text-white group-hover:text-[#77e2c3] transition-colors">
+   709→  2508→                      {contact.value}
+   710→  2509→                    </div>
+   711→  2510→                  </div>
+   712→  2511→                </Link>
+   713→  2512→              ))}
+   714→  2513→            </div>
+   715→  2514→
+   716→  2515→            <Link
+   717→  2516→              href="/contacts"
+   718→  2517→              className="inline-flex items-center gap-2 mt-8 text-white hover:text-[#77e2c3] transition-colors group"
+   719→  2518→            >
+   720→  2519→              <span>Все контакты</span>
+   721→  2520→              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+   722→  2521→            </Link>
+   723→  2522→          </motion.div>
+   724→  2523→        </div>
+   725→  2524→      </div>
+   726→  2525→
+   727→  2526→      {/* Right: Contact Form */}
+   728→  2527→      <div className="flex-1 py-16 lg:py-0">
+   729→  2528→        {/* Mobile header */}
+   730→  2529→        <div className="lg:hidden bg-[#008C95] p-8">
+   731→  2530→          <div className="text-white/30 text-sm font-medium mb-4">07</div>
+   732→  2531→          <h2 className="text-4xl font-bold text-white mb-4">Контакты</h2>
+   733→  2532→          <p className="text-white/70">
+   734→  2533→            Свяжитесь с нами для обсуждения вашего проекта.
+   735→  2534→          </p>
+   736→  2535→        </div>
+   737→  2536→
+   738→  2537→        <motion.div
+   739→  2538→          initial={{ opacity: 0, y: 20 }}
+   740→  2539→          whileInView={{ opacity: 1, y: 0 }}
+   741→  2540→          viewport={{ once: true }}
+   742→  2541→          transition={{ duration: 0.6 }}
+   743→  2542→          className="p-8 lg:p-16 lg:flex lg:items-center lg:min-h-screen"
+   744→  2543→        >
+   745→  2544→          <div className="w-full max-w-xl mx-auto lg:mx-0">
+   746→  2545→            <h3 className="text-2xl font-bold text-gray-900 mb-6">
+   747→  2546→              Оставьте заявку
+   748→  2547→            </h3>
+   749→  2548→
+   750→  2549→            <div className="lg:hidden mb-8 space-y-4">
+   751→  2550→              {contacts.map((contact, index) => (
+   752→  2551→                <Link
+   753→  2552→                  key={index}
+   754→  2553→                  href={contact.href}
+   755→  2554→                  className="flex items-center gap-3 text-gray-600 hover:text-[#008C95] transition-colors"
+   756→  2555→                >
+   757→  2556→                  <contact.icon className="w-5 h-5" />
+   758→  2557→                  <span>{contact.value}</span>
+   759→  2558→                </Link>
+   760→  2559→              ))}
+   761→  2560→              <Link
+   762→  2561→                href="/contacts"
+   763→  2562→                className="inline-flex items-center gap-2 text-[#008C95] font-medium mt-4"
+   764→  2563→              >
+   765→  2564→                <span>Все контакты</span>
+   766→  2565→                <ArrowRight className="w-4 h-4" />
+   767→  2566→              </Link>
+   768→  2567→            </div>
+   769→  2568→
+   770→  2569→            <form className="space-y-6">
+   771→  2570→              <div className="grid sm:grid-cols-2 gap-6">
+   772→  2571→                <div>
+   773→  2572→                  <label className="block text-sm text-gray-600 mb-2">
+   774→  2573→                    Имя
+   775→  2574→                  </label>
+   776→  2575→                  <input
+   777→  2576→                    type="text"
+   778→  2577→                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:border-[#008C95] focus:outline-none transition-colors"
+   779→  2578→                    placeholder="Ваше имя"
+   780→  2579→                  />
+   781→  2580→                </div>
+   782→  2581→                <div>
+   783→  2582→                  <label className="block text-sm text-gray-600 mb-2">
+   784→  2583→                    Телефон
+   785→  2584→                  </label>
+   786→  2585→                  <input
+   787→  2586→                    type="tel"
+   788→  2587→                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:border-[#008C95] focus:outline-none transition-colors"
+   789→  2588→                    placeholder="+7 (___) ___-__-__"
+   790→  2589→                  />
+   791→  2590→                </div>
+   792→  2591→              </div>
+   793→  2592→
+   794→  2593→              <div>
+   795→  2594→                <label className="block text-sm text-gray-600 mb-2">
+   796→  2595→                  Email
+   797→  2596→                </label>
+   798→  2597→                <input
+   799→  2598→                  type="email"
+   800→  2599→                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:border-[#008C95] focus:outline-none transition-colors"
+   801→  2600→                  placeholder="email@company.ru"
+   802→  2601→                />
+   803→  2602→              </div>
+   804→  2603→
+   805→  2604→              <div>
+   806→  2605→                <label className="block text-sm text-gray-600 mb-2">
+   807→  2606→                  Сообщение
+   808→  2607→                </label>
+   809→  2608→                <textarea
+   810→  2609→                  rows={4}
+   811→  2610→                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:border-[#008C95] focus:outline-none transition-colors resize-none"
+   812→  2611→                  placeholder="Опишите ваш проект или задачу"
+   813→  2612→                />
+   814→  2613→              </div>
+   815→  2614→
+   816→  2615→              <div className="flex flex-col sm:flex-row gap-4">
+   817→  2616→                <button
+   818→  2617→                  type="submit"
+   819→  2618→                  className="px-8 py-4 bg-[#E04E39] text-white font-medium hover:bg-[#c94330] transition-colors flex items-center justify-center gap-2 group"
+   820→  2619→                >
+   821→  2620→                  Отправить заявку
+   822→  2621→                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+   823→  2622→                </button>
+   824→  2623→                <Link
+   825→  2624→                  href="/contacts"
+   826→  2625→                  className="hidden lg:inline-flex items-center gap-2 px-8 py-4 border border-[#008C95] text-[#008C95] font-medium hover:bg-[#e8f5f3] transition-colors"
+   827→  2626→                >
+   828→  2627→                  Все контакты
+   829→  2628→                </Link>
+   830→  2629→              </div>
+   831→  2630→            </form>
+   832→  2631→          </div>
+   833→  2632→        </motion.div>
+   834→  2633→      </div>
+   835→  2634→    </section>
+   836→  2635→  );
+   837→  2636→}
+   838→  2637→
+   839→  2638→/* ═══════════════════════════════════════════════════════
+   840→  2639→   SECTION — QUICK LINKS (before footer)
+   841→  2640→   ═══════════════════════════════════════════════════════ */
+   842→  2641→function QuickLinksSection() {
+   843→  2642→  return (
+   844→  2643→    <section className="bg-white py-20 md:py-28">
+   845→  2644→      <div className="container-kept">
+   846→  2645→        {/* Section header */}
+   847→  2646→        <motion.div
+   848→  2647→          className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+   849→  2648→          variants={fadeUp}
+   850→  2649→          initial="hidden"
+   851→  2650→          whileInView="visible"
+   852→  2651→          viewport={vp}
+   853→  2652→        >
+   854→  2653→          <div>
+   855→  2654→            <SectionLabel>Навигация</SectionLabel>
+   856→  2655→            <h2 className="heading-section" style={{ color: C.textDark }}>
+   857→  2656→              Полезные ссылки
+   858→  2657→            </h2>
+   859→  2658→          </div>
+   860→  2659→          <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+   861→  2660→            Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании
+   862→  2661→          </p>
+   863→  2662→        </motion.div>
+   864→  2663→
+   865→  2664→        {/* Cards + CTA row */}
+   866→  2665→        <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+   867→  2666→          {/* Left: 6 navigation cards */}
+   868→  2667→          <div className="flex-1 flex">
+   869→  2668→            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 w-full h-full auto-rows-fr">
+   870→  2669→              {sectionCards.map((card, index) => {
+   871→  2670→                const isWhite = card.bg === C.white;
+   872→  2671→                return (
+   873→  2672→                  <motion.div
+   874→  2673→                    key={card.title}
+   875→  2674→                    variants={scaleIn}
+   876→  2675→                    initial="hidden"
+   877→  2676→                    whileInView="visible"
+   878→  2677→                    viewport={vp}
+   879→  2678→                    custom={index * 0.08}
+   880→  2679→                  >
+   881→  2680→                    <Link href={card.href} className="group block">
+   882→  2681→                      <motion.div
+   883→  2682→                        className={cn(
+   884→  2683→                          "relative flex h-[130px] flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300",
+   885→  2684→                          isWhite && "border shadow-sm group-hover:shadow-md",
+   886→  2685→                        )}
+   887→  2686→                        style={{ background: card.bg, color: card.textColor, borderColor: isWhite ? C.border : undefined }}
+   888→  2687→                        whileHover={{ y: -3, transition: { duration: 0.25 } }}
+   889→  2688→                      >
+   890→  2689→                        {card.bg === C.dark && (
+   891→  2690→                          <div
+   892→  2691→                            className="pointer-events-none absolute inset-0 opacity-[0.06]"
+   893→  2692→                            style={{
+   894→  2693→                              backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`,
+   895→  2694→                              backgroundSize: "20px 20px",
+   896→  2695→                            }}
+   897→  2696→                          />
+   898→  2697→                        )}
+   899→  2698→                        {isWhite && (
+   900→  2699→                          <div
+   901→  2700→                            className="pointer-events-none absolute inset-0 opacity-[0.1]"
+   902→  2701→                            style={{
+   903→  2702→                              backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`,
+   904→  2703→                              backgroundSize: "12px 12px",
+   905→  2704→                            }}
+   906→  2705→                          />
+   907→  2706→                        )}
+   908→  2707→
+   909→  2708→                        {/* Colored accent bar on left */}
+   910→  2709→                        <div
+   911→  2710→                          className="pointer-events-none absolute left-0 top-0 h-full w-1"
+   912→  2711→                          style={{ background: isWhite ? C.dna : "rgba(255,255,255,0.4)" }}
+   913→  2712→                        />
+   914→  2713→
+   915→  2714→                        <div className="relative z-10">
+   916→  2715→                          <div className="flex items-center gap-2">
+   917→  2716→                            {card.icon && (
+   918→  2717→                              <card.icon className="h-4 w-4 opacity-60" />
+   919→  2718→                            )}
+   920→  2719→                            <span className="block text-sm font-semibold md:text-base">{card.title}</span>
+   921→  2720→                          </div>
+   922→  2721→                          <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+   923→  2722→                        </div>
+   924→  2723→
+   925→  2724→                        <div className="relative z-10 flex justify-end">
+   926→  2725→                          <div
+   927→  2726→                            className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+   928→  2727→                            style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}
+   929→  2728→                          >
+   930→  2729→                            <ArrowRight className="h-4 w-4" style={{ color: isWhite ? C.dna : "#ffffff" }} />
+   931→  2730→                          </div>
+   932→  2731→                        </div>
+   933→  2732→                      </motion.div>
+   934→  2733→                    </Link>
+   935→  2734→                  </motion.div>
+   936→  2735→                );
+   937→  2736→              })}
+   938→  2737→            </div>
+   939→  2738→          </div>
+   940→  2739→
+   941→  2740→          {/* Right: CTA panel — request commercial proposal / callback */}
+   942→  2741→          <motion.div
+   943→  2742→            className="lg:w-[340px] flex-shrink-0"
+   944→  2743→            variants={fadeUp}
+   945→  2744→            initial="hidden"
+   946→  2745→            whileInView="visible"
+   947→  2746→            viewport={vp}
+   948→  2747→            custom={0.3}
+   949→  2748→          >
+   950→  2749→            <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg p-6 md:p-8" style={{ background: C.dark }}>
+   951→  2750→              {/* Decorative pattern */}
+   952→  2751→              <div
+   953→  2752→                className="pointer-events-none absolute inset-0 opacity-[0.03]"
+   954→  2753→                style={{
+   955→  2754→                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+   956→  2755→                }}
+   957→  2756→              />
+   958→  2757→
+   959→  2758→              <div className="relative z-10">
+   960→  2759→                {/* Decorative line */}
+   961→  2760→                <div className="h-px w-12 mb-5" style={{ background: C.mint }} />
+   962→  2761→
+   963→  2762→                <h3
+   964→  2763→                  className="text-xl font-bold leading-tight mb-2"
+   965→  2764→                  style={{ fontFamily: "var(--font-russo)", color: "#ffffff" }}
+   966→  2765→                >
+   967→  2766→                  Начните сотрудничество
+   968→  2767→                </h3>
+   969→  2768→                <p className="text-[13px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+   970→  2769→                  Оставьте заявку — мы свяжемся с&nbsp;вами, обсудим задачу и&nbsp;подготовим индивидуальное предложение.
+   971→  2770→                </p>
+   972→  2771→              </div>
+   973→  2772→
+   974→  2773→              <div className="relative z-10 flex flex-col gap-3">
+   975→  2774→                <Link href="/feedback?type=proposals" className="group/kp inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300" style={{ background: C.dna, borderRadius: "4px" }}>
+   976→  2775→                  <Mail className="h-4 w-4" />
+   977→  2776→                  Запросить КП
+   978→  2777→                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/kp:translate-x-0.5" />
+   979→  2778→                </Link>
+   980→  2779→                <Link href="/feedback?type=callback" className="group/cb inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider transition-all duration-300 border" style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.8)", borderRadius: "4px" }}>
+   981→  2780→                  <Phone className="h-4 w-4" />
+   982→  2781→                  Заказать звонок
+   983→  2782→                </Link>
+   984→  2783→              </div>
+   985→  2784→            </div>
+   986→  2785→          </motion.div>
+   987→  2786→        </div>
+   988→  2787→      </div>
+   989→  2788→    </section>
+   990→  2789→  );
+   991→  2790→}
+   992→  2791→
+   993→  2792→export default function Home() {
+   994→  2793→  return (
+   995→  2794→    <main>
+   996→  2795→      <HeroSection />
+   997→  2796→      <BusinessDirectionsSection />
+   998→  2797→      <MissionSection />
+   999→  2798→      <IndustriesSection />
+  1000→  2799→      <InnovationSection />
+  1001→  2800→      <SolutionsSection />
+  1002→  2801→      <PublicationsSection />
+  1003→  2802→      <QuickLinksSection />
+  1004→  2803→    </main>
+  1005→  2804→  );
+  1006→  2805→}
+  1007→  2806→

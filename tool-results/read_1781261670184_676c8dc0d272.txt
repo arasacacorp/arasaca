@@ -1,0 +1,1007 @@
+  1800→    title: "Стратегия ESG-трансформации",
+  1801→    description: "Разработали стратегию устойчивого развития и внедрили систему ESG-отчётности.",
+  1802→    client: "Нефтегазовая компания",
+  1803→    result: "Повышение рейтинга ESG на 2 уровня",
+  1804→  },
+  1805→];
+  1806→
+  1807→function CasesSection() {
+  1808→  return (
+  1809→    <section className="py-16 lg:py-24 bg-white">
+  1810→      <div className="container-kept">
+  1811→        <motion.div
+  1812→          initial={{ opacity: 0, y: 20 }}
+  1813→          whileInView={{ opacity: 1, y: 0 }}
+  1814→          viewport={{ once: true }}
+  1815→          transition={{ duration: 0.6 }}
+  1816→        >
+  1817→          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12">
+  1818→            <div>
+  1819→              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+  1820→                Кейсы
+  1821→              </h2>
+  1822→              <p className="text-gray-500 text-lg max-w-2xl">
+  1823→                Примеры реализованных проектов и достигнутых результатов
+  1824→              </p>
+  1825→            </div>
+  1826→            <Link
+  1827→              href="/cases"
+  1828→              className="inline-flex items-center gap-2 text-[#008C95] font-medium group"
+  1829→            >
+  1830→              Все кейсы
+  1831→              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+  1832→            </Link>
+  1833→          </div>
+  1834→
+  1835→          {/* Cases grid */}
+  1836→          <div className="grid lg:grid-cols-3 gap-8">
+  1837→            {cases.map((item, index) => (
+  1838→              <motion.div
+  1839→                key={index}
+  1840→                initial={{ opacity: 0, y: 20 }}
+  1841→                whileInView={{ opacity: 1, y: 0 }}
+  1842→                viewport={{ once: true }}
+  1843→                transition={{ duration: 0.4, delay: index * 0.1 }}
+  1844→                className="group"
+  1845→              >
+  1846→                <Link href="/cases" className="block">
+  1847→                  <div className="bg-gray-50 p-8 h-full hover:bg-gray-100 transition-colors border-l-4 border-[#008C95]">
+  1848→                    {/* Number */}
+  1849→                    <div className="text-4xl font-bold text-[#008C95]/20 mb-4">
+  1850→                      [{String(index + 1).padStart(2, '0')}]
+  1851→                    </div>
+  1852→
+  1853→                    {/* Title */}
+  1854→                    <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-[#008C95] transition-colors">
+  1855→                      {item.title}
+  1856→                    </h3>
+  1857→
+  1858→                    {/* Description */}
+  1859→                    <p className="text-gray-600 mb-6 leading-relaxed">
+  1860→                      {item.description}
+  1861→                    </p>
+  1862→
+  1863→                    {/* Client */}
+  1864→                    <div className="mb-4">
+  1865→                      <span className="text-xs text-gray-400 uppercase tracking-wider">Клиент</span>
+  1866→                      <p className="text-sm text-gray-700">{item.client}</p>
+  1867→                    </div>
+  1868→
+  1869→                    {/* Result */}
+  1870→                    <div className="pt-4 border-t border-gray-200">
+  1871→                      <span className="text-xs text-gray-400 uppercase tracking-wider">Результат</span>
+  1872→                      <p className="text-sm font-medium text-[#008C95]">{item.result}</p>
+  1873→                    </div>
+  1874→                  </div>
+  1875→                </Link>
+  1876→              </motion.div>
+  1877→            ))}
+  1878→          </div>
+  1879→        </motion.div>
+  1880→      </div>
+  1881→    </section>
+  1882→  );
+  1883→}
+  1884→
+  1885→/* ═══════════════════════════════════════════════════════
+  1886→   SECTION 8 — EVENTS
+  1887→   ═══════════════════════════════════════════════════════ */
+  1888→const events = [
+  1889→  {
+  1890→    title: "Конференция «Цифровая экономика 2026»",
+  1891→    date: "15 февраля 2026",
+  1892→    location: "Москва, Центр событий",
+  1893→    type: "Конференция",
+  1894→  },
+  1895→  {
+  1896→    title: "Вебинар: Стратегии роста в неопределённости",
+  1897→    date: "20 января 2026",
+  1898→    location: "Онлайн",
+  1899→    type: "Вебинар",
+  1900→  },
+  1901→  {
+  1902→    title: "Круглый стол: ESG-трансформация",
+  1903→    date: "28 января 2026",
+  1904→    location: "Москва, Отель «Метрополь»",
+  1905→    type: "Круглый стол",
+  1906→  },
+  1907→];
+  1908→
+  1909→function EventsSection() {
+  1910→  return (
+  1911→    <section id="events" className="bg-[#f1f2f4] py-20">
+  1912→      <div className="container-kept">
+  1913→        <motion.div
+  1914→          initial={{ opacity: 0, y: 20 }}
+  1915→          whileInView={{ opacity: 1, y: 0 }}
+  1916→          viewport={{ once: true }}
+  1917→          transition={{ duration: 0.6 }}
+  1918→          className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12"
+  1919→        >
+  1920→          <div>
+  1921→            <div className="text-[#008C95] text-sm font-medium mb-4">04</div>
+  1922→            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
+  1923→              Мероприятия
+  1924→            </h2>
+  1925→          </div>
+  1926→          <p className="text-gray-500 max-w-md lg:text-right">
+  1927→            Конференции, вебинары и круглые столы с участием наших экспертов.
+  1928→          </p>
+  1929→        </motion.div>
+  1930→
+  1931→        {/* Events list */}
+  1932→        <div className="space-y-4">
+  1933→          {events.map((event, index) => (
+  1934→            <motion.div
+  1935→              key={index}
+  1936→              initial={{ opacity: 0, y: 20 }}
+  1937→              whileInView={{ opacity: 1, y: 0 }}
+  1938→              viewport={{ once: true }}
+  1939→              transition={{ duration: 0.4, delay: index * 0.1 }}
+  1940→            >
+  1941→              <Link
+  1942→                href="#"
+  1943→                className="flex flex-col lg:flex-row lg:items-center gap-6 p-6 bg-white border border-gray-200 hover:border-[#008C95] transition-colors group"
+  1944→              >
+  1945→                <div className="flex-shrink-0">
+  1946→                  <span className="px-3 py-1 bg-[#008C95] text-white text-xs font-medium">
+  1947→                    {event.type}
+  1948→                  </span>
+  1949→                </div>
+  1950→                <div className="flex-1">
+  1951→                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-[#008C95] transition-colors">
+  1952→                    {event.title}
+  1953→                  </h3>
+  1954→                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+  1955→                    <span className="flex items-center gap-1">
+  1956→                      <Calendar className="w-4 h-4" />
+  1957→                      {event.date}
+  1958→                    </span>
+  1959→                    <span className="flex items-center gap-1">
+  1960→                      <MapPin className="w-4 h-4" />
+  1961→                      {event.location}
+  1962→                    </span>
+  1963→                  </div>
+  1964→                </div>
+  1965→                <div className="flex-shrink-0">
+  1966→                  <ArrowRight className="w-5 h-5 text-gray-300 group-hover:text-[#008C95] group-hover:translate-x-1 transition-all" />
+  1967→                </div>
+  1968→              </Link>
+  1969→            </motion.div>
+  1970→          ))}
+  1971→        </div>
+  1972→
+  1973→        <motion.div
+  1974→          initial={{ opacity: 0, y: 20 }}
+  1975→          whileInView={{ opacity: 1, y: 0 }}
+  1976→          viewport={{ once: true }}
+  1977→          transition={{ duration: 0.5, delay: 0.3 }}
+  1978→          className="mt-10 pt-10 border-t border-gray-300 flex justify-center"
+  1979→        >
+  1980→          <Link
+  1981→            href="/media"
+  1982→            className="inline-flex items-center gap-2 px-8 py-4 border border-[#008C95] text-[#008C95] font-medium hover:bg-[#008C95] hover:text-white transition-colors"
+  1983→          >
+  1984→            Все мероприятия
+  1985→            <ArrowRight className="w-4 h-4" />
+  1986→          </Link>
+  1987→        </motion.div>
+  1988→      </div>
+  1989→    </section>
+  1990→  );
+  1991→}
+  1992→
+  1993→/* ═══════════════════════════════════════════════════════
+  1994→   SECTION 9 — CAREER
+  1995→   ═══════════════════════════════════════════════════════ */
+  1996→const careerBenefits = [
+  1997→  {
+  1998→    icon: TrendingUp,
+  1999→    title: "Профессиональный рост",
+  2000→    description:
+  2001→      "Мы работаем над масштабными проектами, которые дают уникальный опыт.",
+  2002→  },
+  2003→  {
+  2004→    icon: GraduationCap,
+  2005→    title: "Обучение и развитие",
+  2006→    description:
+  2007→      "Система менторства, тренинги и возможность учиться у лучших экспертов.",
+  2008→  },
+  2009→  {
+  2010→    icon: Users,
+  2011→    title: "Сильная команда",
+  2012→    description:
+  2013→      "Коллеги с богатым опытом в консалтинге, финансах и технологиях.",
+  2014→  },
+  2015→];
+  2016→
+  2017→function CareerSection() {
+  2018→  return (
+  2019→    <section id="career" className="relative flex bg-white">
+  2020→      {/* Left: Teal Sidebar */}
+  2021→      <div className="hidden lg:block w-[380px] bg-[#008C95] flex-shrink-0 relative">
+  2022→        <div className="sticky top-16 h-[calc(100vh-64px)] flex flex-col justify-center p-12">
+  2023→          <motion.div
+  2024→            initial={{ opacity: 0, y: 20 }}
+  2025→            whileInView={{ opacity: 1, y: 0 }}
+  2026→            viewport={{ once: true }}
+  2027→            transition={{ duration: 0.6 }}
+  2028→          >
+  2029→            <div className="text-white/30 text-sm font-medium mb-4">05</div>
+  2030→            <h2 className="text-5xl font-bold text-white mb-6">Карьера</h2>
+  2031→            <p className="text-white/70 leading-relaxed mb-8">
+  2032→              Присоединяйтесь к команде экспертов, которые меняют бизнесы к
+  2033→              лучшему.
+  2034→            </p>
+  2035→            <Link
+  2036→              href="/career/vacancies"
+  2037→              className="inline-flex items-center gap-2 text-white font-medium group"
+  2038→            >
+  2039→              Открытые вакансии
+  2040→              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+  2041→            </Link>
+  2042→          </motion.div>
+  2043→        </div>
+  2044→      </div>
+  2045→
+  2046→      {/* Right: Content */}
+  2047→      <div className="flex-1">
+  2048→        {/* Mobile header */}
+  2049→        <div className="lg:hidden bg-[#008C95] p-8">
+  2050→          <div className="text-white/30 text-sm font-medium mb-4">05</div>
+  2051→          <h2 className="text-4xl font-bold text-white">Карьера</h2>
+  2052→        </div>
+  2053→
+  2054→        {/* Benefits */}
+  2055→        <div className="divide-y divide-gray-200">
+  2056→          {careerBenefits.map((benefit, index) => (
+  2057→            <motion.div
+  2058→              key={index}
+  2059→              initial={{ opacity: 0, y: 20 }}
+  2060→              whileInView={{ opacity: 1, y: 0 }}
+  2061→              viewport={{ once: true }}
+  2062→              transition={{ duration: 0.5, delay: index * 0.1 }}
+  2063→              className="p-8 lg:p-12 bg-white hover:bg-gray-50 transition-colors"
+  2064→            >
+  2065→              <div className="flex gap-6">
+  2066→                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-[#e8f5f3]">
+  2067→                  <benefit.icon className="w-6 h-6 text-[#008C95]" />
+  2068→                </div>
+  2069→                <div>
+  2070→                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+  2071→                    {benefit.title}
+  2072→                  </h3>
+  2073→                  <p className="text-gray-500">{benefit.description}</p>
+  2074→                </div>
+  2075→              </div>
+  2076→            </motion.div>
+  2077→          ))}
+  2078→        </div>
+  2079→
+  2080→        {/* CTA */}
+  2081→        <motion.div
+  2082→          initial={{ opacity: 0, y: 20 }}
+  2083→          whileInView={{ opacity: 1, y: 0 }}
+  2084→          viewport={{ once: true }}
+  2085→          transition={{ duration: 0.5, delay: 0.3 }}
+  2086→          className="p-8 lg:p-12 bg-gray-50"
+  2087→        >
+  2088→          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+  2089→            <div>
+  2090→              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+  2091→                Готовы присоединиться?
+  2092→              </h3>
+  2093→              <p className="text-gray-500">
+  2094→                Отправьте резюме на info@arasaca.ru
+  2095→              </p>
+  2096→            </div>
+  2097→            <Link
+  2098→              href="/career/vacancies"
+  2099→              className="inline-flex items-center gap-2 px-6 py-3 bg-[#E04E39] text-white font-medium hover:bg-[#c94330] transition-colors group"
+  2100→            >
+  2101→              Все вакансии
+  2102→              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+  2103→            </Link>
+  2104→          </div>
+  2105→        </motion.div>
+  2106→      </div>
+  2107→    </section>
+  2108→  );
+  2109→}
+  2110→
+  2111→/* ═══════════════════════════════════════════════════════
+  2112→   SECTION 10 — ACHIEVEMENTS
+  2113→   ═══════════════════════════════════════════════════════ */
+  2114→const achievements = [
+  2115→  {
+  2116→    icon: Award,
+  2117→    title: "Лидер рейтинга",
+  2118→    description: "Лидеры консалтингового рынка по версии экспертных изданий",
+  2119→  },
+  2120→  {
+  2121→    icon: TrendingUp,
+  2122→    title: "Устойчивый рост",
+  2123→    description: "Ежегодный рост выручки и расширение клиентской базы",
+  2124→  },
+  2125→  {
+  2126→    icon: Users,
+  2127→    title: "Доверие клиентов",
+  2128→    description: "Более 76 из 100 крупнейших компаний России — наши клиенты",
+  2129→  },
+  2130→  {
+  2131→    icon: Globe,
+  2132→    title: "Масштаб проектов",
+  2133→    description: "Реализуем проекты в России, СНГ и за рубежом",
+  2134→  },
+  2135→];
+  2136→
+  2137→function AchievementsSection() {
+  2138→  return (
+  2139→    <section className="py-16 lg:py-24 bg-[#f1f2f4]">
+  2140→      <div className="container-kept">
+  2141→        <motion.div
+  2142→          initial={{ opacity: 0, y: 20 }}
+  2143→          whileInView={{ opacity: 1, y: 0 }}
+  2144→          viewport={{ once: true }}
+  2145→          transition={{ duration: 0.6 }}
+  2146→        >
+  2147→          <div className="text-center mb-12">
+  2148→            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+  2149→              Достижения
+  2150→            </h2>
+  2151→            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+  2152→              Результаты, которыми мы гордимся
+  2153→            </p>
+  2154→          </div>
+  2155→
+  2156→          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+  2157→            {achievements.map((item, index) => (
+  2158→              <motion.div
+  2159→                key={index}
+  2160→                initial={{ opacity: 0, y: 20 }}
+  2161→                whileInView={{ opacity: 1, y: 0 }}
+  2162→                viewport={{ once: true }}
+  2163→                transition={{ duration: 0.4, delay: index * 0.1 }}
+  2164→                className="bg-white p-6 group hover:shadow-lg transition-shadow"
+  2165→              >
+  2166→                <div className="w-12 h-12 flex items-center justify-center bg-[#e8f5f3] mb-4 group-hover:bg-[#008C95] transition-colors">
+  2167→                  <item.icon className="w-6 h-6 text-[#008C95] group-hover:text-white transition-colors" />
+  2168→                </div>
+  2169→                <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
+  2170→                <p className="text-sm text-gray-500">{item.description}</p>
+  2171→              </motion.div>
+  2172→            ))}
+  2173→          </div>
+  2174→
+  2175→          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 pt-8 border-t border-gray-200">
+  2176→            {[
+  2177→              { number: "8", label: "лет на рынке" },
+  2178→              { number: "200+", label: "реализованных проектов" },
+  2179→              { number: "50+", label: "экспертов в команде" },
+  2180→              { number: "30+", label: "отраслей экспертизы" },
+  2181→            ].map((stat, index) => (
+  2182→              <motion.div
+  2183→                key={index}
+  2184→                initial={{ opacity: 0, y: 10 }}
+  2185→                whileInView={{ opacity: 1, y: 0 }}
+  2186→                viewport={{ once: true }}
+  2187→                transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
+  2188→                className="text-center"
+  2189→              >
+  2190→                <div className="text-3xl lg:text-4xl font-bold text-[#008C95]">{stat.number}</div>
+  2191→                <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
+  2192→              </motion.div>
+  2193→            ))}
+  2194→          </div>
+  2195→        </motion.div>
+  2196→      </div>
+  2197→    </section>
+  2198→  );
+  2199→}
+  2200→
+  2201→/* ═══════════════════════════════════════════════════════
+  2202→   SECTION 11 — ABOUT
+  2203→   ═══════════════════════════════════════════════════════ */
+  2204→const aboutStats = [
+  2205→  { number: "8", label: "лет на рынке" },
+  2206→  { number: "200+", label: "реализованных проектов" },
+  2207→  { number: "50+", label: "экспертов в команде" },
+  2208→  { number: "98%", label: "клиентов рекомендуют" },
+  2209→];
+  2210→
+  2211→const aboutValues = [
+  2212→  {
+  2213→    icon: Target,
+  2214→    title: "Фокус на результат",
+  2215→    description:
+  2216→      "Мы работаем до достижения измеримых бизнес-результатов, а не просто отдаём отчёты.",
+  2217→  },
+  2218→  {
+  2219→    icon: Users,
+  2220→    title: "Командный подход",
+  2221→    description:
+  2222→      "Проекты ведут опытные консультанты при поддержке отраслевых экспертов.",
+  2223→  },
+  2224→  {
+  2225→    icon: Globe,
+  2226→    title: "Глобальный опыт",
+  2227→    description:
+  2228→      "Сочетаем международную методологию с глубоким пониманием российской специфики.",
+  2229→  },
+  2230→];
+  2231→
+  2232→function AboutSection() {
+  2233→  return (
+  2234→    <section id="about" className="bg-white py-20">
+  2235→      <div className="container-kept">
+  2236→        <motion.div
+  2237→          initial={{ opacity: 0, y: 20 }}
+  2238→          whileInView={{ opacity: 1, y: 0 }}
+  2239→          viewport={{ once: true }}
+  2240→          transition={{ duration: 0.6 }}
+  2241→          className="mb-16"
+  2242→        >
+  2243→          <div className="text-[#008C95] text-sm font-medium mb-4">06</div>
+  2244→          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+  2245→            О компании
+  2246→          </h2>
+  2247→          <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
+  2248→            Арасака — консалтинговая компания, специализирующаяся на повышении
+  2249→            эффективности управления, цифровой трансформации и управлении
+  2250→            инвестиционными программами.
+  2251→          </p>
+  2252→        </motion.div>
+  2253→
+  2254→        <motion.div
+  2255→          initial={{ opacity: 0, y: 20 }}
+  2256→          whileInView={{ opacity: 1, y: 0 }}
+  2257→          viewport={{ once: true }}
+  2258→          transition={{ duration: 0.6, delay: 0.1 }}
+  2259→          className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-gray-200 border border-gray-200 mb-16"
+  2260→        >
+  2261→          {aboutStats.map((stat, index) => (
+  2262→            <div key={index} className="bg-white p-8 text-center">
+  2263→              <div className="text-4xl font-bold text-[#008C95] mb-2">
+  2264→                {stat.number}
+  2265→              </div>
+  2266→              <div className="text-gray-500">{stat.label}</div>
+  2267→            </div>
+  2268→          ))}
+  2269→        </motion.div>
+  2270→
+  2271→        <div className="grid md:grid-cols-3 gap-8 mb-16">
+  2272→          {aboutValues.map((value, index) => (
+  2273→            <motion.div
+  2274→              key={index}
+  2275→              initial={{ opacity: 0, y: 20 }}
+  2276→              whileInView={{ opacity: 1, y: 0 }}
+  2277→              viewport={{ once: true }}
+  2278→              transition={{ duration: 0.5, delay: index * 0.1 }}
+  2279→              className="p-6 bg-gray-50 border border-gray-200"
+  2280→            >
+  2281→              <div className="w-12 h-12 flex items-center justify-center bg-[#e8f5f3] mb-4">
+  2282→                <value.icon className="w-6 h-6 text-[#008C95]" />
+  2283→              </div>
+  2284→              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+  2285→                {value.title}
+  2286→              </h3>
+  2287→              <p className="text-gray-500 text-sm leading-relaxed">
+  2288→                {value.description}
+  2289→              </p>
+  2290→            </motion.div>
+  2291→          ))}
+  2292→        </div>
+  2293→
+  2294→        <motion.div
+  2295→          initial={{ opacity: 0, y: 20 }}
+  2296→          whileInView={{ opacity: 1, y: 0 }}
+  2297→          viewport={{ once: true }}
+  2298→          transition={{ duration: 0.5, delay: 0.2 }}
+  2299→          className="mb-16"
+  2300→        >
+  2301→          <Link
+  2302→            href="/pro-bono"
+  2303→            className="flex items-center gap-4 p-6 bg-[#e8f5f3] border border-[#008C95]/20 rounded-xl hover:bg-[#d8f0ed] transition-colors group"
+  2304→          >
+  2305→            <div className="w-12 h-12 flex items-center justify-center bg-[#008C95]/10 rounded-lg shrink-0">
+  2306→              <Heart className="w-6 h-6 text-[#008C95]" />
+  2307→            </div>
+  2308→            <div className="flex-1 min-w-0">
+  2309→              <h3 className="font-semibold text-gray-900 group-hover:text-[#008C95] transition-colors">
+  2310→                Услуги Pro Bono
+  2311→              </h3>
+  2312→              <p className="text-sm text-gray-500 mt-0.5">
+  2313→                Оказываем консалтинговую поддержку на безвозмездной основе НКО и
+  2314→                социальным проектам.
+  2315→              </p>
+  2316→            </div>
+  2317→            <ArrowRight className="w-5 h-5 text-[#008C95] group-hover:translate-x-1 transition-transform shrink-0" />
+  2318→          </Link>
+  2319→        </motion.div>
+  2320→
+  2321→        <motion.div
+  2322→          initial={{ opacity: 0, y: 20 }}
+  2323→          whileInView={{ opacity: 1, y: 0 }}
+  2324→          viewport={{ once: true }}
+  2325→          transition={{ duration: 0.5, delay: 0.3 }}
+  2326→          className="flex justify-center"
+  2327→        >
+  2328→          <Link
+  2329→            href="/about"
+  2330→            className="inline-flex items-center gap-2 px-8 py-4 bg-[#008C95] text-white font-medium hover:bg-[#02757d] transition-colors group"
+  2331→          >
+  2332→            Узнать больше о нас
+  2333→            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+  2334→          </Link>
+  2335→        </motion.div>
+  2336→      </div>
+  2337→    </section>
+  2338→  );
+  2339→}
+  2340→
+  2341→/* ═══════════════════════════════════════════════════════
+  2342→   SECTION 12 — LAB
+  2343→   ═══════════════════════════════════════════════════════ */
+  2344→const labHighlights = [
+  2345→  { icon: Users, title: "CRM-системы", description: "Управление клиентами и продажами" },
+  2346→  { icon: Workflow, title: "Автоматизация", description: "Рутинные процессы без ручного труда" },
+  2347→  { icon: Plug, title: "Интеграции", description: "Связываем системы между собой" },
+  2348→  { icon: GraduationCap, title: "LMS-платформы", description: "Корпоративное обучение" },
+  2349→  { icon: Database, title: "HR-системы", description: "Учёт и мотивация персонала" },
+  2350→  { icon: BarChart3, title: "Дашборды", description: "Аналитика в реальном времени" },
+  2351→];
+  2352→
+  2353→function LabSection() {
+  2354→  return (
+  2355→    <section className="py-16 lg:py-24 bg-[#00313C] relative overflow-hidden">
+  2356→      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+  2357→        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl" />
+  2358→        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-3xl" />
+  2359→      </div>
+  2360→
+  2361→      <div className="container-kept relative z-10">
+  2362→        <motion.div
+  2363→          initial={{ opacity: 0, y: 20 }}
+  2364→          whileInView={{ opacity: 1, y: 0 }}
+  2365→          viewport={{ once: true }}
+  2366→          transition={{ duration: 0.6 }}
+  2367→          className="mb-12"
+  2368→        >
+  2369→          <div className="flex items-center gap-2 mb-4">
+  2370→            <div className="w-10 h-10 flex items-center justify-center bg-white/10 rounded">
+  2371→              <FlaskConical className="w-5 h-5 text-[#77e2c3]" />
+  2372→            </div>
+  2373→            <span className="text-[#77e2c3] text-sm font-medium uppercase tracking-wider">
+  2374→              Лаборатория цифровых решений
+  2375→            </span>
+  2376→          </div>
+  2377→          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+  2378→            Арасака Лаб
+  2379→          </h2>
+  2380→          <p className="text-white/70 text-lg max-w-2xl leading-relaxed">
+  2381→            Разрабатываем IT-системы для внутренних нужд компании и под индивидуальные запросы клиентов.
+  2382→            Создаём решения, которые идеально подходят под ваши задачи.
+  2383→          </p>
+  2384→        </motion.div>
+  2385→
+  2386→        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-0 border border-white/10 bg-white/5">
+  2387→          {labHighlights.map((item, index) => (
+  2388→            <motion.div
+  2389→              key={index}
+  2390→              initial={{ opacity: 0, y: 20 }}
+  2391→              whileInView={{ opacity: 1, y: 0 }}
+  2392→              viewport={{ once: true }}
+  2393→              transition={{ duration: 0.4, delay: index * 0.05 }}
+  2394→              className="group"
+  2395→            >
+  2396→              <Link
+  2397→                href="/lab"
+  2398→                className="block p-6 border-r border-b border-white/10 h-full hover:bg-white/10 transition-colors"
+  2399→              >
+  2400→                <div className="flex items-start gap-4">
+  2401→                  <div className="w-12 h-12 flex items-center justify-center bg-white/10 flex-shrink-0 group-hover:bg-white/20 transition-colors">
+  2402→                    <item.icon className="w-6 h-6 text-white" />
+  2403→                  </div>
+  2404→                  <div className="flex-1 min-w-0">
+  2405→                    <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-[#77e2c3] transition-colors">
+  2406→                      {item.title}
+  2407→                    </h3>
+  2408→                    <p className="text-white/60 text-sm">{item.description}</p>
+  2409→                  </div>
+  2410→                  <div className="flex-shrink-0 p-2 text-white/30 group-hover:text-[#77e2c3] group-hover:translate-x-1 transition-all">
+  2411→                    <ArrowRight className="w-5 h-5" />
+  2412→                  </div>
+  2413→                </div>
+  2414→              </Link>
+  2415→            </motion.div>
+  2416→          ))}
+  2417→        </div>
+  2418→
+  2419→        <motion.div
+  2420→          initial={{ opacity: 0, y: 20 }}
+  2421→          whileInView={{ opacity: 1, y: 0 }}
+  2422→          viewport={{ once: true }}
+  2423→          transition={{ duration: 0.6, delay: 0.3 }}
+  2424→          className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 mt-12 pt-8 border-t border-white/10"
+  2425→        >
+  2426→          <div className="flex flex-wrap gap-8 lg:gap-12">
+  2427→            {[
+  2428→              { number: "20+", label: "решений разработано" },
+  2429→              { number: "5+", label: "лет в разработке" },
+  2430→              { number: "100%", label: "индивидуальный подход" },
+  2431→            ].map((stat, index) => (
+  2432→              <div key={index}>
+  2433→                <div className="text-2xl lg:text-3xl font-bold text-white">{stat.number}</div>
+  2434→                <div className="text-sm text-white/50">{stat.label}</div>
+  2435→              </div>
+  2436→            ))}
+  2437→          </div>
+  2438→
+  2439→          <Link
+  2440→            href="/lab"
+  2441→            className="inline-flex items-center gap-2 px-6 py-3 bg-[#E04E39] text-white font-medium hover:bg-[#c94330] transition-colors group"
+  2442→          >
+  2443→            Подробнее о лаборатории
+  2444→            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+  2445→          </Link>
+  2446→        </motion.div>
+  2447→      </div>
+  2448→    </section>
+  2449→  );
+  2450→}
+  2451→
+  2452→/* ═══════════════════════════════════════════════════════
+  2453→   SECTION 13 — CONTACTS
+  2454→   ═══════════════════════════════════════════════════════ */
+  2455→const contacts = [
+  2456→  {
+  2457→    icon: MapPin,
+  2458→    label: "Адрес",
+  2459→    value: "Москва, Ленинградский проспект 34А",
+  2460→    href: "/contacts",
+  2461→  },
+  2462→  {
+  2463→    icon: Phone,
+  2464→    label: "Телефон",
+  2465→    value: "+7 495 937 4477",
+  2466→    href: "tel:+74959374477",
+  2467→  },
+  2468→  {
+  2469→    icon: Mail,
+  2470→    label: "Email",
+  2471→    value: "info@arasaca.ru",
+  2472→    href: "mailto:info@arasaca.ru",
+  2473→  },
+  2474→];
+  2475→
+  2476→function ContactsSection() {
+  2477→  return (
+  2478→    <section id="contacts" className="relative flex bg-white">
+  2479→      {/* Left: Teal Sidebar */}
+  2480→      <div className="hidden lg:block w-[380px] bg-[#008C95] flex-shrink-0 relative">
+  2481→        <div className="sticky top-16 h-[calc(100vh-64px)] flex flex-col justify-center p-12">
+  2482→          <motion.div
+  2483→            initial={{ opacity: 0, y: 20 }}
+  2484→            whileInView={{ opacity: 1, y: 0 }}
+  2485→            viewport={{ once: true }}
+  2486→            transition={{ duration: 0.6 }}
+  2487→          >
+  2488→            <div className="text-white/30 text-sm font-medium mb-4">07</div>
+  2489→            <h2 className="text-5xl font-bold text-white mb-6">Контакты</h2>
+  2490→            <p className="text-white/70 leading-relaxed mb-8">
+  2491→              Готовы обсудить ваш проект? Свяжитесь с нами удобным для вас
+  2492→              способом.
+  2493→            </p>
+  2494→
+  2495→            <div className="space-y-6">
+  2496→              {contacts.map((contact, index) => (
+  2497→                <Link
+  2498→                  key={index}
+  2499→                  href={contact.href}
+  2500→                  className="flex items-start gap-4 group"
+  2501→                >
+  2502→                  <contact.icon className="w-5 h-5 text-white/50 group-hover:text-[#77e2c3] transition-colors mt-0.5" />
+  2503→                  <div>
+  2504→                    <div className="text-white/50 text-sm mb-1">
+  2505→                      {contact.label}
+  2506→                    </div>
+  2507→                    <div className="text-white group-hover:text-[#77e2c3] transition-colors">
+  2508→                      {contact.value}
+  2509→                    </div>
+  2510→                  </div>
+  2511→                </Link>
+  2512→              ))}
+  2513→            </div>
+  2514→
+  2515→            <Link
+  2516→              href="/contacts"
+  2517→              className="inline-flex items-center gap-2 mt-8 text-white hover:text-[#77e2c3] transition-colors group"
+  2518→            >
+  2519→              <span>Все контакты</span>
+  2520→              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+  2521→            </Link>
+  2522→          </motion.div>
+  2523→        </div>
+  2524→      </div>
+  2525→
+  2526→      {/* Right: Contact Form */}
+  2527→      <div className="flex-1 py-16 lg:py-0">
+  2528→        {/* Mobile header */}
+  2529→        <div className="lg:hidden bg-[#008C95] p-8">
+  2530→          <div className="text-white/30 text-sm font-medium mb-4">07</div>
+  2531→          <h2 className="text-4xl font-bold text-white mb-4">Контакты</h2>
+  2532→          <p className="text-white/70">
+  2533→            Свяжитесь с нами для обсуждения вашего проекта.
+  2534→          </p>
+  2535→        </div>
+  2536→
+  2537→        <motion.div
+  2538→          initial={{ opacity: 0, y: 20 }}
+  2539→          whileInView={{ opacity: 1, y: 0 }}
+  2540→          viewport={{ once: true }}
+  2541→          transition={{ duration: 0.6 }}
+  2542→          className="p-8 lg:p-16 lg:flex lg:items-center lg:min-h-screen"
+  2543→        >
+  2544→          <div className="w-full max-w-xl mx-auto lg:mx-0">
+  2545→            <h3 className="text-2xl font-bold text-gray-900 mb-6">
+  2546→              Оставьте заявку
+  2547→            </h3>
+  2548→
+  2549→            <div className="lg:hidden mb-8 space-y-4">
+  2550→              {contacts.map((contact, index) => (
+  2551→                <Link
+  2552→                  key={index}
+  2553→                  href={contact.href}
+  2554→                  className="flex items-center gap-3 text-gray-600 hover:text-[#008C95] transition-colors"
+  2555→                >
+  2556→                  <contact.icon className="w-5 h-5" />
+  2557→                  <span>{contact.value}</span>
+  2558→                </Link>
+  2559→              ))}
+  2560→              <Link
+  2561→                href="/contacts"
+  2562→                className="inline-flex items-center gap-2 text-[#008C95] font-medium mt-4"
+  2563→              >
+  2564→                <span>Все контакты</span>
+  2565→                <ArrowRight className="w-4 h-4" />
+  2566→              </Link>
+  2567→            </div>
+  2568→
+  2569→            <form className="space-y-6">
+  2570→              <div className="grid sm:grid-cols-2 gap-6">
+  2571→                <div>
+  2572→                  <label className="block text-sm text-gray-600 mb-2">
+  2573→                    Имя
+  2574→                  </label>
+  2575→                  <input
+  2576→                    type="text"
+  2577→                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:border-[#008C95] focus:outline-none transition-colors"
+  2578→                    placeholder="Ваше имя"
+  2579→                  />
+  2580→                </div>
+  2581→                <div>
+  2582→                  <label className="block text-sm text-gray-600 mb-2">
+  2583→                    Телефон
+  2584→                  </label>
+  2585→                  <input
+  2586→                    type="tel"
+  2587→                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:border-[#008C95] focus:outline-none transition-colors"
+  2588→                    placeholder="+7 (___) ___-__-__"
+  2589→                  />
+  2590→                </div>
+  2591→              </div>
+  2592→
+  2593→              <div>
+  2594→                <label className="block text-sm text-gray-600 mb-2">
+  2595→                  Email
+  2596→                </label>
+  2597→                <input
+  2598→                  type="email"
+  2599→                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:border-[#008C95] focus:outline-none transition-colors"
+  2600→                  placeholder="email@company.ru"
+  2601→                />
+  2602→              </div>
+  2603→
+  2604→              <div>
+  2605→                <label className="block text-sm text-gray-600 mb-2">
+  2606→                  Сообщение
+  2607→                </label>
+  2608→                <textarea
+  2609→                  rows={4}
+  2610→                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:border-[#008C95] focus:outline-none transition-colors resize-none"
+  2611→                  placeholder="Опишите ваш проект или задачу"
+  2612→                />
+  2613→              </div>
+  2614→
+  2615→              <div className="flex flex-col sm:flex-row gap-4">
+  2616→                <button
+  2617→                  type="submit"
+  2618→                  className="px-8 py-4 bg-[#E04E39] text-white font-medium hover:bg-[#c94330] transition-colors flex items-center justify-center gap-2 group"
+  2619→                >
+  2620→                  Отправить заявку
+  2621→                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+  2622→                </button>
+  2623→                <Link
+  2624→                  href="/contacts"
+  2625→                  className="hidden lg:inline-flex items-center gap-2 px-8 py-4 border border-[#008C95] text-[#008C95] font-medium hover:bg-[#e8f5f3] transition-colors"
+  2626→                >
+  2627→                  Все контакты
+  2628→                </Link>
+  2629→              </div>
+  2630→            </form>
+  2631→          </div>
+  2632→        </motion.div>
+  2633→      </div>
+  2634→    </section>
+  2635→  );
+  2636→}
+  2637→
+  2638→/* ═══════════════════════════════════════════════════════
+  2639→   SECTION — QUICK LINKS (before footer)
+  2640→   ═══════════════════════════════════════════════════════ */
+  2641→function QuickLinksSection() {
+  2642→  return (
+  2643→    <section className="bg-white py-20 md:py-28">
+  2644→      <div className="container-kept">
+  2645→        {/* Section header */}
+  2646→        <motion.div
+  2647→          className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
+  2648→          variants={fadeUp}
+  2649→          initial="hidden"
+  2650→          whileInView="visible"
+  2651→          viewport={vp}
+  2652→        >
+  2653→          <div>
+  2654→            <SectionLabel>Навигация</SectionLabel>
+  2655→            <h2 className="heading-section" style={{ color: C.textDark }}>
+  2656→              Полезные ссылки
+  2657→            </h2>
+  2658→          </div>
+  2659→          <p className="text-[14px] font-normal leading-relaxed max-w-xs lg:text-right" style={{ color: C.textMuted }}>
+  2660→            Быстрый доступ к&nbsp;разделам<br />и&nbsp;ключевым возможностям компании
+  2661→          </p>
+  2662→        </motion.div>
+  2663→
+  2664→        {/* Cards + CTA row */}
+  2665→        <div className="flex flex-col gap-5 lg:flex-row lg:items-stretch">
+  2666→          {/* Left: 6 navigation cards */}
+  2667→          <div className="flex-1 flex">
+  2668→            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 w-full h-full auto-rows-fr">
+  2669→              {sectionCards.map((card, index) => {
+  2670→                const isWhite = card.bg === C.white;
+  2671→                return (
+  2672→                  <motion.div
+  2673→                    key={card.title}
+  2674→                    variants={scaleIn}
+  2675→                    initial="hidden"
+  2676→                    whileInView="visible"
+  2677→                    viewport={vp}
+  2678→                    custom={index * 0.08}
+  2679→                  >
+  2680→                    <Link href={card.href} className="group block">
+  2681→                      <motion.div
+  2682→                        className={cn(
+  2683→                          "relative flex h-[130px] flex-col justify-between overflow-hidden rounded-lg p-4 md:p-5 transition-shadow duration-300",
+  2684→                          isWhite && "border shadow-sm group-hover:shadow-md",
+  2685→                        )}
+  2686→                        style={{ background: card.bg, color: card.textColor, borderColor: isWhite ? C.border : undefined }}
+  2687→                        whileHover={{ y: -3, transition: { duration: 0.25 } }}
+  2688→                      >
+  2689→                        {card.bg === C.dark && (
+  2690→                          <div
+  2691→                            className="pointer-events-none absolute inset-0 opacity-[0.06]"
+  2692→                            style={{
+  2693→                              backgroundImage: `linear-gradient(135deg, transparent 25%, rgba(255,255,255,0.3) 25%, rgba(255,255,255,0.3) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.3) 75%)`,
+  2694→                              backgroundSize: "20px 20px",
+  2695→                            }}
+  2696→                          />
+  2697→                        )}
+  2698→                        {isWhite && (
+  2699→                          <div
+  2700→                            className="pointer-events-none absolute inset-0 opacity-[0.1]"
+  2701→                            style={{
+  2702→                              backgroundImage: `radial-gradient(circle, ${C.dna} 1px, transparent 1px)`,
+  2703→                              backgroundSize: "12px 12px",
+  2704→                            }}
+  2705→                          />
+  2706→                        )}
+  2707→
+  2708→                        {/* Colored accent bar on left */}
+  2709→                        <div
+  2710→                          className="pointer-events-none absolute left-0 top-0 h-full w-1"
+  2711→                          style={{ background: isWhite ? C.dna : "rgba(255,255,255,0.4)" }}
+  2712→                        />
+  2713→
+  2714→                        <div className="relative z-10">
+  2715→                          <div className="flex items-center gap-2">
+  2716→                            {card.icon && (
+  2717→                              <card.icon className="h-4 w-4 opacity-60" />
+  2718→                            )}
+  2719→                            <span className="block text-sm font-semibold md:text-base">{card.title}</span>
+  2720→                          </div>
+  2721→                          <span className="mt-0.5 block text-[10px] font-normal opacity-60">{card.description}</span>
+  2722→                        </div>
+  2723→
+  2724→                        <div className="relative z-10 flex justify-end">
+  2725→                          <div
+  2726→                            className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+  2727→                            style={{ background: isWhite ? "rgba(0,140,149,0.1)" : "rgba(255,255,255,0.2)" }}
+  2728→                          >
+  2729→                            <ArrowRight className="h-4 w-4" style={{ color: isWhite ? C.dna : "#ffffff" }} />
+  2730→                          </div>
+  2731→                        </div>
+  2732→                      </motion.div>
+  2733→                    </Link>
+  2734→                  </motion.div>
+  2735→                );
+  2736→              })}
+  2737→            </div>
+  2738→          </div>
+  2739→
+  2740→          {/* Right: CTA panel — request commercial proposal / callback */}
+  2741→          <motion.div
+  2742→            className="lg:w-[340px] flex-shrink-0"
+  2743→            variants={fadeUp}
+  2744→            initial="hidden"
+  2745→            whileInView="visible"
+  2746→            viewport={vp}
+  2747→            custom={0.3}
+  2748→          >
+  2749→            <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-lg p-6 md:p-8" style={{ background: C.dark }}>
+  2750→              {/* Decorative pattern */}
+  2751→              <div
+  2752→                className="pointer-events-none absolute inset-0 opacity-[0.03]"
+  2753→                style={{
+  2754→                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(119,226,195,0.3) 30px, rgba(119,226,195,0.3) 31px)`,
+  2755→                }}
+  2756→              />
+  2757→
+  2758→              <div className="relative z-10">
+  2759→                {/* Decorative line */}
+  2760→                <div className="h-px w-12 mb-5" style={{ background: C.mint }} />
+  2761→
+  2762→                <h3
+  2763→                  className="text-xl font-bold leading-tight mb-2"
+  2764→                  style={{ fontFamily: "var(--font-russo)", color: "#ffffff" }}
+  2765→                >
+  2766→                  Начните сотрудничество
+  2767→                </h3>
+  2768→                <p className="text-[13px] leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.5)" }}>
+  2769→                  Оставьте заявку — мы свяжемся с&nbsp;вами, обсудим задачу и&nbsp;подготовим индивидуальное предложение.
+  2770→                </p>
+  2771→              </div>
+  2772→
+  2773→              <div className="relative z-10 flex flex-col gap-3">
+  2774→                <Link href="/feedback?type=proposals" className="group/kp inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider text-white transition-all duration-300" style={{ background: C.dna, borderRadius: "4px" }}>
+  2775→                  <Mail className="h-4 w-4" />
+  2776→                  Запросить КП
+  2777→                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/kp:translate-x-0.5" />
+  2778→                </Link>
+  2779→                <Link href="/feedback?type=callback" className="group/cb inline-flex items-center justify-center gap-2 px-5 py-3 text-[12px] font-semibold uppercase tracking-wider transition-all duration-300 border" style={{ borderColor: "rgba(255,255,255,0.2)", color: "rgba(255,255,255,0.8)", borderRadius: "4px" }}>
+  2780→                  <Phone className="h-4 w-4" />
+  2781→                  Заказать звонок
+  2782→                </Link>
+  2783→              </div>
+  2784→            </div>
+  2785→          </motion.div>
+  2786→        </div>
+  2787→      </div>
+  2788→    </section>
+  2789→  );
+  2790→}
+  2791→
+  2792→export default function Home() {
+  2793→  return (
+  2794→    <main>
+  2795→      <HeroSection />
+  2796→      <BusinessDirectionsSection />
+  2797→      <MissionSection />
+  2798→      <IndustriesSection />
+  2799→      <InnovationSection />
+  2800→      <SolutionsSection />
+  2801→      <PublicationsSection />
+  2802→      <QuickLinksSection />
+  2803→    </main>
+  2804→  );
+  2805→}
+  2806→
