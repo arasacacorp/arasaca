@@ -69,6 +69,8 @@ jobs:
           port: ${{ secrets.VPS_PORT || 22 }}
           source: deploy.tar.gz
           target: /tmp/
+          # scp от arasaca (не root) — нужен writable target. /tmp подходит.
+          rm: true
 
       - name: Run remote deploy script
         uses: appleboy/ssh-action@v1.0.3
@@ -80,16 +82,15 @@ jobs:
           script: |
             set -euo pipefail
             cd /opt/arasaca
-            # Снимаем старую версию
-            mv /tmp/deploy.tar.gz /tmp/deploy.tar.gz.old 2>/dev/null || true
+            # /opt/arasaca принадлежит arasaca (chown в setup) — пишем напрямую
             mv /tmp/deploy.tar.gz /opt/arasaca/deploy.tar.gz
             # Атомарный релиз через симлинк
             RELEASE_DIR="releases/$(date +%Y%m%d%H%M%S)"
             mkdir -p "$RELEASE_DIR"
             tar -xzf deploy.tar.gz -C "$RELEASE_DIR"
             ln -sfn "$RELEASE_DIR/.next/standalone" current
-            # Перезапуск сервиса (VPS_USER = root, sudo не нужен)
-            systemctl restart arasaca
+            # Перезапуск сервиса (arasaca имеет sudo на systemctl)
+            sudo systemctl restart arasaca
             # Чистим старые релизы (оставляем 5 последних)
             ls -1dt releases/* | tail -n +6 | xargs rm -rf
             rm -f deploy.tar.gz
@@ -98,5 +99,5 @@ jobs:
       - name: Health check
         run: |
           sleep 5
-          curl --fail --max-time 15 https://${{ secrets.PROD_DOMAIN || 'onreza.ru' }} || \
+          curl --fail --max-time 15 https://${{ secrets.PROD_DOMAIN || 'arasaca.ru' }} || \
           curl --fail --max-time 15 http://${{ secrets.VPS_HOST }}

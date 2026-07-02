@@ -1,36 +1,45 @@
 #!/bin/bash
 # ============================================================
 # Первичная настройка VPS Cloud.ru для деплоя Arasaca
-# Запускать ОДИН РАЗ на свежей Ubuntu 22.04/24.04 от root:
+# Запускать ОДИН РАЗ от пользователя arasaca (с sudo-правами):
 #   bash setup-server.sh
+# Идемпотентный: можно запускать повторно.
 # ============================================================
 set -euo pipefail
 
-# Чтобы apt не зависал на интерактивных вопросах (tzdata и т.п.)
+# Чтобы apt не зависал на интерактивных вопросах (tzdata, needrestart и т.п.)
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 export NEEDRESTART_SUSPEND=1
 
-# ── 0. Параметры (поменяйте при необходимости) ──
+# ── 0. Параметры ──
 APP_NAME="arasaca"
 APP_USER="arasaca"
 APP_DIR="/opt/arasaca"
 DOMAIN="arasaca.ru"
 NODE_VERSION="20"
+LOG_DIR="/var/log/caddy"
 
 echo "=========================================="
 echo " Настройка VPS для $DOMAIN"
+echo " (пользователь: $(whoami), sudo: $(command -v sudo >/dev/null 2>&1 && echo 'yes' || echo 'NO — нужен sudo')"
 echo "=========================================="
+
+# Проверка sudo
+if ! command -v sudo >/dev/null 2>&1; then
+  echo "ОШИБКА: sudo не установлен или нет прав. Этот скрипт требует sudo."
+  exit 1
+fi
 
 # ── 1. Системные пакеты ──
 echo "[1/7] Установка системных пакетов..."
-apt-get update -qq
-apt-get install -y -qq curl wget git ufw ca-certificates gnupg lsb-release
+sudo apt-get update -qq
+sudo apt-get install -y -qq curl wget git ufw ca-certificates gnupg lsb-release
 
-# ── 2. Создание пользователя для приложения ──
-echo "[2/7] Создание пользователя $APP_USER..."
+# ── 2. Создание пользователя для приложения (если не существует) ──
+echo "[2/7] Проверка пользователя $APP_USER..."
 if ! id "$APP_USER" &>/dev/null; then
-  useradd -m -s /bin/bash "$APP_USER"
+  sudo useradd -m -s /bin/bash "$APP_USER"
   echo "Пользователь $APP_USER создан"
 else
   echo "Пользователь $APP_USER уже существует"
@@ -38,44 +47,49 @@ fi
 
 # ── 3. Установка Bun + Node ──
 echo "[3/7] Установка Bun и Node.js $NODE_VERSION..."
+# Bun — в /usr/local/bin (доступен всем)
 if ! command -v bun &>/dev/null; then
-  curl -fsSL https://bun.sh/install | bash
+  curl -fsSL https://bun.sh/install | sudo bash
+  sudo ln -sf /root/.bun/bin/bun /usr/local/bin/bun 2>/dev/null || true
 fi
+# Node через NodeSource
 if ! command -v node &>/dev/null; then
-  curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
-  apt-get install -y -qq nodejs
+  curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | sudo -E bash -
+  sudo apt-get install -y -qq nodejs
 fi
 
 # ── 4. Установка Caddy (авто-SSL, reverse proxy) ──
 echo "[4/7] Установка Caddy..."
 if ! command -v caddy &>/dev/null; then
-  apt-get install -y -qq debian-keyring debian-archive-keyring apt-transport-https
+  sudo apt-get install -y -qq debian-keyring debian-archive-keyring apt-transport-https
   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' \
-    | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+    | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
   curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' \
-    | tee /etc/apt/sources.list.d/caddy-stable.list
-  apt-get update -qq
-  apt-get install -y -qq caddy
+    | sudo tee /etc/apt/sources.list.d/caddy-stable.list >/dev/null
+  sudo apt-get update -qq
+  sudo apt-get install -y -qq caddy
 fi
 
 # ── 5. Директории приложения ──
 echo "[5/7] Создание структуры директорий..."
-mkdir -p "$APP_DIR"/{releases,current}
-mkdir -p "$APP_DIR/db"
-chown -R "$APP_USER:$APP_USER" "$APP_DIR"
+sudo mkdir -p "$APP_DIR"/{releases,current}
+sudo mkdir -p "$APP_DIR/db"
+sudo mkdir -p "$LOG_DIR"
+sudo chown -R "$APP_USER:$APP_USER" "$APP_DIR"
+sudo chown -R "$APP_USER:$APP_USER" "$LOG_DIR" 2>/dev/null || true
 
 # ── 6. Конфигурация Caddy ──
 echo "[6/7] Настройка Caddy ($DOMAIN → localhost:3000)..."
-cat > /etc/caddy/Caddyfile << CADDYEOF
+sudo tee /etc/caddy/Caddyfile > /dev/null << CADDYEOF
 {
   # Авто-HTTPS через Let's Encrypt
   email admin@$DOMAIN
 }
 
 $DOMAIN, www.$DOMAIN {
-  # Редирект www → apex (или наоборот, по желанию)
-  # @www host www.$DOMAIN
-  # redir @www https://$DOMAIN{uri} permanent
+  # Редирект www → apex
+  @www host www.$DOMAIN
+  redir @www https://$DOMAIN{uri} permanent
 
   reverse_proxy localhost:3000 {
     header_up Host {host}
@@ -100,18 +114,18 @@ $DOMAIN, www.$DOMAIN {
   }
 
   log {
-    output file /var/log/caddy/$DOMAIN.log
+    output file $LOG_DIR/$DOMAIN.log
     format json
   }
 }
 CADDYEOF
 
-systemctl enable caddy
-systemctl restart caddy
+sudo systemctl enable caddy
+sudo systemctl restart caddy || sudo systemctl start caddy
 
 # ── 7. Systemd-сервис для приложения ──
 echo "[7/7] Создание systemd-сервиса $APP_NAME..."
-cat > /etc/systemd/system/${APP_NAME}.service << SVCEOF
+sudo tee /etc/systemd/system/${APP_NAME}.service > /dev/null << SVCEOF
 [Unit]
 Description=Arasaca Next.js (standalone)
 After=network.target
@@ -132,34 +146,26 @@ RestartSec=5
 WantedBy=multi-user.target
 SVCEOF
 
-systemctl daemon-reload
-systemctl enable "$APP_NAME"
+sudo systemctl daemon-reload
+sudo systemctl enable "$APP_NAME"
 
 # ── Файрвол ──
 echo "Настройка файрвола..."
-ufw allow 22/tcp
-ufw allow 80/tcp
-ufw allow 443/tcp
-ufw --force enable
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw --force enable || true
 
 echo ""
 echo "=========================================="
 echo " ✓ VPS готов к деплою"
 echo "=========================================="
 echo ""
-echo "Следующие шаги (всё в браузере, без терминала):"
-echo "  1. На reg.ru создайте A-запись:"
-echo "       arasaca.ru      → $(curl -s ifconfig.me)"
-echo "       www.arasaca.ru  → $(curl -s ifconfig.me)  (или CNAME на arasaca.ru)"
-echo "  2. Дождитесь обновления DNS (5-30 мин)."
-echo "  3. В GitHub repo → Settings → Secrets → Actions добавьте:"
-echo "       VPS_HOST     = $(curl -s ifconfig.me)"
-echo "       VPS_USER     = root"
-echo "       VPS_SSH_KEY  = содержимое .pem ключа из Cloud.ru"
-echo "       VPS_PORT     = 22"
-echo "       PROD_DOMAIN  = $DOMAIN"
-echo "  4. В GitHub → Actions → 'Setup VPS (first run)' → Run workflow"
-echo "     (этот шаг можно пропустить — он уже выполнен этим запуском)"
-echo "  5. В GitHub → Actions → 'Deploy to Cloud.ru' → Run workflow"
-echo "  Готово — сайт откроется на https://$DOMAIN"
+echo "Публичный IP: $(curl -s ifconfig.me 2>/dev/null || echo 'недоступен')"
+echo "Bun:    $(command -v bun >/dev/null 2>&1 && bun --version || echo 'ОТСУТСТВУЕТ')"
+echo "Node:   $(command -v node >/dev/null 2>&1 && node --version || echo 'ОТСУТСТВУЕТ')"
+echo "Caddy:  $(command -v caddy >/dev/null 2>&1 && caddy version | head -1 || echo 'ОТСУТСТВУЕТ')"
+echo "systemd $APP_NAME: $(sudo systemctl is-enabled $APP_NAME 2>/dev/null || echo 'не создан')"
+echo ""
+echo "Дальше: GitHub → Actions → 'Deploy to Cloud.ru' → Run workflow"
 echo ""
