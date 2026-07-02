@@ -34,7 +34,7 @@ fi
 # ── 1. Системные пакеты ──
 echo "[1/7] Установка системных пакетов..."
 sudo apt-get update -qq
-sudo apt-get install -y -qq curl wget git ufw ca-certificates gnupg lsb-release
+sudo apt-get install -y -qq curl wget git ufw ca-certificates gnupg lsb-release unzip tar
 
 # ── 2. Создание пользователя для приложения (если не существует) ──
 echo "[2/7] Проверка пользователя $APP_USER..."
