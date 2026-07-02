@@ -72,11 +72,13 @@ fi
 
 # ── 5. Директории приложения ──
 echo "[5/7] Создание структуры директорий..."
-sudo mkdir -p "$APP_DIR"/{releases,current}
+sudo mkdir -p "$APP_DIR/releases"
+# НЕ создаём current — это будет symlink на releases/.../.next/standalone
 sudo mkdir -p "$APP_DIR/db"
 sudo mkdir -p "$LOG_DIR"
+# /var/log/caddy должен принадлежать caddy — иначе Caddy не сможет писать логи
+sudo chown -R caddy:caddy "$LOG_DIR" 2>/dev/null || true
 sudo chown -R "$APP_USER:$APP_USER" "$APP_DIR"
-sudo chown -R "$APP_USER:$APP_USER" "$LOG_DIR" 2>/dev/null || true
 
 # ── 6. Конфигурация Caddy ──
 echo "[6/7] Настройка Caddy ($DOMAIN → localhost:3000)..."

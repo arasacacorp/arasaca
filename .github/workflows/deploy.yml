@@ -89,11 +89,24 @@ jobs:
             RELEASE_DIR="releases/$(date +%Y%m%d%H%M%S)"
             mkdir -p "$RELEASE_DIR"
             tar -xzf deploy.tar.gz -C "$RELEASE_DIR"
-            ln -sfn "$RELEASE_DIR/.next/standalone" current
+            # Копируем БД в персистентное место (только при первом деплое)
+            if [ ! -f /opt/arasaca/db/custom.db ]; then
+              cp "$RELEASE_DIR/.next/standalone/db/custom.db" /opt/arasaca/db/custom.db 2>/dev/null && echo "DB скопирована" || echo "(db в бандле не найден — будет создана Prisma)"
+            fi
+            # Атомарный релиз: current → новый standalone (-T заменяет, не создаёт внутри)
+            ln -sfnT "$RELEASE_DIR/.next/standalone" /opt/arasaca/current
+            # Перезапуск сервиса
             sudo systemctl restart arasaca
+            sleep 3
+            # Чиним права Caddy (на случай если setup выполнялся старой версией скрипта)
+            sudo chown -R caddy:caddy /var/log/caddy 2>/dev/null || true
+            sudo systemctl restart caddy 2>/dev/null || sudo systemctl start caddy
             sleep 2
-            sudo systemctl status arasaca --no-pager | head -15
-            ls -1dt releases/* | tail -n +6 | xargs rm -rf
+            sudo systemctl status arasaca --no-pager | head -8
+            echo "--- caddy ---"
+            sudo systemctl status caddy --no-pager | head -5
+            # Чистим старые релизы
+            ls -1dt /opt/arasaca/releases/* 2>/dev/null | tail -n +6 | xargs rm -rf
             rm -f deploy.tar.gz
             echo "Deploy OK: $RELEASE_DIR"
 
