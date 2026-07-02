@@ -1,0 +1,51 @@
+name: Diagnose VPS
+
+# Запускается ВРУЧНУЮ для диагностики проблем на VPS
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Diagnose arasaca service via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          command_timeout: 3m
+          script: |
+            echo "===== 1. systemctl status ====="
+            sudo systemctl status arasaca --no-pager -l | head -25
+            echo ""
+            echo "===== 2. journalctl последние 40 строк ====="
+            sudo journalctl -u arasaca -n 40 --no-pager
+            echo ""
+            echo "===== 3. current symlink ====="
+            ls -la /opt/arasaca/current
+            echo ""
+            echo "===== 4. содержимое current ====="
+            ls -la /opt/arasaca/current/ | head -20
+            echo ""
+            echo "===== 5. .next внутри current ====="
+            ls -la /opt/arasaca/current/.next/ 2>/dev/null | head -10
+            echo ""
+            echo "===== 6. db файл ====="
+            ls -la /opt/arasaca/db/ 2>/dev/null
+            echo ""
+            echo "===== 7. node версия ====="
+            /usr/bin/node --version
+            echo ""
+            echo "===== 8. Пробный запуск server.js вручную ====="
+            cd /opt/arasaca/current
+            sudo -u arasaca DATABASE_URL=file:/opt/arasaca/db/custom.db NODE_ENV=production PORT=3001 HOSTNAME=127.0.0.1 timeout 8 /usr/bin/node server.js 2>&1 | head -40 || echo "(процесс завершился)"
+            echo ""
+            echo "===== 9. Caddy status ====="
+            sudo systemctl status caddy --no-pager | head -15
+            echo ""
+            echo "===== 10. Caddy лог (последние 15) ====="
+            sudo journalctl -u caddy -n 15 --no-pager
