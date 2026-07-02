@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // ONREZA: полноценный SSR (не статический экспорт)
+  // Production: standalone-сборка для деплоя на VPS (Cloud.ru)
+  // Создаст .next/standalone с автономным server.js + минимальные node_modules
+  output: "standalone",
 
   typescript: {
     ignoreBuildErrors: true,

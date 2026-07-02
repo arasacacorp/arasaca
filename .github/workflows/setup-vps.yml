@@ -1,0 +1,52 @@
+name: Setup VPS (first run)
+
+# Запускается ВРУЧНУЮ из вкладки Actions → "Setup VPS (first run)" → Run workflow
+# Один раз настраивает свежую ВМ Cloud.ru: ставит Bun, Node, Caddy, systemd-сервис
+# После этого можно запускать "Deploy to Cloud.ru"
+#
+# Что нужно перед запуском:
+#   - ВМ создана на Cloud.ru (Ubuntu 22.04)
+#   - В GitHub Secrets добавлены: VPS_HOST, VPS_USER, VPS_SSH_KEY, VPS_PORT
+#   - Security Group ВМ открывает порт 22 для 0.0.0.0/0 (для GitHub Actions)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout кода (нужен deploy/setup-server.sh)
+        uses: actions/checkout@v4
+
+      - name: Загрузить и запустить setup-server.sh на VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          # apt install долгий — даём 10 минут
+          command_timeout: 10m
+          # Берём скрипт из репозитория и выполняем на сервере
+          script_path: deploy/setup-server.sh
+
+      - name: Проверка установки
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          command_timeout: 2m
+          script: |
+            echo "=== Проверка ==="
+            echo "Bun:    $(command -v bun >/dev/null 2>&1 && bun --version || echo 'ОТСУТСТВУЕТ')"
+            echo "Node:   $(command -v node >/dev/null 2>&1 && node --version || echo 'ОТСУТСТВУЕТ')"
+            echo "Caddy:  $(command -v caddy >/dev/null 2>&1 && caddy version | head -1 || echo 'ОТСУТСТВУЕТ')"
+            echo "systemd arasaca: $(systemctl is-enabled arasaca 2>/dev/null || echo 'не создан')"
+            echo "Публичный IP: $(curl -s ifconfig.me)"
+            echo ""
+            echo "=== ✓ VPS готов. Запустите workflow 'Deploy to Cloud.ru' ==="

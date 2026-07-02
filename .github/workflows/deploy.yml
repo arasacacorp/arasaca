@@ -1,0 +1,100 @@
+name: Deploy to Cloud.ru
+
+# Триггеры:
+#  - вручную из вкладки Actions (Run workflow)
+#  - автоматически при пуше в main / dev
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, dev]
+
+# Чтобы два деплоя не бежали параллельно
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Node (для next build)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: bun run db:generate
+        env:
+          DATABASE_URL: "file:./db/custom.db"
+
+      - name: Build Next.js (standalone output)
+        run: bun run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          DATABASE_URL: "file:./db/custom.db"
+
+      - name: Prepare deploy bundle
+        # .next/standalone содержит автономный server.js + только нужные node_modules
+        # добавляем public/ и static/ — они не входят в standalone автоматически
+        run: |
+          mkdir -p bundle/.next
+          cp -r .next/standalone bundle/
+          cp -r .next/static bundle/.next/standalone/.next/static
+          cp -r public bundle/.next/standalone/public
+          cp -r prisma bundle/.next/standalone/prisma
+          cp -r db bundle/.next/standalone/db
+          tar -czf deploy.tar.gz -C bundle .
+
+      - name: Upload bundle to VPS via SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          source: deploy.tar.gz
+          target: /tmp/
+
+      - name: Run remote deploy script
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -euo pipefail
+            cd /opt/arasaca
+            # Снимаем старую версию
+            mv /tmp/deploy.tar.gz /tmp/deploy.tar.gz.old 2>/dev/null || true
+            mv /tmp/deploy.tar.gz /opt/arasaca/deploy.tar.gz
+            # Атомарный релиз через симлинк
+            RELEASE_DIR="releases/$(date +%Y%m%d%H%M%S)"
+            mkdir -p "$RELEASE_DIR"
+            tar -xzf deploy.tar.gz -C "$RELEASE_DIR"
+            ln -sfn "$RELEASE_DIR/.next/standalone" current
+            # Перезапуск сервиса (VPS_USER = root, sudo не нужен)
+            systemctl restart arasaca
+            # Чистим старые релизы (оставляем 5 последних)
+            ls -1dt releases/* | tail -n +6 | xargs rm -rf
+            rm -f deploy.tar.gz
+            echo "Deploy OK: $RELEASE_DIR"
+
+      - name: Health check
+        run: |
+          sleep 5
+          curl --fail --max-time 15 https://${{ secrets.PROD_DOMAIN || 'onreza.ru' }} || \
+          curl --fail --max-time 15 http://${{ secrets.VPS_HOST }}
