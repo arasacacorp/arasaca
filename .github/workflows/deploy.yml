@@ -19,8 +19,10 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Checkout code
+      - name: Checkout code (dev — деплоим dev-ветку)
         uses: actions/checkout@v4
+        with:
+          ref: dev
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2

@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout кода (нужен deploy/setup-server.sh)
         uses: actions/checkout@v4
+        with:
+          ref: dev
 
       - name: Загрузить и запустить setup-server.sh на VPS
         uses: appleboy/ssh-action@v1.0.3
