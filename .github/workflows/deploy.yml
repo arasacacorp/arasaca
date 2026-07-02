@@ -80,7 +80,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
           script: |
-            set -euo pipefail
+            bash -c 'set -euo pipefail
             cd /opt/arasaca
             # /opt/arasaca принадлежит arasaca (chown в setup) — пишем напрямую
             mv /tmp/deploy.tar.gz /opt/arasaca/deploy.tar.gz
@@ -95,6 +95,7 @@ jobs:
             ls -1dt releases/* | tail -n +6 | xargs rm -rf
             rm -f deploy.tar.gz
             echo "Deploy OK: $RELEASE_DIR"
+            '
 
       - name: Health check
         run: |
