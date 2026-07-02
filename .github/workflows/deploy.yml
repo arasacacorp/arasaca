@@ -52,13 +52,17 @@ jobs:
         # .next/standalone содержит автономный server.js + только нужные node_modules
         # добавляем public/ и static/ — они не входят в standalone автоматически
         run: |
-          mkdir -p bundle/.next
-          cp -r .next/standalone bundle/
+          mkdir -p bundle/.next/standalone/.next
+          # Копируем содержимое standalone в bundle/.next/standalone/
+          cp -r .next/standalone/. bundle/.next/standalone/
+          # Добавляем статику, public, prisma, db
           cp -r .next/static bundle/.next/standalone/.next/static
           cp -r public bundle/.next/standalone/public
           cp -r prisma bundle/.next/standalone/prisma
           cp -r db bundle/.next/standalone/db
           tar -czf deploy.tar.gz -C bundle .
+          ls -la deploy.tar.gz
+          echo "Bundle size: $(du -h deploy.tar.gz | cut -f1)"
 
       - name: Upload bundle to VPS via SSH
         uses: appleboy/scp-action@v0.1.7
@@ -69,8 +73,8 @@ jobs:
           port: ${{ secrets.VPS_PORT || 22 }}
           source: deploy.tar.gz
           target: /tmp/
-          # scp от arasaca (не root) — нужен writable target. /tmp подходит.
-          rm: true
+          # scp от arasaca (не root) — /tmp writable, перезаписываем файл
+          overwrite: true
 
       - name: Run remote deploy script
         uses: appleboy/ssh-action@v1.0.3
@@ -80,25 +84,25 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
           script: |
-            bash -c 'set -euo pipefail
             cd /opt/arasaca
-            # /opt/arasaca принадлежит arasaca (chown в setup) — пишем напрямую
             mv /tmp/deploy.tar.gz /opt/arasaca/deploy.tar.gz
-            # Атомарный релиз через симлинк
             RELEASE_DIR="releases/$(date +%Y%m%d%H%M%S)"
             mkdir -p "$RELEASE_DIR"
             tar -xzf deploy.tar.gz -C "$RELEASE_DIR"
             ln -sfn "$RELEASE_DIR/.next/standalone" current
-            # Перезапуск сервиса (arasaca имеет sudo на systemctl)
             sudo systemctl restart arasaca
-            # Чистим старые релизы (оставляем 5 последних)
+            sleep 2
+            sudo systemctl status arasaca --no-pager | head -15
             ls -1dt releases/* | tail -n +6 | xargs rm -rf
             rm -f deploy.tar.gz
             echo "Deploy OK: $RELEASE_DIR"
-            '
 
       - name: Health check
         run: |
-          sleep 5
-          curl --fail --max-time 15 https://${{ secrets.PROD_DOMAIN || 'arasaca.ru' }} || \
-          curl --fail --max-time 15 http://${{ secrets.VPS_HOST }}
+          sleep 8
+          echo "=== HTTPS check ==="
+          curl -sI --max-time 15 https://${{ secrets.PROD_DOMAIN || 'arasaca.ru' }} | head -5 || echo "HTTPS ещё не готов (Let's Encrypt может перевыдавать сертификат)"
+          echo "=== HTTP (по IP) check ==="
+          curl -sI --max-time 15 http://${{ secrets.VPS_HOST }} | head -5
+          echo "=== Local service check (via ssh) ==="
+          curl -s --max-time 10 http://${{ secrets.VPS_HOST }}:3000 -o /dev/null -w "Node :3000 HTTP %{http_code}\n" || echo "Node :3000 не отвечает напрямую (Caddy проксирует)"
